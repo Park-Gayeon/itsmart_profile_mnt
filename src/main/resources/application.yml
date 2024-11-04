@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: project-demo
+  mvc:
+    view:
+      prefix: /WEB-INF/views/
+      suffix: .jsp
+  datasource:
+    #url: jdbc:mysql://localhost:3306/demo_db
+    #username: pgy
+    #password: 0830
+
+    # TODO : allowPublicKeyRetrieval=true ??? ?????? ????? ?? ???? ?? ??
+    url: jdbc:mysql://mysqlDB:3306/demo_db?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    username: itsmart
+    password: itsmart1!
+    driver-class-name: com.mysql.cj.jdbc.Driver
+mybatis:
+  mapper-locations: classpath:sqlMapper/*.xml
+
+debug: false
+management.endpoints.web.exposure.exclude: "*"
+
+logging:
+  level:
+    kr.co.itsmart.projectdemo: debug
+    org.springframework.web.servlet: debug

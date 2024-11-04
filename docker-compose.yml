@@ -1,0 +1,37 @@
+version: '3'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '8081:8080'
+    volumes:
+      - .:/app # 로컬 소스 코드 디렉토리와 컨테이너의 /app 디렉토리를 동기화
+      - ./src/main/webapp/WEB-INF/views:/app/src/main/webapp/WEB-INF/views # JSP 파일 동기화
+      - ./application.yaml:/src/main/resources/application.yaml
+    depends_on:
+      - mysqlDB
+  mysqlDB:
+    image: mysql:latest
+    restart: always
+    container_name: 'mysqlDB'
+    environment:
+      MYSQL_USER: 'itsmart'
+      MYSQL_PASSWORD: 'itsmart1!'
+      MYSQL_ROOT_PASSWORD: 'itsmart1!'
+      MYSQL_DATABASE: 'demo_db'
+      TZ: Asia/Seoul
+    ports:
+      - '3307:3306'
+    volumes:
+      - mysqlDB:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    command:
+      [
+        '--character-set-server=utf8mb4',
+        '--collation-server=utf8mb4_unicode_ci',
+        '--init-connect=SET NAMES utf8mb4'
+      ]
+volumes:
+  mysqlDB:
