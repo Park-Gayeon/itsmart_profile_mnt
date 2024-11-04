@@ -1,0 +1,57 @@
+html,
+body {
+    height: 100%;
+    margin: 0px;
+}
+
+.form-signin {
+    max-width: 330px;
+    padding: 1rem;
+}
+
+.form-signin input {
+    width: 100%;
+    height: 56px;
+    box-sizing: border-box;
+    border: none;
+    outline: none;
+    border-bottom: 2px solid #E9E9E9;
+    font-size: 16px;
+    line-height: 24px;
+    color: #241E17
+}
+
+.form-signin input::placeholder {
+    color: #C7C7C7
+}
+
+.form-signin input:focus {
+    border-bottom: 2px solid #241E17;
+    outline: none;
+}
+
+/* logo */
+.logo {
+    width: 100%;
+    font-size: 28px;
+    font-weight: 500;
+    padding-bottom: 70px;
+    text-align: center;
+}
+
+.logo p {
+    padding-top: 70px;
+    color: #757575;
+}
+
+.logo .logo-image,
+.logo .logo-text {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 50px;
+}
+
+.logo .logo-image img {
+    height: 100%;
+}
