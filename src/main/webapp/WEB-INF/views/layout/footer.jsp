@@ -7,7 +7,7 @@
     .div_footer .foot_txts > address a {display:inline; color:#fff !important;}
     .div_footer .foot_txts > .copyright { width:100%; color:#fff; text-align:center; margin:5px 0 0 0;}
 </style>
-<footer class="footer mt-auto py-3 bg-dark">
+<footer class="footer py-3 bg-dark">
     <div class="container">
         <div class="div_footer">
             <p class="foot_logo">㈜아이티스마트</p>

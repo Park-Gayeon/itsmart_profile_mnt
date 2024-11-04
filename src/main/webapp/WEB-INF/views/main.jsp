@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <%-- 웹 앱 반응형 --%>
     <meta name="viewport" content="width=device-width", initial-scale="1">
-    <%-- css cdn--%>
     <link rel="stylesheet" href="/css/bootstrap.css">
     <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <title>직원 프로필관리 시스템</title>

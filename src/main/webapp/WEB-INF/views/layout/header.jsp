@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+<header class="d-flex flex-wrap justify-content-center py-3 mb-4">
     <nav class="navbar navbar-dark bg-dark fixed-top">
         <div class="container-fluid">
             <!-- NAV - 메뉴바 토글 -->
@@ -49,19 +49,21 @@
                         </ul>
                         <!-- 사이드바 BODY 끝-->
                         <hr>
+                        <!-- drop down -->
                         <div class="dropdown">
                             <a href="#"
                                class="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
-                               data-bs-toggle="dropdown" aria-expanded="false">
+                               data-bs-toggle="dropdown" data-bs-auto-close="true" aria-expanded="false">
                                 <strong>${model.empName}</strong>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
                                 <!-- TODO : login 페이지 이동 -->
-                                <li><a class="dropdown-item" href="#">로그아웃
+                                <li><a class="dropdown-item" href="/logout">로그아웃
                                     <img src="/image/box-arrow-right.svg" alt="" class="bi pe-none me-2">
                                 </a></li>
                             </ul>
                         </div>
+                        <!-- drop down 끝 -->
                     </div>
                     <!-- 사이드바 끝 -->
                 </div>
