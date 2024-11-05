@@ -1,0 +1,83 @@
+.content {
+    flex-grow: 1; /* 빈 공간을 채우기 위한 메인 콘텐츠 */
+    padding: 20px; /* 패딩으로 여백 추가 */
+    background-color: var(--bs-gray-200);
+}
+
+.content > .container {
+    position: relative;
+    width: 1200px;
+    margin: 0 auto;
+    padding-bottom: 200px;
+    text-align: left;
+}
+
+.container h2.header {
+    position: relative;
+    margin-bottom: 14px;
+    color: #333;
+    font-weight: bold;
+    font-size: 20px;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+}
+.container h2.header .description{
+    position: absolute;
+    right: 0;
+    top: 5px;
+    font-size: 13px;
+    letter-spacing: 0px;
+    color: #999;
+    font-weight: normal;
+}
+
+.star {
+    color: #ff3333;
+}
+
+.row-box {
+    position: relative;
+    margin-bottom: 34px;
+    background-color: #fff;
+    border: 1px solid #dbe0e9;
+    padding: 20px 20px 10px;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.input-box-1 {
+    padding-top: 20px;
+    position: relative;
+    display: inline-block;
+    margin-right: 10px;
+    border: 1px solid #ddd;
+    box-sizing: border-box;
+    vertical-align: top;
+    text-align: left;
+}
+
+.input-box-1 > label {
+    top: 9px;
+    font-size: 11px;
+    letter-spacing: 0px;
+    color: #a8a8a8;
+    visibility: visible;
+    position: absolute;
+    left: 15px;
+    cursor: pointer;
+    vertical-align: middle;
+}
+
+.input-box-1 > input {
+    display: block;
+    width: 100%;
+    padding: 0 15px;
+    border: 0;
+    color: #333;
+    outline: none;
+    box-sizing: border-box;
+    font-size: 16px;
+    height: 40px;
+}
