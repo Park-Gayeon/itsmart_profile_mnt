@@ -1,11 +1,259 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.itsmart.projectdemo.dao.ProfileDAO">
-    <select id="selectDetailInfo" resultType="kr.co.itsmart.projectdemo.vo.ProfileVO">
+    <!-- mybatis : https://mybatis.org/mybatis-3/ko/sqlmap-xml.html#result-maps -->
+    <resultMap id="UsrProfileInfo" type="ProfileVO">
+        <id property="user_id" column="USER_ID"/>
+        <result property="user_nm" column="USER_NM"/>
+        <result property="user_position" column="USER_POSITION"/>
+        <result property="user_birth" column="USER_BIRTH"/>
+        <result property="user_department" column="USER_DEPARTMENT"/>
+        <result property="hire_date" column="HIRE_DATE"/>
+        <result property="user_phone" column="USER_PHONE"/>
+        <result property="user_address" column="USER_ADDRESS"/>
+        <result property="edu1_school_name" column="EDU1_SCHOOL_NAME"/>
+        <result property="edu1_grad_status" column="EDU1_GRAD_STATUS"/>
+        <result property="edu1_start_date" column="EDU1_START_DATE"/>
+        <result property="edu1_end_date" column="EDU1_END_DATE"/>
+        <result property="edu2_school_name" column="EDU2_SCHOOL_NAME"/>
+        <result property="edu2_grad_status" column="EDU2_GRAD_STATUS"/>
+        <result property="edu2_start_date" column="EDU2_START_DATE"/>
+        <result property="edu2_end_date" column="EDU2_END_DATE"/>
+        <result property="edu3_school_name" column="EDU3_SCHOOL_NAME"/>
+        <result property="edu3_grad_status" column="EDU3_GRAD_STATUS"/>
+        <result property="edu3_start_date" column="EDU3_START_DATE"/>
+        <result property="edu3_end_date" column="EDU3_END_DATE"/>
+        <result property="major" column="MAJOR"/>
+        <result property="double_major" column="DOUBLE_MAJOR"/>
+        <result property="total_grade" column="TOTAL_GRADE"/>
+        <result property="standard_grade" column="STANDARD_GRADE"/>
+        <association column="user_id" property="fileInfo" javaType="FileVO">
+            <result property="file_seq" column="FILE_SEQ"/>
+            <result property="file_ori_nm" column="FILE_ORI_NM"/>
+            <result property="file_sver_nm" column="FILE_SVER_NM"/>
+            <result property="file_sver_path" column="FILE_SVER_PATH"/>
+            <result property="file_extension" column="FILE_EXTENSION"/>
+        </association>
+        <collection column="user_id" property="projectList" javaType="List" ofType="ProjectVO"
+                    select="selectUsrProjectList">
+            <result property="project_seq" column="PROJECT_SEQ"/>
+            <result property="project_nm" column="PROJECT_NM"/>
+            <result property="project_start_date" column="PROJECT_START_DATE"/>
+            <result property="project_end_date" column="PROJECT_END_DATE"/>
+            <result property="project_role" column="PROJECT_ROLE"/>
+            <result property="project_client" column="PROJECT_CLIENT"/>
+            <result property="assigned_task_lar_nm" column="ASSIGNED_TASK_LAR_NM"/>
+            <result property="assigned_task_mid_nm" column="ASSIGNED_TASK_MID_NM"/>
+        </collection>
+        <collection column="user_id" property="qualificationList" javaType="List" ofType="QualificationVO"
+                    select="selectUsrQualificationList">
+            <result property="qualification_seq" column="QUALIFICATION_SEQ"/>
+            <result property="qualification_nm" column="QUALIFICATION_NM"/>
+            <result property="issuer" column="ISSUER"/>
+            <result property="acquisition_date" column="ACQUISITION_DATE"/>
+            <result property="expiry_date" column="EXPIRY_DATE"/>
+        </collection>
+        <collection column="user_id" property="workExperienceList" javaType="List" ofType="WorkExperienceVO"
+                    select="selectUsrWorkList">
+            <result property="work_seq" column="WORK_SEQ"/>
+            <result property="work_place" column="WORK_PLACE"/>
+            <result property="work_start_date" column="WORK_START_DATE"/>
+            <result property="word_end_date" column="WORD_END_DATE"/>
+        </collection>
+    </resultMap>
+
+    <resultMap id="UsrProjectSkills" type="ProjectVO">
+        <id property="project_seq" column="PROJECT_SEQ" />
+        <result property="project_nm" column="PROJECT_NM"/>
+        <collection property="skillList" column="project_seq" ofType="UserSkillVO">
+            <id property="skill_id" column="SKILL_ID"/>
+            <result property="skill_nm" column="SKILL_NM"/>
+        </collection>
+    </resultMap>
+
+
+
+
+    <select id="selectDetailInfo" parameterType="String" resultMap="UsrProfileInfo">
+        <![CDATA[
+        SELECT
+            /* 인적사항 */
+            PF.USER_ID                           AS USER_ID,
+            PF.USER_NM                           AS USER_NM,
+            (SELECT CODE_VALUE
+             FROM TB_COMMON_CODE
+             WHERE CODE_GROUP_ID = 'PSIT'
+               AND CODE_ID = PF.USER_POSITION)   AS USER_POSITION,
+            PF.USER_BIRTH                        AS USER_BIRTH,
+            (SELECT CODE_VALUE
+             FROM TB_COMMON_CODE
+             WHERE CODE_GROUP_ID = 'ORG'
+               AND CODE_ID = PF.USER_DEPARTMENT) AS USER_DEPARTMENT,
+            PF.HIRE_DATE                         AS HIRE_DATE,
+            PF.USER_PHONE                        AS USER_PHONE,
+            PF.USER_ADDRESS                      AS USER_ADDRESS,
+            PF.EDU1_SCHOOL_NAME                  AS EDU1_SCHOOL_NAME,
+            PF.EDU1_GRAD_STATUS                  AS EDU1_GRAD_STATUS,
+            PF.EDU1_START_DATE                   AS EDU1_START_DATE,
+            PF.EDU1_END_DATE                     AS EDU1_END_DATE,
+            PF.EDU2_SCHOOL_NAME                  AS EDU2_SCHOOL_NAME,
+            PF.EDU2_GRAD_STATUS                  AS EDU2_GRAD_STATUS,
+            PF.EDU2_START_DATE                   AS EDU2_START_DATE,
+            PF.EDU2_END_DATE                     AS EDU2_END_DATE,
+            PF.EDU3_SCHOOL_NAME                  AS EDU3_SCHOOL_NAME,
+            PF.EDU3_GRAD_STATUS                  AS EDU3_GRAD_STATUS,
+            PF.EDU3_START_DATE                   AS EDU3_START_DATE,
+            PF.EDU3_END_DATE                     AS EDU3_END_DATE,
+            PF.MAJOR                             AS MAJOR,
+            PF.DOUBLE_MAJOR                      AS DOUBLE_MAJOR,
+            PF.TOTAL_GRADE                       AS TOTAL_GRADE,
+            PF.STANDARD_GRADE                    AS STANDARD_GRADE,
+
+            /* 파일 */
+            AT.FILE_ORI_NM                       AS FILE_ORI_NM,
+            AT.FILE_SVER_NM                      AS FILE_SVER_NM,
+            AT.FILE_SVER_PATH                    AS FILE_SVER_PATH,
+            AT.FILE_EXTENSION                    AS FILE_EXTENSION
+
+        FROM TB_USER_PROFILE_INFO PF
+                 JOIN TB_ATTACHMENT_INFO AT ON PF.USER_ID = AT.USER_ID AND PF.FILE_SEQ = AT.FILE_SEQ AND AT.USE_YN = 'Y'
+        WHERE PF.USER_ID = #{user_id}
+          AND PF.USE_YN = 'Y'
+        ]]>
+    </select>
+
+    <!-- profile + projectList -->
+    <select id="selectUsrProjectList" resultType="projectVO">
+        SELECT PROJECT_SEQ,
+               PROJECT_NM,
+               PROJECT_START_DATE,
+               PROJECT_END_DATE,
+               (SELECT CODE_VALUE FROM TB_COMMON_CODE
+                WHERE CODE_GROUP_ID = 'ROLE' AND CODE_ID = PJ.PROJECT_ROLE) AS PROJECT_ROLE,
+               PROJECT_CLIENT,
+               (SELECT CODE_VALUE FROM TB_COMMON_CODE
+                WHERE CODE_GROUP_ID = 'TASK' AND CODE_ID = PJ.ASSIGNED_TASK_LAR) AS ASSIGNED_TASK_LAR_NM,
+               (SELECT CODE_VALUE FROM TB_COMMON_CODE
+                WHERE CODE_GROUP_ID = 'TASK' AND CODE_ID = PJ.ASSIGNED_TASK_MID) AS ASSIGNED_TASK_MID_NM
+        FROM TB_PROJECT_INFO PJ
+        WHERE USER_ID = #{user_id}
+    </select>
+
+    <!-- profile + qualificationList -->
+    <select id="selectUsrQualificationList" resultType="qualificationVO">
+        SELECT QUALIFICATION_SEQ,
+               QUALIFICATION_NM,
+               ISSUER,
+               ACQUISITION_DATE,
+               EXPIRY_DATE
+        FROM TB_USER_QUALIFICATION_INFO
+        WHERE USER_ID = #{user_id}
+        AND USE_YN = 'Y'
+    </select>
+
+    <!-- profile + workExperienceList -->
+    <select id="selectUsrWorkList" resultType="workExperienceVO">
+        SELECT WORK_SEQ,
+               WORK_PLACE,
+               WORK_START_DATE,
+               WORk_END_DATE
+        FROM TB_WORK_EXPERIENCE_INFO
+        WHERE USER_ID = #{user_id}
+        AND USE_YN = 'Y'
+    </select>
+
+    <!-- project + usrSkillLIst -->
+    <select id="selectUsrSkillList" resultMap="UsrProjectSkills">
+        SELECT PJ.PROJECT_SEQ,
+               PJ.PROJECT_NM,
+               SK.SKILL_ID,
+               SK.SKILL_NM
+        FROM TB_PROJECT_INFO PJ
+                 LEFT JOIN TB_USER_SKILL_INFO SK
+                           ON PJ.USER_ID = SK.USER_ID AND PJ.PROJECT_SEQ = SK.PROJECT_SEQ AND SK.USE_YN = 'Y'
+        WHERE PJ.USER_ID = #{user_id}
+          AND PJ.PROJECT_SEQ = #{project_seq}
+    </select>
+
+
+
+
+
+
+
+    <select id="registUsrProfile" parameterType="kr.co.itsmart.projectdemo.vo.ProfileVO">
+        <![CDATA[
+        insert into TB_USER_PROFILE_INFO(user_id, user_pw, user_nm, user_position, user_birth, user_department,
+                                         hire_date, user_phone, user_address, create_date, modified_date, creator,
+                                         modifier)
+        VALUES ( #{user_id}
+               , #{user_pw}
+               , #{user_nm}
+               , #{user_id}
+               , #{user_position}
+               , #{user_department}
+               , #{hire_date}
+               , #{user_phone}
+               , #{user_address}
+               , sysdate()
+               , sysdate()
+               , ${creator}
+               , ${modifier})
+        ]]>
+    </select>
+    <select id="selectUsrProfileInfo" parameterType="kr.co.itsmart.projectdemo.vo.ProfileVO"
+            resultType="kr.co.itsmart.projectdemo.vo.ProfileVO">
         <![CDATA[
         SELECT *
-        FROM TB_USER_PROFILE_INFO
-        WHERE USER_ID = 'GYPARK'
+        FROM TB_PROJECT_INFO
+        ]]>
+    </select>
+    <select id="updateDetailInfo" parameterType="kr.co.itsmart.projectdemo.vo.ProfileVO">
+        <![CDATA[
+        UPDATE TB_USER_PROFILE_INFO
+        SET USER_ID = ${USER_ID}
+        WHERE USER_ID = ${USER_ID}
+        ]]>
+    </select>
+    <select id="registUsrProfileHist" parameterType="kr.co.itsmart.projectdemo.vo.ProfileVO">
+        <![CDATA[
+        insert into TB_USER_PROFILE_INFO_HIST(user_id, hist_seq, user_nm, user_position, user_birth, user_department,
+                                              hire_date, user_phone, user_address, file_seq, file_seq, edu1_school_name,
+                                              edu1_grad_status, edu1_start_date, edu1_end_date, edu2_school_name,
+                                              edu2_grad_status, edu2_start_date, edu2_end_date, edu3_school_name,
+                                              edu3_grad_status, edu3_start_date, edu3_end_date, major, double_major,
+                                              total_grade, standard_grade, create_date, creator)
+        select user_id
+             , ${hist_seq}
+             , user_nm
+             , user_position
+             , user_birth
+             , user_department
+             , hire_date
+             , user_phone
+             , user_address
+             , file_seq
+             , ${file_seq}
+             , edu1_school_name
+             , edu1_grad_status
+             , edu1_start_date
+             , edu1_end_date
+             , edu2_school_name
+             , edu2_grad_status
+             , edu2_start_date
+             , edu2_end_date
+             , edu3_school_name
+             , edu3_grad_status
+             , edu3_start_date
+             , edu3_end_date
+             , major
+             , double_major
+             , total_grade
+             , standard_grade
+             , sysdate()
+             , ${creator}
+        from TB_USER_PROFILE_INFO
+        where user_id = ${user_id}
         ]]>
     </select>
 </mapper>

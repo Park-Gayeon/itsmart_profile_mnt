@@ -16,8 +16,8 @@ public class MainController {
 
     @GetMapping(value = "/main")
     public String selectInfo(Model model){
-        SampleVO sample = sampleService.selectInfo();
-        model.addAttribute("model", sample);
+        /*SampleVO sample = sampleService.selectInfo();*/
+        model.addAttribute("key", "gypark");
         return "main";
     }
 }
