@@ -24,10 +24,8 @@
 <%@ include file="layout/footer.jsp" %>
 <!-- footer.jsp -->
 
-</body>
-<%-- jquery cdn--%>
 <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
-<%-- js cdn--%>
 <script src="js/bootstrap.js"></script>
 <script src="js/bootstrap.bundle.js"></script>
+</body>
 </html>
