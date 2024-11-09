@@ -2,11 +2,14 @@ package kr.co.itsmart.projectdemo.vo;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.ibatis.type.Alias;
+
+import java.util.List;
 
 @Getter
 @Setter
 public class ProfileVO {
-    private String user_id; // 직원 아이다
+    private String user_id; // 직원 아이디
     private String user_pw; // 비밀번호
     private String user_nm; // 직원명
     private String user_position; // 직급/직위
@@ -37,6 +40,14 @@ public class ProfileVO {
 
     // 이력관리
     private int file_seq; // 파일 순번
+
+    // etc
+    private String eduGubun; // 학교구분
+
+    private List<ProjectVO> projectList;
+    private List<QualificationVO> qualificationList;
+    private List<WorkExperienceVO> workExperienceList;
+    private FileVO fileInfo;
 
     // meta_data
     private String created_date; // 생성일시

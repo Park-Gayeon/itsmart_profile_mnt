@@ -17,6 +17,9 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
 mybatis:
   mapper-locations: classpath:sqlMapper/*.xml
+  type-aliases-package: kr.co.itsmart.projectdemo.vo
+  configuration:
+    map-underscore-to-camel-case: false
 
 debug: false
 management.endpoints.web.exposure.exclude: "*"
