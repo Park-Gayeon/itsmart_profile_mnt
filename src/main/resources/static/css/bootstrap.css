@@ -724,11 +724,6 @@ progress {
   height: auto;
 }
 
-.img-profile {
-  width: 150px;
-  border-radius: 3.5rem;
-}
-
 .img-thumbnail {
   padding: 0.25rem;
   background-color: var(--bs-body-bg);
@@ -2612,7 +2607,6 @@ textarea.form-control-lg {
 
 .form-floating {
   position: relative;
-  width: 1200px;
 }
 .form-floating > .form-control,
 .form-floating > .form-control-plaintext,

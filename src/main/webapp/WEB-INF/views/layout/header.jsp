@@ -54,7 +54,7 @@
                             <a href="#"
                                class="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
                                data-bs-toggle="dropdown" data-bs-auto-close="true" aria-expanded="false">
-                                <strong>${model.empName}</strong>
+                                <strong>${model.user_id}</strong>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
                                 <!-- TODO : login 페이지 이동 -->
