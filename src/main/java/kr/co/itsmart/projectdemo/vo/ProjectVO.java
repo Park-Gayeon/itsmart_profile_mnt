@@ -30,7 +30,6 @@ public class ProjectVO {
     private String creator; // 생성자
     private String modifier; // 수정자
 
-
     public String getUser_id() {
         return user_id;
     }

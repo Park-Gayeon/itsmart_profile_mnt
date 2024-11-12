@@ -7,8 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/api/main/company")
-@RequiredArgsConstructor
-public class OrganizationController {
+public class OrgController {
     @GetMapping("/organization")
     public String getOrganization(){
         return "organization";
