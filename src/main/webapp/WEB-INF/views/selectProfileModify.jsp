@@ -98,8 +98,8 @@
             </div>
             <!-- 인적사항 form 끝 -->
             <!-- 학력 form -->
-            <div class="form-floating">
-                <h2 class="header">학력</h2>
+            <div class="form-floating" id="schFrm">
+                <h2 class="header">학력<span><button type="button" class="btn btn-primary add_field" data-target="schFrm">ADD</button></span></h2>
                 <div class="common-box row-box row mb-5 g-0">
                     <div class="col-md g-0">
                         <c:forEach var="i" begin="1" end="3">
@@ -110,8 +110,9 @@
                                     <div class="row mb-2 g-0">
                                         <div class="col-sm-1 common-box input-box pt-4">
                                             <c:set var="gubunKey" value="edu${i}_gubun"/>
-                                            <label">학교구분</label>
-                                            <select class="form-select" style="width: 100px; font-size: 12px;" name="eduGubun${i}">
+                                            <label>학교구분</label>
+                                            <select class="form-select" style="width: 100px; font-size: 12px;"
+                                                    name="eduGubun${i}">
                                                 <option value="010" ${profile[gubunKey] == '010' ? 'selected' : ''}>
                                                     고등학교
                                                 </option>
@@ -146,7 +147,8 @@
                                         <div class="col-sm-1 common-box input-box pt-4 me-2">
                                             <c:set var="statusKey" value="edu${i}_grad_status"/>
                                             <label>졸업상태</label>
-                                            <select class="form-select" style="width: 100px; font-size: 12px" name="edu${i}_grad_status">
+                                            <select class="form-select" style="width: 100px; font-size: 12px"
+                                                    name="edu${i}_grad_status">
                                                 <option value="001" ${profile[statusKey] == '001' ? 'selected' : ''}>
                                                     졸업
                                                 </option>
@@ -166,7 +168,8 @@
                                         <div class="row mb-2 g-0">
                                             <div class="col-sm-1 common-box input-box pt-4">
                                                 <label>학교구분</label>
-                                                <select class="form-select" style="width: 100px; font-size: 12px" name="edu${i}_gubun">
+                                                <select class="form-select" style="width: 100px; font-size: 12px"
+                                                        name="edu${i}_gubun">
                                                     <option value="010">고등학교</option>
                                                     <option value="011">대학교(2,3년)</option>
                                                     <option value="012">대학교(4년)</option>
@@ -230,11 +233,11 @@
             <!-- 학력 form 끝 -->
 
             <!-- 자격증 form -->
-            <div class="form-floating">
-                <h2 class="header">자격증</h2>
+            <div class="form-floating" id="qlFrm">
+                <h2 class="header">자격증<span><button type="button" class="btn btn-primary add_field" data-target="qlFrm">ADD</button></span></h2>
                 <div class="common-box row-box row mb-5 g-0">
-                    <div class="col-md g-0">
-                        <div class="row mb-2 g-0">
+                    <div class="col-md g-0 add-main">
+                        <div class="row mb-2 g-0 add" id="addList_0">
                             <c:forEach var="qualification" items="${profile.qualificationList}" varStatus="qlStatus">
                                 <div class="col-sm-2 common-box input-box pt-4 me-2">
                                     <label for="qualification_nm">자격증명</label>
@@ -259,6 +262,11 @@
                                            id="expiry_date"
                                            value="${qualification.expiry_date}"/>
                                 </div>
+                                <div class="col-sm-1" style="text-align: center; padding-top: 15px;">
+                                    <button type="button" id="clear_field" class="btn btn-danger"
+                                            onclick="clearField()">CLEAR
+                                    </button>
+                                </div>
                             </c:forEach>
                         </div>
                     </div>
@@ -270,10 +278,12 @@
                 <h2 class="header">경력</h2>
                 <div class="common-box row-box row mb-5 g-0">
                     <!-- 근무경력 form -->
-                    <div class="pb-3">
-                        <header class="header">근무경력<span class="fw-bolder" style="font-size: 12px;">(총 n년 n개월)</span>
+                    <div class="pb-3" id="workFrm">
+                        <header class="header">근무경력
+                            <span class="fw-bolder" style="font-size: 12px;">(총 n년 n개월)</span>
+                            <span><button type="button" class="btn btn-primary add_field" data-target="workFrm">ADD</button></span>
                         </header>
-                        <div class="col-md g-0">
+                        <div class="col-md g-0 add-main">
                             <div class="row mb-2 g-0">
                                 <c:forEach var="work" items="${profile.workExperienceList}" varStatus="wkStatus">
                                     <div class="col-sm-3 common-box input-box pt-4 me-2">
@@ -301,8 +311,10 @@
                     <!-- 근무경력 form 끝-->
                     <hr>
                     <!-- 사업경력 form -->
-                    <div>
-                        <header class="header">사업경력<span class="fw-bolder" style="font-size: 12px;">(총 n년 n개월)</span>
+                    <div id="pjFrm">
+                        <header class="header">사업경력
+                            <span class="fw-bolder" style="font-size: 12px;">(총 n년 n개월)</span>
+                            <span><button type="button" class="btn btn-primary add_field" data-target="pjFrm">ADD</button></span>
                         </header>
                         <div class="table-responsive common-box p-3">
                             <header>진행사항</header>
@@ -484,6 +496,67 @@
 <script src="//code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="/js/bootstrap.bundle.js"></script>
 <script type="text/javascript">
+    $(document).ready(function () {
+
+        $(".add_field").click(function () {
+            let frmId = $(this).data("target");
+            let rowIndex = $("#" + frmId + " .add-main").length;
+            let newRow;
+            let listNm;
+
+            if(frmId == 'qlFrm'){
+                listNm = 'qualificationList';
+                newRow =
+                `<div class="row mb-2 g-0 add" id="addList_`+rowIndex+`">
+                            <div class="col-sm-2 common-box input-box pt-4 me-2">
+                                <label>자격증명</label>
+                                <input type="text" name="qualificationList[`+rowIndex+`].qualification_nm"
+                                       value=""/>
+                            </div>
+                            <div class="col-sm-2 common-box input-box pt-4 me-2">
+                                <label>발행기관</label>
+                                <input type="text" name="qualificationList[`+rowIndex+`].issuer"
+                                       value=""/>
+                            </div>
+                            <div class="col-sm-2 common-box input-box pt-4">
+                                <label>취득일자</label>
+                                <input type="text" name="qualificationList[`+rowIndex+`].acquisition_date"
+                                       value=""/>
+                            </div>
+                            <div class="col-sm-2 common-box input-box pt-4">
+                                <label>만기일자</label>
+                                <input type="text" name="qualificationList[`+rowIndex+`].expiry_date"
+                                       value=""/>
+                            </div>
+                            <div class="col-sm-1" style="text-align: center; padding-top: 15px;"><button type="button" class="btn btn-danger remove-field">REMOVE</button></div>
+                        </div>`;
+            }
+            else if(frmId == 'workFrm'){
+                ``;
+            }
+            $("#" + frmId + " .add-main").append(newRow);
+            updateRowIndex(frmId, listNm);
+        });
+    });
+
+    function updateRowIndex(frmId, listNm){
+        $("#" + frmId + " .add").each(function(i){
+            $(this).attr("id", `addList_`+i);
+            $(this).find("input[name^='"+listNm+"']").each(function(){
+                let name = $(this).attr("name");
+                let newName = name.replace(/\[\d+\]/, '['+i+']');
+                $(this).attr("name", newName);
+            });
+        });
+        $(".remove-field").off("click").on("click", function (){
+            $(this).closest(".add").remove();
+            updateRowIndex();
+        });
+    }
+
+    function clearField() {
+        alert("아직 구현중");
+    }
 
     function viewSkill(project_seq) {
         let user_id = $('input[name=user_id]').val();
