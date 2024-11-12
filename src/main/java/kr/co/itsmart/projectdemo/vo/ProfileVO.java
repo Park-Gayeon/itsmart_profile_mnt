@@ -6,9 +6,11 @@ public class ProfileVO {
     private String user_id; // 직원 아이디
     private String user_pw; // 비밀번호
     private String user_nm; // 직원명
-    private String user_position; // 직급/직위
+    private String user_position; // 직급/직위 코드
+    private String user_position_nm; // 직급/직위명
     private String user_birth; // 직원 생년월일
-    private String user_department; // 소속
+    private String user_department; // 소속 코드
+    private String user_department_nm; // 소속명
     private String hire_date; // 입사일
     private String user_phone; // 휴대전화
     private String user_address; // 주소
@@ -18,15 +20,18 @@ public class ProfileVO {
     private String edu1_school_name; // 학력1_학교명
     private String edu1_grad_status; // 학력1_졸업상태
     private String edu1_start_date; // 학력1_입학년월
-    private String edu1_end_date; // 학력_졸업년월
+    private String edu1_end_date; // 학력1_졸업년월
+    private String edu1_gubun; // 학력1_구분
     private String edu2_school_name; // 학력2_학교명
     private String edu2_grad_status; // 학력2_졸업상태
     private String edu2_start_date; // 학력2_입학년월
     private String edu2_end_date; // 학력2_졸업년월
+    private String edu2_gubun; // 학력2_구분
     private String edu3_school_name; // 학력3_학교명
     private String edu3_grad_status; // 학력3_졸업상태
     private String edu3_start_date; // 학력3_입학년월
     private String edu3_end_date; // 학력3_졸업년월
+    private String edu3_gubun; // 학력3_구분
     private String major; // 전공
     private String double_major; // 복수전공
     private String total_grade; // 졸업학점
@@ -77,8 +82,17 @@ public class ProfileVO {
         return user_position;
     }
 
+
     public void setUser_position(String user_position) {
         this.user_position = user_position;
+    }
+
+    public String getUser_position_nm() {
+        return user_position_nm;
+    }
+
+    public void setUser_position_nm(String user_position_nm) {
+        this.user_position_nm = user_position_nm;
     }
 
     public String getUser_birth() {
@@ -96,6 +110,15 @@ public class ProfileVO {
     public void setUser_department(String user_department) {
         this.user_department = user_department;
     }
+
+    public String getUser_department_nm() {
+        return user_department_nm;
+    }
+
+    public void setUser_department_nm(String user_department_nm) {
+        this.user_department_nm = user_department_nm;
+    }
+
 
     public String getHire_date() {
         return hire_date;
@@ -177,6 +200,14 @@ public class ProfileVO {
         this.edu1_end_date = edu1_end_date;
     }
 
+    public String getEdu1_gubun() {
+        return edu1_gubun;
+    }
+
+    public void setEdu1_gubun(String edu1_gubun) {
+        this.edu1_gubun = edu1_gubun;
+    }
+
     public String getEdu2_school_name() {
         return edu2_school_name;
     }
@@ -209,6 +240,14 @@ public class ProfileVO {
         this.edu2_end_date = edu2_end_date;
     }
 
+    public String getEdu2_gubun() {
+        return edu2_gubun;
+    }
+
+    public void setEdu2_gubun(String edu2_gubun) {
+        this.edu2_gubun = edu2_gubun;
+    }
+
     public String getEdu3_school_name() {
         return edu3_school_name;
     }
@@ -239,6 +278,14 @@ public class ProfileVO {
 
     public void setEdu3_end_date(String edu3_end_date) {
         this.edu3_end_date = edu3_end_date;
+    }
+
+    public String getEdu3_gubun() {
+        return edu3_gubun;
+    }
+
+    public void setEdu3_gubun(String edu3_gubun) {
+        this.edu3_gubun = edu3_gubun;
     }
 
     public String getMajor() {

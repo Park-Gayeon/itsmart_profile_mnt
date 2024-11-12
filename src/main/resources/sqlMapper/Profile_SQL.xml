@@ -17,14 +17,17 @@
         <result property="edu1_grad_status" column="EDU1_GRAD_STATUS"/>
         <result property="edu1_start_date" column="EDU1_START_DATE"/>
         <result property="edu1_end_date" column="EDU1_END_DATE"/>
+        <result property="edu1_gubun" column="EDU1_GUBUN"/>
         <result property="edu2_school_name" column="EDU2_SCHOOL_NAME"/>
         <result property="edu2_grad_status" column="EDU2_GRAD_STATUS"/>
         <result property="edu2_start_date" column="EDU2_START_DATE"/>
         <result property="edu2_end_date" column="EDU2_END_DATE"/>
+        <result property="edu2_gubun" column="EDU2_GUBUN"/>
         <result property="edu3_school_name" column="EDU3_SCHOOL_NAME"/>
         <result property="edu3_grad_status" column="EDU3_GRAD_STATUS"/>
         <result property="edu3_start_date" column="EDU3_START_DATE"/>
         <result property="edu3_end_date" column="EDU3_END_DATE"/>
+        <result property="edu3_gubun" column="EDU3_GUBUN"/>
         <result property="major" column="MAJOR"/>
         <result property="double_major" column="DOUBLE_MAJOR"/>
         <result property="total_grade" column="TOTAL_GRADE"/>
@@ -65,15 +68,13 @@
     </resultMap>
 
     <resultMap id="UsrProjectSkills" type="ProjectVO">
-        <id property="project_seq" column="PROJECT_SEQ" />
+        <id property="project_seq" column="PROJECT_SEQ"/>
         <result property="project_nm" column="PROJECT_NM"/>
         <collection property="skillList" column="project_seq" ofType="UserSkillVO">
             <id property="skill_id" column="SKILL_ID"/>
             <result property="skill_nm" column="SKILL_NM"/>
         </collection>
     </resultMap>
-
-
 
 
     <select id="selectUsrProfileDetail" parameterType="String" resultMap="UsrProfileInfo">
@@ -100,14 +101,17 @@
             PF.EDU1_GRAD_STATUS                  AS EDU1_GRAD_STATUS,
             PF.EDU1_START_DATE                   AS EDU1_START_DATE,
             PF.EDU1_END_DATE                     AS EDU1_END_DATE,
+            PF.EDU1_GUBUN                        AS EDU1_GUBUN,
             PF.EDU2_SCHOOL_NAME                  AS EDU2_SCHOOL_NAME,
             PF.EDU2_GRAD_STATUS                  AS EDU2_GRAD_STATUS,
             PF.EDU2_START_DATE                   AS EDU2_START_DATE,
             PF.EDU2_END_DATE                     AS EDU2_END_DATE,
+            PF.EDU2_GUBUN                        AS EDU2_GUBUN,
             PF.EDU3_SCHOOL_NAME                  AS EDU3_SCHOOL_NAME,
             PF.EDU3_GRAD_STATUS                  AS EDU3_GRAD_STATUS,
             PF.EDU3_START_DATE                   AS EDU3_START_DATE,
             PF.EDU3_END_DATE                     AS EDU3_END_DATE,
+            PF.EDU3_GUBUN                        AS EDU2_GUBUN,
             PF.MAJOR                             AS MAJOR,
             PF.DOUBLE_MAJOR                      AS DOUBLE_MAJOR,
             PF.TOTAL_GRADE                       AS TOTAL_GRADE,
@@ -133,15 +137,21 @@
                PROJECT_START_DATE,
                PROJECT_END_DATE,
                PROJECT_ROLE,
-               (SELECT CODE_VALUE FROM TB_COMMON_CODE
-                WHERE CODE_GROUP_ID = 'ROLE' AND CODE_ID = PJ.PROJECT_ROLE) AS PROJECT_ROLE_NM,
+               (SELECT CODE_VALUE
+                FROM TB_COMMON_CODE
+                WHERE CODE_GROUP_ID = 'ROLE'
+                  AND CODE_ID = PJ.PROJECT_ROLE)      AS PROJECT_ROLE_NM,
                PROJECT_CLIENT,
                ASSIGNED_TASK_LAR,
-               (SELECT CODE_VALUE FROM TB_COMMON_CODE
-                WHERE CODE_GROUP_ID = 'TASK' AND CODE_ID = PJ.ASSIGNED_TASK_LAR) AS ASSIGNED_TASK_LAR_NM,
                ASSIGNED_TASK_MID,
-               (SELECT CODE_VALUE FROM TB_COMMON_CODE
-                WHERE CODE_GROUP_ID = 'TASK' AND CODE_ID = PJ.ASSIGNED_TASK_MID) AS ASSIGNED_TASK_MID_NM
+               (SELECT CODE_VALUE
+                FROM TB_COMMON_CODE
+                WHERE CODE_GROUP_ID = 'TASK'
+                  AND CODE_ID = PJ.ASSIGNED_TASK_LAR) AS ASSIGNED_TASK_LAR_NM,
+               (SELECT CODE_VALUE
+                FROM TB_COMMON_CODE
+                WHERE CODE_GROUP_ID = 'TASK'
+                  AND CODE_ID = PJ.ASSIGNED_TASK_MID) AS ASSIGNED_TASK_MID_NM
         FROM TB_PROJECT_INFO PJ
         WHERE USER_ID = #{user_id}
     </select>
@@ -155,7 +165,7 @@
                EXPIRY_DATE
         FROM TB_USER_QUALIFICATION_INFO
         WHERE USER_ID = #{user_id}
-        AND USE_YN = 'Y'
+          AND USE_YN = 'Y'
     </select>
 
     <!-- profile + workExperienceList -->
@@ -166,7 +176,7 @@
                WORk_END_DATE
         FROM TB_WORK_EXPERIENCE_INFO
         WHERE USER_ID = #{user_id}
-        AND USE_YN = 'Y'
+          AND USE_YN = 'Y'
     </select>
 
     <!-- project + usrSkillLIst -->
@@ -182,85 +192,4 @@
           AND PJ.PROJECT_SEQ = #{project_seq}
     </select>
 
-
-
-
-
-
-
-    <select id="registUsrProfile" parameterType="kr.co.itsmart.projectdemo.vo.ProfileVO">
-        <![CDATA[
-        insert into TB_USER_PROFILE_INFO(user_id, user_pw, user_nm, user_position, user_birth, user_department,
-                                         hire_date, user_phone, user_address, create_date, modified_date, creator,
-                                         modifier)
-        VALUES ( #{user_id}
-               , #{user_pw}
-               , #{user_nm}
-               , #{user_id}
-               , #{user_position}
-               , #{user_department}
-               , #{hire_date}
-               , #{user_phone}
-               , #{user_address}
-               , sysdate()
-               , sysdate()
-               , ${creator}
-               , ${modifier})
-        ]]>
-    </select>
-    <select id="selectUsrProfileInfo" parameterType="kr.co.itsmart.projectdemo.vo.ProfileVO"
-            resultType="kr.co.itsmart.projectdemo.vo.ProfileVO">
-        <![CDATA[
-        SELECT *
-        FROM TB_PROJECT_INFO
-        ]]>
-    </select>
-    <select id="updateDetailInfo" parameterType="kr.co.itsmart.projectdemo.vo.ProfileVO">
-        <![CDATA[
-        UPDATE TB_USER_PROFILE_INFO
-        SET USER_ID = ${USER_ID}
-        WHERE USER_ID = ${USER_ID}
-        ]]>
-    </select>
-    <select id="registUsrProfileHist" parameterType="kr.co.itsmart.projectdemo.vo.ProfileVO">
-        <![CDATA[
-        insert into TB_USER_PROFILE_INFO_HIST(user_id, hist_seq, user_nm, user_position, user_birth, user_department,
-                                              hire_date, user_phone, user_address, file_seq, file_seq, edu1_school_name,
-                                              edu1_grad_status, edu1_start_date, edu1_end_date, edu2_school_name,
-                                              edu2_grad_status, edu2_start_date, edu2_end_date, edu3_school_name,
-                                              edu3_grad_status, edu3_start_date, edu3_end_date, major, double_major,
-                                              total_grade, standard_grade, create_date, creator)
-        select user_id
-             , ${hist_seq}
-             , user_nm
-             , user_position
-             , user_birth
-             , user_department
-             , hire_date
-             , user_phone
-             , user_address
-             , file_seq
-             , ${file_seq}
-             , edu1_school_name
-             , edu1_grad_status
-             , edu1_start_date
-             , edu1_end_date
-             , edu2_school_name
-             , edu2_grad_status
-             , edu2_start_date
-             , edu2_end_date
-             , edu3_school_name
-             , edu3_grad_status
-             , edu3_start_date
-             , edu3_end_date
-             , major
-             , double_major
-             , total_grade
-             , standard_grade
-             , sysdate()
-             , ${creator}
-        from TB_USER_PROFILE_INFO
-        where user_id = ${user_id}
-        ]]>
-    </select>
 </mapper>
