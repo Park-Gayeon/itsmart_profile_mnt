@@ -10,8 +10,7 @@ import java.util.List;
 @Mapper
 public interface ProfileDAO {
     /*직원(관리자 포함) : 프로필 상세화면 조회*/
-    // TODO : 나중에 저 @Param의 필요성에 대해 다시한번 test
-    ProfileVO selectDetailInfo(@Param("user_id") String user_id);
+    ProfileVO selectUsrProfileDetail(@Param("user_id") String user_id);
 
     /*직원(관리자 포함) : 프로필 상세화면 > 프로젝트 기술 조회*/
     ProjectVO selectUsrSkillList(ProjectVO tmpVO);
