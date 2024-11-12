@@ -3,13 +3,15 @@ package kr.co.itsmart.projectdemo.service;
 import kr.co.itsmart.projectdemo.dao.ProfileDAO;
 import kr.co.itsmart.projectdemo.vo.ProfileVO;
 import kr.co.itsmart.projectdemo.vo.ProjectVO;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
-@RequiredArgsConstructor
 public class ProfileServiceImpl implements ProfileService{
     private final ProfileDAO profileDAO;
+
+    public ProfileServiceImpl(ProfileDAO profileDAO) {
+        this.profileDAO = profileDAO;
+    }
 
     @Override
     public ProfileVO selectDetailInfo(String user_id){

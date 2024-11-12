@@ -3,7 +3,6 @@ package kr.co.itsmart.projectdemo.controller;
 import kr.co.itsmart.projectdemo.service.ProfileService;
 import kr.co.itsmart.projectdemo.vo.ProfileVO;
 import kr.co.itsmart.projectdemo.vo.ProjectVO;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,9 +13,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("/profile/detail")
-@RequiredArgsConstructor
 public class ProfileController {
     private final ProfileService profileService;
+
+    public ProfileController(ProfileService profileService) {
+        this.profileService = profileService;
+    }
+
     @GetMapping("/{user_id}")
     public String selectDetailInfo(@PathVariable("user_id") String user_id, Model model){
         ProfileVO profile = profileService.selectDetailInfo(user_id);
