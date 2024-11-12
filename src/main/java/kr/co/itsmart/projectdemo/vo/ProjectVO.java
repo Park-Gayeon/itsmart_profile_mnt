@@ -8,7 +8,8 @@ public class ProjectVO {
     private String project_nm; // 사업명
     private String project_start_date; // 투입시작일
     private String project_end_date; // 투입종료일
-    private String project_role; // 역할
+    private String project_role; // 역할 코드
+    private String project_role_nm; // 역할명
     private String project_client; // 발주처
     private String assigned_task_lar; // 담당업무(대분류)
     private String assigned_task_mid; // 담당업무(소분류)
@@ -75,6 +76,14 @@ public class ProjectVO {
 
     public void setProject_role(String project_role) {
         this.project_role = project_role;
+    }
+
+    public String getProject_role_nm() {
+        return project_role_nm;
+    }
+
+    public void setProject_role_nm(String project_role_nm) {
+        this.project_role_nm = project_role_nm;
     }
 
     public String getProject_client() {
@@ -172,4 +181,5 @@ public class ProjectVO {
     public void setModifier(String modifier) {
         this.modifier = modifier;
     }
+
 }

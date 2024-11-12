@@ -6,16 +6,16 @@ import kr.co.itsmart.projectdemo.vo.ProjectVO;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ProfileServiceImpl implements ProfileService{
+public class ProfileDetailServiceImpl implements ProfileDetailService {
     private final ProfileDAO profileDAO;
 
-    public ProfileServiceImpl(ProfileDAO profileDAO) {
+    public ProfileDetailServiceImpl(ProfileDAO profileDAO) {
         this.profileDAO = profileDAO;
     }
 
     @Override
-    public ProfileVO selectDetailInfo(String user_id){
-        return profileDAO.selectDetailInfo(user_id);
+    public ProfileVO selectUsrProfileDetail(String user_id){
+        return profileDAO.selectUsrProfileDetail(user_id);
     }
 
     @Override

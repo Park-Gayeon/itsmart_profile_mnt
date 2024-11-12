@@ -6,8 +6,10 @@
         <id property="user_id" column="USER_ID"/>
         <result property="user_nm" column="USER_NM"/>
         <result property="user_position" column="USER_POSITION"/>
+        <result property="user_position_nm" column="USER_POSITION_NM"/>
         <result property="user_birth" column="USER_BIRTH"/>
         <result property="user_department" column="USER_DEPARTMENT"/>
+        <result property="user_department_nm" column="USER_DEPARTMENT_NM"/>
         <result property="hire_date" column="HIRE_DATE"/>
         <result property="user_phone" column="USER_PHONE"/>
         <result property="user_address" column="USER_ADDRESS"/>
@@ -74,21 +76,23 @@
 
 
 
-    <select id="selectDetailInfo" parameterType="String" resultMap="UsrProfileInfo">
+    <select id="selectUsrProfileDetail" parameterType="String" resultMap="UsrProfileInfo">
         <![CDATA[
         SELECT
             /* 인적사항 */
             PF.USER_ID                           AS USER_ID,
             PF.USER_NM                           AS USER_NM,
+            PF.USER_POSITION                     AS USER_POSITION,
             (SELECT CODE_VALUE
              FROM TB_COMMON_CODE
              WHERE CODE_GROUP_ID = 'PSIT'
-               AND CODE_ID = PF.USER_POSITION)   AS USER_POSITION,
+               AND CODE_ID = PF.USER_POSITION)   AS USER_POSITION_NM,
             PF.USER_BIRTH                        AS USER_BIRTH,
+            PF.USER_DEPARTMENT                   AS USER_DEPARTMENT,
             (SELECT CODE_VALUE
              FROM TB_COMMON_CODE
              WHERE CODE_GROUP_ID = 'ORG'
-               AND CODE_ID = PF.USER_DEPARTMENT) AS USER_DEPARTMENT,
+               AND CODE_ID = PF.USER_DEPARTMENT) AS USER_DEPARTMENT_NM,
             PF.HIRE_DATE                         AS HIRE_DATE,
             PF.USER_PHONE                        AS USER_PHONE,
             PF.USER_ADDRESS                      AS USER_ADDRESS,
@@ -128,11 +132,14 @@
                PROJECT_NM,
                PROJECT_START_DATE,
                PROJECT_END_DATE,
+               PROJECT_ROLE,
                (SELECT CODE_VALUE FROM TB_COMMON_CODE
-                WHERE CODE_GROUP_ID = 'ROLE' AND CODE_ID = PJ.PROJECT_ROLE) AS PROJECT_ROLE,
+                WHERE CODE_GROUP_ID = 'ROLE' AND CODE_ID = PJ.PROJECT_ROLE) AS PROJECT_ROLE_NM,
                PROJECT_CLIENT,
+               ASSIGNED_TASK_LAR,
                (SELECT CODE_VALUE FROM TB_COMMON_CODE
                 WHERE CODE_GROUP_ID = 'TASK' AND CODE_ID = PJ.ASSIGNED_TASK_LAR) AS ASSIGNED_TASK_LAR_NM,
+               ASSIGNED_TASK_MID,
                (SELECT CODE_VALUE FROM TB_COMMON_CODE
                 WHERE CODE_GROUP_ID = 'TASK' AND CODE_ID = PJ.ASSIGNED_TASK_MID) AS ASSIGNED_TASK_MID_NM
         FROM TB_PROJECT_INFO PJ

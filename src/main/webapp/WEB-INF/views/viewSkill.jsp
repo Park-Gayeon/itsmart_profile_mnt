@@ -19,26 +19,34 @@
             <div class="modal-header">
                 <h5 class="modal-title">직원 기술</h5>
             </div>
-            <div class="modal-body" style="padding-top: 15px">
+            <div class="modal-body py-3">
                 <div class="container text-center">
                     <div class="col-md-auto g-0">
                     <c:forEach var="skill" items="${skill.skillList}">
-                        <div class="col-sm-2 common-box common-box input-box" style="display: block;">
-                            <input type="text" style="text-align: center" name="skill_nm" value="${skill.skill_nm}"/>
+                        <div class="col-sm-2 common-box common-box input-box">
+                            <input type="text" style="text-align: center" name="skill_nm" value="${skill.skill_nm}" readonly/>
                         </div>
                     </c:forEach>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
+                <button type="button" class="btn btn-secondary" onclick="window.close()">Close</button>
+                <%--<button type="button" class="btn btn-primary" onclick="saveSkill()">Save</button>--%>
             </div>
         </div>
     </div>
 </div>
 
-
+<script src="//code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="/js/bootstrap.bundle.js"></script>
+<script type="text/javascript">
+    function saveSkill(){
+        if(confirm("저장하시겠습니까 ?")){
+            alert("저장되었습니다. - 로직구현이전");
+            window.close();
+        }
+    }
+</script>
 </body>
 </html>
