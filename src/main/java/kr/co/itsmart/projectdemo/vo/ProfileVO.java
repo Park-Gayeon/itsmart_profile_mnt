@@ -1,5 +1,6 @@
 package kr.co.itsmart.projectdemo.vo;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public class ProfileVO {
@@ -34,10 +35,11 @@ public class ProfileVO {
     private String edu3_gubun; // 학력3_구분
     private String major; // 전공
     private String double_major; // 복수전공
-    private String total_grade; // 졸업학점
-    private String standard_grade; // 기준학점
+    private BigDecimal total_grade; // 졸업학점
+    private BigDecimal standard_grade; // 기준학점
 
     // 이력관리
+    private int hist_seq; // 이력 순번
     private int file_seq; // 파일 순번
 
     // etc
@@ -82,7 +84,6 @@ public class ProfileVO {
         return user_position;
     }
 
-
     public void setUser_position(String user_position) {
         this.user_position = user_position;
     }
@@ -118,7 +119,6 @@ public class ProfileVO {
     public void setUser_department_nm(String user_department_nm) {
         this.user_department_nm = user_department_nm;
     }
-
 
     public String getHire_date() {
         return hire_date;
@@ -169,10 +169,14 @@ public class ProfileVO {
     }
 
     public String getEdu1_school_name() {
+        if(edu1_school_name == null){
+            edu1_school_name = "";
+        }
         return edu1_school_name;
     }
 
     public void setEdu1_school_name(String edu1_school_name) {
+
         this.edu1_school_name = edu1_school_name;
     }
 
@@ -209,6 +213,8 @@ public class ProfileVO {
     }
 
     public String getEdu2_school_name() {
+        if(edu2_school_name == null)
+            edu2_school_name = "";
         return edu2_school_name;
     }
 
@@ -249,6 +255,9 @@ public class ProfileVO {
     }
 
     public String getEdu3_school_name() {
+        if(edu3_school_name == null) {
+            edu3_school_name = "";
+        }
         return edu3_school_name;
     }
 
@@ -304,20 +313,28 @@ public class ProfileVO {
         this.double_major = double_major;
     }
 
-    public String getTotal_grade() {
+    public BigDecimal getTotal_grade() {
         return total_grade;
     }
 
-    public void setTotal_grade(String total_grade) {
+    public void setTotal_grade(BigDecimal total_grade) {
         this.total_grade = total_grade;
     }
 
-    public String getStandard_grade() {
+    public BigDecimal getStandard_grade() {
         return standard_grade;
     }
 
-    public void setStandard_grade(String standard_grade) {
+    public void setStandard_grade(BigDecimal standard_grade) {
         this.standard_grade = standard_grade;
+    }
+
+    public int getHist_seq() {
+        return hist_seq;
+    }
+
+    public void setHist_seq(int hist_seq) {
+        this.hist_seq = hist_seq;
     }
 
     public int getFile_seq() {

@@ -2,6 +2,9 @@ package kr.co.itsmart.projectdemo.dao;
 
 import kr.co.itsmart.projectdemo.vo.ProfileVO;
 import kr.co.itsmart.projectdemo.vo.ProjectVO;
+import kr.co.itsmart.projectdemo.vo.QualificationVO;
+import kr.co.itsmart.projectdemo.vo.WorkExperienceVO;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -22,9 +25,22 @@ public interface ProfileDAO {
     List<ProfileVO> selectUsrProfileInfo(ProfileVO profileVO);
 
     /*직원 : 프로필 수정*/
-    void updateDetailInfo(ProfileVO profileVO);
+    boolean updateUsrProfileInfo(ProfileVO profileVO);
+    void updateUsrProjectInfo(ProjectVO projectVO);
+    void updateUsrQualificationInfo(QualificationVO qualificationVO);
+    void updateUsrWorkInfo(WorkExperienceVO workExperienceVO);
 
     /*이력 등록*/
-    void registUsrProfileHist(ProfileVO profileVO);
+    boolean insertUsrProfileInfoHist(ProfileVO profileVO);
+    void insertUsrProjectInfoHist(ProjectVO projectVO);
+    void insertUsrQualificationInfoHist(QualificationVO qualificationVO);
+    void insertUsrWorkInfoHist(WorkExperienceVO workExperienceVO);
 
+    /* TB 데이터 삭제 */
+    @Delete("DELETE FROM TB_PROJECT_INFO WHERE USER_ID = #{user_id}")
+    void deleteUsrProjectInfo(String userId);
+    @Delete("DELETE FROM TB_USER_QUALIFICATION_INFO WHERE USER_ID = #{user_id}")
+    void deleteUsrQualificationInfo(String userId);
+    @Delete("DELETE FROM TB_WORK_EXPERIENCE_INFO WHERE USER_ID = #{user_id}")
+    void deleteUsrWorkInfo(String userId);
 }

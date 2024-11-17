@@ -192,4 +192,191 @@
           AND PJ.PROJECT_SEQ = #{project_seq}
     </select>
 
+    <!--updateUsrProfileInfo : 직원 프로필 정보 테이블 UPDATE-->
+    <update id="updateUsrProfileInfo" parameterType="profileVO">
+        UPDATE TB_USER_PROFILE_INFO
+        SET USER_POSITION    = #{user_position},
+            USER_BIRTH       = #{user_birth},
+            USER_DEPARTMENT  = #{user_department},
+            USER_PHONE       = #{user_phone},
+            USER_ADDRESS     = #{user_address},
+            FILE_SEQ         = #{file_seq},
+            EDU1_SCHOOL_NAME = #{edu1_school_name},
+            EDU1_GRAD_STATUS = #{edu1_grad_status},
+            EDU1_START_DATE  = #{edu1_start_date},
+            EDU1_END_DATE    = #{edu1_end_date},
+            EDU1_GUBUN       = #{edu1_gubun},
+            EDU2_SCHOOL_NAME = #{edu2_school_name},
+            EDU2_GRAD_STATUS = #{edu2_grad_status},
+            EDU2_START_DATE  = #{edu2_start_date},
+            EDU2_END_DATE    = #{edu2_end_date},
+            EDU2_GUBUN       = #{edu2_gubun},
+            EDU3_SCHOOL_NAME = #{edu3_school_name},
+            EDU3_GRAD_STATUS = #{edu3_grad_status},
+            EDU3_START_DATE  = #{edu3_start_date},
+            EDU3_END_DATE    = #{edu3_end_date},
+            EDU3_GUBUN       = #{edu3_gubun},
+            MAJOR            = #{major},
+            DOUBLE_MAJOR     = #{double_major},
+            TOTAL_GRADE      = #{total_grade},
+            STANDARD_GRADE   = #{standard_grade},
+            MODIFIED_DATE    = sysdate(),
+            MODIFIER         = #{user_id}
+        WHERE USER_ID = #{user_id}
+          AND USE_YN = 'Y'
+    </update>
+
+    <!-- insertUsrProfileInfoHist : 직원 프로필 정보 이력 테이블 INSERT -->
+    <insert id="insertUsrProfileInfoHist" parameterType="profileVO">
+        INSERT INTO TB_USER_PROFILE_INFO_HIST(USER_ID, HIST_SEQ, USER_NM, USER_POSITION, USER_BIRTH, USER_DEPARTMENT,
+                                              HIRE_DATE, USER_PHONE, USER_ADDRESS, FILE_SEQ, EDU1_SCHOOL_NAME,
+                                              EDU1_GRAD_STATUS, EDU1_START_DATE, EDU1_END_DATE, EDU1_GUBUN,
+                                              EDU2_SCHOOL_NAME, EDU2_GRAD_STATUS, EDU2_START_DATE, EDU2_END_DATE,
+                                              EDU2_GUBUN, EDU3_SCHOOL_NAME, EDU3_GRAD_STATUS, EDU3_START_DATE,
+                                              EDU3_END_DATE, EDU3_GUBUN, MAJOR, DOUBLE_MAJOR, TOTAL_GRADE,
+                                              STANDARD_GRADE, CREATE_DATE, CREATOR)
+        SELECT USER_ID,
+               #{hist_seq},
+               USER_NM,
+               USER_POSITION,
+               USER_BIRTH,
+               USER_DEPARTMENT,
+               HIRE_DATE,
+               USER_PHONE,
+               USER_ADDRESS,
+               FILE_SEQ,
+               EDU1_SCHOOL_NAME,
+               EDU1_GRAD_STATUS,
+               EDU1_START_DATE,
+               EDU1_END_DATE,
+               EDU1_GUBUN,
+               EDU2_SCHOOL_NAME,
+               EDU2_GRAD_STATUS,
+               EDU2_START_DATE,
+               EDU2_END_DATE,
+               EDU2_GUBUN,
+               EDU3_SCHOOL_NAME,
+               EDU3_GRAD_STATUS,
+               EDU3_START_DATE,
+               EDU3_END_DATE,
+               EDU3_GUBUN,
+               MAJOR,
+               DOUBLE_MAJOR,
+               TOTAL_GRADE,
+               STANDARD_GRADE,
+               sysdate(),
+               #{user_id}
+        FROM TB_USER_PROFILE_INFO
+        WHERE USER_ID = #{user_id}
+          AND USE_YN = 'Y'
+    </insert>
+
+    <!-- updateUsrProjectInfo : 사업 경력 INSERT -->
+    <insert id="updateUsrProjectInfo" parameterType="projectVO">
+        INSERT INTO TB_PROJECT_INFO(USER_ID, PROJECT_SEQ, PROJECT_NM, PROJECT_START_DATE, PROJECT_END_DATE,
+                                    PROJECT_ROLE, PROJECT_CLIENT, ASSIGNED_TASK_LAR, ASSIGNED_TASK_MID,
+                                    CREATE_DATE, MODIFIED_DATE, CREATOR, MODIFIER)
+        VALUES (#{user_id},
+                #{project_seq},
+                #{project_nm},
+                #{project_start_date},
+                #{project_end_date},
+                #{project_role},
+                #{project_client},
+                #{assigned_task_lar},
+                #{assigned_task_mid},
+                sysdate(),
+                sysdate(),
+                #{user_id},
+                #{user_id}
+                )
+    </insert>
+
+    <!-- insertUsrProjectInfoHist : 사업 경력 이력 INSERT -->
+    <insert id="insertUsrProjectInfoHist" parameterType="projectVO">
+        INSERT INTO TB_PROJECT_INFO_HIST(USER_ID, PROJECT_SEQ, HIST_SEQ, PROJECT_NM, PROJECT_START_DATE,
+                                         PROJECT_END_DATE, PROJECT_ROLE, PROJECT_CLIENT, ASSIGNED_TASK_LAR,
+                                         ASSIGNED_TASK_MID, CREATE_DATE, CREATOR)
+        SELECT user_id,
+               project_seq,
+               #{hist_seq},
+               project_nm,
+               project_start_date,
+               project_end_date,
+               project_role,
+               project_client,
+               assigned_task_lar,
+               assigned_task_mid,
+               sysdate(),
+               #{user_id}
+        FROM TB_PROJECT_INFO
+        WHERE project_seq = #{project_seq}
+    </insert>
+
+    <!-- updateUsrQualificationInfo : 자격증 INSERT -->
+    <insert id="updateUsrQualificationInfo" parameterType="qualificationVO">
+        INSERT INTO TB_USER_QUALIFICATION_INFO(USER_ID, QUALIFICATION_SEQ, QUALIFICATION_NM, ISSUER, ACQUISITION_DATE,
+                                               EXPIRY_DATE, CREATED_DATE, MODIFIED_DATE, CREATOR, MODIFIER)
+        VALUES (#{user_id},
+                #{qualification_seq},
+                #{qualification_nm},
+                #{issuer},
+                #{acquisition_date},
+                #{expiry_date},
+                SYSDATE(),
+                SYSDATE(),
+                #{user_id},
+                #{user_id}
+               )
+    </insert>
+
+    <!-- insertUsrQualificationInfoHist : 자격증 이력 INSERT -->
+    <insert id="insertUsrQualificationInfoHist" parameterType="qualificationVO">
+        INSERT INTO TB_USER_QUALIFICATION_INFO_HIST(USER_ID, QUALIFICATION_SEQ, HIST_SEQ, QUALIFICATION_NM, ISSUER,
+                                                    ACQUISITION_DATE, EXPIRY_DATE, CREATED_DATE, CREATOR)
+        SELECT USER_ID,
+               QUALIFICATION_SEQ,
+               #{hist_seq},
+               QUALIFICATION_NM,
+               ISSUER,
+               ACQUISITION_DATE,
+               EXPIRY_DATE,
+               SYSDATE(),
+               #{user_id}
+        FROM TB_USER_QUALIFICATION_INFO
+        WHERE QUALIFICATION_SEQ = #{qualification_seq}
+    </insert>
+
+    <!-- updateUsrWorkInfo : 근무 경력 INSERT -->
+    <insert id="updateUsrWorkInfo" parameterType="workExperienceVO">
+        INSERT INTO TB_WORK_EXPERIENCE_INFO(USER_ID, WORK_SEQ, WORK_PLACE, WORK_START_DATE, WORK_END_DATE, CREATED_DATE,
+                                            MODIFIED_DATE, CREATOR, MODIFIER)
+        VALUES (#{user_id},
+                #{work_seq},
+                #{work_place},
+                #{work_start_date},
+                #{work_end_date},
+                sysdate(),
+                sysdate(),
+                #{user_id},
+                #{user_id}
+                )
+    </insert>
+
+    <!-- insertUsrWorkInfoHist : 근무 경력 이력 INSERT -->
+    <insert id="insertUsrWorkInfoHist" parameterType="workExperienceVO">
+        INSERT INTO TB_WORK_EXPERIENCE_INFO_HIST(user_id, work_seq, hist_seq, work_place, work_start_date,
+                                                 work_end_date, created_date, creator)
+        SELECT USER_ID,
+               WORK_SEQ,
+               #{hist_seq},
+               WORK_PLACE,
+               WORK_START_DATE,
+               WORK_END_DATE,
+               SYSDATE(),
+               #{user_id}
+        FROM TB_WORK_EXPERIENCE_INFO
+        WHERE WORK_SEQ = #{work_seq}
+    </insert>
+
 </mapper>
