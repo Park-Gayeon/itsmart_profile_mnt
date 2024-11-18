@@ -7,6 +7,7 @@ import kr.co.itsmart.projectdemo.vo.WorkExperienceVO;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
@@ -43,4 +44,19 @@ public interface ProfileDAO {
     void deleteUsrQualificationInfo(String userId);
     @Delete("DELETE FROM TB_WORK_EXPERIENCE_INFO WHERE USER_ID = #{user_id}")
     void deleteUsrWorkInfo(String userId);
+
+    /* TB hist_seq 생성 */
+    @Select("SELECT COALESCE(MAX(HIST_SEQ) + 1, 0) AS HIST_SEQ FROM TB_USER_PROFILE_INFO_HIST WHERE USER_ID = #{user_id}")
+    int selectPfMaxSeq(String userId);
+    @Select("SELECT COALESCE(MAX(HIST_SEQ) + 1, 1) AS HIST_SEQ FROM TB_PROJECT_INFO_HIST WHERE USER_ID = #{user_id}")
+    int selectPjMaxSeq(String userId);
+    @Select("SELECT COALESCE(MAX(HIST_SEQ) + 1, 1) AS HIST_SEQ FROM TB_USER_QUALIFICATION_INFO_HIST WHERE USER_ID = #{user_id}")
+    int selectQlMaxSeq(String userId);
+    @Select("SELECT COALESCE(MAX(HIST_SEQ) + 1, 1) AS HIST_SEQ FROM TB_WORK_EXPERIENCE_INFO_HIST WHERE USER_ID = #{user_id}")
+    int selectWkMaxSeq(String userId);
+
+    /* project max seq 조회 */
+    @Select("SELECT COALESCE(MAX(PROJECT_SEQ), 1) AS PROJECT_SEQ FROM TB_PROJECT_INFO WHERE USER_ID = #{user_id}")
+    int getProjectMaxSeq(String userId);
+
 }

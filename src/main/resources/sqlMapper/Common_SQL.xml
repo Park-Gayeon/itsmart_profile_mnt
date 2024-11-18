@@ -2,13 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.itsmart.projectdemo.dao.CommonDAO">
 
-    <!-- Max(hist_seq) -->
-    <select id="maxHistSeq" parameterType="String" resultType="int">
-        SELECT COALESCE(MAX(HIST_SEQ) + 1, 0) AS HIST_SEQ
-        FROM TB_USER_PROFILE_INFO_HIST
-        WHERE USER_ID = #{user_id}
-    </select>
-
     <!-- code_group_id로 list 조회 -->
     <select id="selectCodeList" parameterType="String" resultType="CommonVO">
         SELECT code_id, code_value

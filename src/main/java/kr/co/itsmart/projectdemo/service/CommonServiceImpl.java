@@ -15,11 +15,6 @@ public class CommonServiceImpl implements CommonService{
     }
 
     @Override
-    public int maxHistSeq(String user_id){
-        return commonDAO.maxHistSeq(user_id);
-    }
-
-    @Override
     public List<CommonVO> selectCodeList(String code_group_id){
         return commonDAO.selectCodeList(code_group_id);
     };
