@@ -1,3 +1,5 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -18,6 +20,7 @@
             <div class="modal-body py-3">
                 <div class="container text-center">
                     <form>
+                        <input type="hidden" id="project_seq" name="project_seq" value="${maxSeq}"/>
                         <label for="project_nm">사업명:</label>
                         <input type="text" id="project_nm" name="project_nm"><br><br>
 
@@ -108,6 +111,7 @@
 <script>
     // 부모 창으로 데이터를 전달 하고 팝업창을 닫는다
     function sendDataToParent() {
+        const project_seq = document.getElementById("project_seq").value;
         const project_nm = document.getElementById("project_nm").value.trim();
         const project_start_date = document.getElementById("project_start_date").value;
         const project_end_date = document.getElementById("project_end_date").value;
@@ -127,6 +131,7 @@
         }
 
         const data = {
+            project_seq: project_seq,
             project_nm: project_nm,
             project_start_date: project_start_date,
             project_end_date: project_end_date,
@@ -136,7 +141,9 @@
             assigned_task_lar: assigned_task_lar,
             assigned_task_lar_nm: assigned_task_lar_nm,
             assigned_task_mid: assigned_task_mid,
-            assigned_task_mid_nm: assigned_task_mid_nm
+            assigned_task_mid_nm: assigned_task_mid_nm,
+            flag: "new",
+            addCnt: 1
         };
 
         window.opener.addProjectRow(data);
@@ -150,6 +157,9 @@
         let chk = true;
         for(let i = 0; i < els.length; i++){
             let elVal = els[i].value;
+            if(els[i].name == 'project_seq'){
+                continue;
+            }
             let elNm = els[i].previousElementSibling.innerText;
             if(elVal == ''){
                 chk = false;
