@@ -99,34 +99,45 @@
                 <div class="common-box row-box row mb-5 g-0">
                     <!-- 학력 -->
                     <div class="col-md g-0">
-                        <!-- 첫번째 row -->
-                        <div class="row mb-2 g-0">
-                            <div class="col-sm-1 common-box input-box pt-4">
-                                <label for="eduGubun">학교구분</label>
-                                <input type="text" name="eduGubun" id="eduGubun" value="${profile.eduGubun}" readonly/>
+                        <c:forEach var="i" begin="1" end="3">
+                            <c:set var="eduKey" value="edu${i}_school_name"/>
+                            <c:if test="${profile[eduKey] ne ''}">
+                            <!-- 첫번째 row -->
+                            <div class="row mb-2 g-0">
+                                <div class="col-sm-1 common-box input-box pt-4">
+                                    <c:set var="gubunKey" value="edu${i}_gubun"/>
+                                    <label>학교구분</label>
+                                    <input type="text" name="edu${i}_gubun"
+                                           value="${profile[gubunKey]}" readonly/>
+                                </div>
+                                <div class="col-sm-3 common-box input-box pt-4 me-2">
+                                    <label>학교명</label>
+                                    <input type="text" name="edu${i}_school_name"
+                                           value="${profile[eduKey]}" readonly/>
+                                </div>
+                                <div class="col-sm-2 common-box input-box pt-4">
+                                    <c:set var="startDateKey" value="edu${i}_start_date"/>
+                                    <label>입학년월</label>
+                                    <input type="text" name="edu${i}_start_date"
+                                           value="${profile[startDateKey]}" readonly/>
+                                </div>
+                                <div class="col-sm-2 common-box input-box pt-4 me-2">
+                                    <c:set var="endDateKey" value="edu${i}_end_date"/>
+                                    <label>졸업년월</label>
+                                    <input type="text" name="edu${i}_end_date"
+                                           value="${profile[endDateKey]}" readonly/>
+                                </div>
+                                <div class="col-sm-1 common-box input-box pt-4 me-2">
+                                    <c:set var="statusKey" value="edu${i}_grad_status"/>
+                                    <label>졸업상태</label>
+                                    <input type="text" name="edu${i}_grad_status"
+                                           value="${profile[statusKey]}" readonly/>
+                                </div>
                             </div>
-                            <div class="col-sm-3 common-box input-box pt-4 me-2">
-                                <label for="edu1_school_name">학교명</label>
-                                <input type="text" name="edu1_school_name" id="edu1_school_name"
-                                       value="${profile.edu1_school_name}" readonly/>
-                            </div>
-                            <div class="col-sm-2 common-box input-box pt-4">
-                                <label for="edu1_start_date">입학년월</label>
-                                <input type="text" name="edu1_start_date" id="edu1_start_date"
-                                       value="${profile.edu1_start_date}" readonly/>
-                            </div>
-                            <div class="col-sm-2 common-box input-box pt-4 me-2">
-                                <label for="edu1_end_date">졸업년월</label>
-                                <input type="text" name="edu1_end_date" id="edu1_end_date"
-                                       value="${profile.edu1_end_date}" readonly/>
-                            </div>
-                            <div class="col-sm-1 common-box input-box pt-4 me-2">
-                                <label for="edu1_grad_status">졸업상태</label>
-                                <input type="text" id="edu1_grad_status" value="${profile.edu1_grad_status}" readonly/>
-                            </div>
-                        </div>
+                            </c:if>
+                        </c:forEach>
                         <!-- 두번째 row -->
-                        <div class="row mb-2 g-0">
+                        <div class="row mb-2 g-0" style="<c:if test="${profile.major eq ''}">display: none;</c:if>">
                             <div class="col-sm-2 common-box input-box pt-4 me-2">
                                 <label for="major">전공명</label>
                                 <input type="text" name="major" id="major" value="${profile.major}" readonly/>
@@ -401,7 +412,7 @@
     function goModify() {
         let frm = $("#frm");
         let user_id = $('input[name=user_id]').val();
-        frm.attr('action', '/profile/modify/' + user_id);
+        frm.attr('action', '/profile/modify/info/' + user_id);
         frm.attr('method', 'post');
         frm.submit();
     }
