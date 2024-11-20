@@ -57,4 +57,12 @@ public interface ProfileDAO {
     @Select("SELECT COALESCE(MAX(PROJECT_SEQ), 0) AS PROJECT_SEQ FROM TB_PROJECT_INFO WHERE USER_ID = #{user_id}")
     int getProjectMaxSeq(String userId);
 
+    /* 사업경력 totalMonth 조회 */
+    @Select("SELECT SUM(TIMESTAMPDIFF(MONTH, PROJECT_START_DATE, PROJECT_END_DATE)) FROM TB_PROJECT_INFO WHERE USER_ID = #{user_id} AND USE_YN ='Y'")
+    int calcPjTotalMonth(String user_id);
+
+    /* 근무경력 totalMonth 조회 */
+    @Select("SELECT SUM(TIMESTAMPDIFF(MONTH, WORK_START_DATE, WORK_END_DATE)) FROM TB_WORK_EXPERIENCE_INFO WHERE USER_ID = #{user_id}")
+    int calcWkTotalMonth(String user_id);
+
 }

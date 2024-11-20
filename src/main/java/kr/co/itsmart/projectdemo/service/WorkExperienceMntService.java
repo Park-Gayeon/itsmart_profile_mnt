@@ -8,4 +8,7 @@ public interface WorkExperienceMntService {
 
     /* 프로필 수정(근무경력) */
     void updateUsrWorkExperience(ProfileVO profileVO);
+
+    /* 근무경력 계산 */
+    int calcTotalMonth(String user_id);
 }

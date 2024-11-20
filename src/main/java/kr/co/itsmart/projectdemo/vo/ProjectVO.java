@@ -20,8 +20,8 @@ public class ProjectVO {
     // 이력관리
     private int hist_seq; // 이력 순번
 
-    // etc (검색 조건 변수 추가 예정)
-    private String flag; // 구분값
+    // etc
+    private int totalMonth; // 총 사업 경력
 
     private List<UserSkillVO> skillList;
 
@@ -146,15 +146,12 @@ public class ProjectVO {
         this.hist_seq = hist_seq;
     }
 
-    public String getFlag() {
-        if(flag == null){
-            flag = "";
-        }
-        return flag;
+    public int getTotalMonth() {
+        return totalMonth;
     }
 
-    public void setFlag(String flag) {
-        this.flag = flag;
+    public void setTotalMonth(int totalMonth) {
+        this.totalMonth = totalMonth;
     }
 
     public List<UserSkillVO> getSkillList() {
