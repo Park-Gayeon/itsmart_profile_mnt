@@ -502,7 +502,7 @@
                                                          name="projectList[${pjStatus.index}].project_end_date"
                                                          value="${project_ing.project_end_date}"/></td>
                                             <td>
-                                                <select class="form-select" style="width: auto"
+                                                <select class="form-select" style="width: auto" onchange="selectTaskLar(this)"
                                                         name="projectList[${pjStatus.index}].assigned_task_lar">
                                                     <c:forEach var="taskLarList" items="${taskLarList}">
                                                         <option value="${taskLarList.code_id}"
@@ -511,9 +511,9 @@
                                                 </select>
                                                 <select class="form-select" style="width: auto"
                                                         name="projectList[${pjStatus.index}].assigned_task_mid">
-                                                    <c:forEach var="taskLarList" items="${taskLarList}">
-                                                        <option value="${taskLarList.code_id}"
-                                                                <c:if test="${taskLarList.code_id eq project_ing.assigned_task_mid}">selected</c:if>>${taskLarList.code_value}</option>
+                                                    <c:forEach var="taskMidList" items="${taskMidList}">
+                                                        <option value="${taskMidList.code_id}"
+                                                                <c:if test="${taskMidList.code_id eq project_ing.assigned_task_mid}">selected</c:if>>${taskMidList.code_value}</option>
                                                     </c:forEach>
                                                 </select>
                                             </td>
@@ -599,9 +599,9 @@
                                                 </select>
                                                 <select class="form-select" style="width: auto"
                                                         name="projectList[${pjStatus.index}].assigned_task_mid">
-                                                    <c:forEach var="taskLarList" items="${taskLarList}">
-                                                        <option value="${taskLarList.code_id}"
-                                                                <c:if test="${taskLarList.code_id eq project_hist.assigned_task_mid}">selected</c:if>>${taskLarList.code_value}</option>
+                                                    <c:forEach var="taskMidList" items="${taskMidList}">
+                                                        <option value="${taskMidList.code_id}"
+                                                                <c:if test="${taskMidList.code_id eq project_hist.assigned_task_mid}">selected</c:if>>${taskMidList.code_value}</option>
                                                     </c:forEach>
                                                 </select>
                                             </td>
@@ -907,7 +907,6 @@
         window.open(url, "registerNewProfile", properties)
     }
 
-    // 선택된 save 버튼 구분값을 매개변수로 받는다
     function goSave(frm) {
         let frmId = $(frm).data("name");
         let url;
@@ -944,7 +943,7 @@
                 error: function () {
                     alert("서버 오류가 발생했습니다. 다시 시도해 주세요.")
                 }
-            })
+            });
         }
     }
 
@@ -960,6 +959,32 @@
             let updateEl = $(ob).closest(".add").find(".useYn");
             updateEl.val('N');
         }
+    }
+
+    function selectTaskLar(ob){
+        const parentId = $(ob).val();
+        const url = "/profile/project/modify/select/task";
+        const $subCategory = $(ob).next();
+
+        // 중분류를 초기화 한다.
+        $subCategory.empty().append('<option value="">-- 중분류 선택 --</option>');
+
+        $.ajax({
+            url: url,
+            type: "GET",
+            data: {code_id : parentId},
+            dataType: 'json',
+            success: function (response) {
+                response.forEach( data => {
+                    $subCategory.append('<option value="' + data.code_id + '">' + data.code_value + '</option>');
+                });
+            },
+            error: function () {
+                alert("서버 오류가 발생했습니다. 다시 시도해 주세요.")
+            }
+        });
+
+
     }
 
 

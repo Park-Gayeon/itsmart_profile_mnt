@@ -13,7 +13,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/profile/modify")
@@ -38,11 +40,20 @@ private static final Logger LOGGER = LoggerFactory.getLogger(ProjectMntControlle
 
     @PostMapping("/info/{user_id}")
     public String modifyUsrProfile(@ModelAttribute ProfileVO profile, Model model) {
-        List<CommonVO> orgList = commonService.selectCodeList("ORG");
-        List<CommonVO> psitList = commonService.selectCodeList("PSIT");
-        List<CommonVO> roleList = commonService.selectCodeList("ROLE");
-        List<CommonVO> taskLarList = commonService.selectCodeList("TASK");
-        List<CommonVO> taskMidLIst = commonService.selectCodeList("TASK");
+        Map<String, String> params = new HashMap<>();
+        params.put("code_group_id", "TASK");
+        params.put("task_type", "lar");
+        List<CommonVO> taskLarList = commonService.selectCodeList(params);
+
+        params.clear();
+        params.put("code_group_id", "TASK");
+        List<CommonVO> taskMidList = commonService.selectCodeList(params);
+        params.put("code_group_id", "ORG");
+        List<CommonVO> orgList = commonService.selectCodeList(params);
+        params.put("code_group_id", "PSIT");
+        List<CommonVO> psitList = commonService.selectCodeList(params);
+        params.put("code_group_id", "ROLE");
+        List<CommonVO> roleList = commonService.selectCodeList(params);
 
         int pj_totalMonth = projectMntService.calcTotalMonth(profile.getUser_id());
         int wk_totalMonth = workExperienceMntService.calcTotalMonth(profile.getUser_id());
@@ -52,7 +63,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(ProjectMntControlle
         model.addAttribute("psitList", psitList);
         model.addAttribute("roleList", roleList);
         model.addAttribute("taskLarList", taskLarList);
-        model.addAttribute("taskMidLIst", taskMidLIst);
+        model.addAttribute("taskMidList", taskMidList);
         model.addAttribute("pj_totalMonth", pj_totalMonth);
         model.addAttribute("wk_totalMonth", wk_totalMonth);
 

@@ -1,6 +1,8 @@
 package kr.co.itsmart.projectdemo.controller;
 
+import kr.co.itsmart.projectdemo.service.CommonService;
 import kr.co.itsmart.projectdemo.service.ProjectMntService;
+import kr.co.itsmart.projectdemo.vo.CommonVO;
 import kr.co.itsmart.projectdemo.vo.ProfileVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,14 +10,18 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/profile/project/modify")
 public class ProjectMntController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ProjectMntController.class);
     private final ProjectMntService projectMntService;
+    private final CommonService commonService;
 
-    public ProjectMntController(ProjectMntService projectMntService) {
+    public ProjectMntController(ProjectMntService projectMntService, CommonService commonService) {
         this.projectMntService = projectMntService;
+        this.commonService = commonService;
     }
 
     @GetMapping("/add")
@@ -29,9 +35,6 @@ public class ProjectMntController {
     @PostMapping("/{user_id}")
     @ResponseBody
     public String updateProjectInfo(@PathVariable("user_id")String user_id, @ModelAttribute ProfileVO profile){
-        for(int i = 0; i<profile.getProjectList().size(); i++){
-            LOGGER.info("사업명 project_nm={}", profile.getProjectList().get(i).getProject_nm());
-        }
         try {
             // hist_seq
             int hist_seq = projectMntService.selectMaxSeq(user_id);
@@ -45,5 +48,14 @@ public class ProjectMntController {
             return "FAIL";
         }
         return "SUCCESS";
+    }
+
+    @GetMapping("/select/task")
+    @ResponseBody
+    public List<CommonVO> getTaskMidCode(@RequestParam("code_id")String code_id){
+        LOGGER.info("code_id={}", code_id);
+        List<CommonVO> results =commonService.getTaskMidCode(code_id);
+        LOGGER.debug("Returned list: {}", results);
+        return results;
     }
 }
