@@ -15,12 +15,13 @@ public class ProjectVO {
     private String assigned_task_mid; // 담당업무(소분류)
     private String assigned_task_lar_nm; // 담당업무(대분류)
     private String assigned_task_mid_nm; // 담당업무(소분류)
-    private String user_yn; // 사용여부
+    private String use_yn; // 사용여부
 
     // 이력관리
     private int hist_seq; // 이력 순번
 
     // etc (검색 조건 변수 추가 예정)
+    private String flag; // 구분값
 
     private List<UserSkillVO> skillList;
 
@@ -126,12 +127,15 @@ public class ProjectVO {
         this.assigned_task_mid_nm = assigned_task_mid_nm;
     }
 
-    public String getUser_yn() {
-        return user_yn;
+    public String getUse_yn() {
+        if(use_yn == null){
+            use_yn = "Y";
+        }
+        return use_yn;
     }
 
-    public void setUser_yn(String user_yn) {
-        this.user_yn = user_yn;
+    public void setUse_yn(String use_yn) {
+        this.use_yn = use_yn;
     }
 
     public int getHist_seq() {
@@ -140,6 +144,17 @@ public class ProjectVO {
 
     public void setHist_seq(int hist_seq) {
         this.hist_seq = hist_seq;
+    }
+
+    public String getFlag() {
+        if(flag == null){
+            flag = "";
+        }
+        return flag;
+    }
+
+    public void setFlag(String flag) {
+        this.flag = flag;
     }
 
     public List<UserSkillVO> getSkillList() {

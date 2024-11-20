@@ -31,16 +31,13 @@ public class ProjectMntServiceImpl implements ProjectMntService{
             LOGGER.info("사업 정보가 비어있습니다. 처리할 데이터가 없습니다: user_id={}", user_id);
             return;
         }
-        // DELETE TB
-        LOGGER.info("사업 정보를 삭제합니다: user_id={}", user_id);
-        profileDAO.deleteUsrProjectInfo(user_id);
-        
+
         for(ProjectVO project : profile.getProjectList()){
             project.setUser_id(user_id);
             project.setHist_seq(hist_seq);
 
-            // UPDATE(=INSERT)
-            LOGGER.info("사업 정보를 입력합니다: user_id={}, project_nm={}", user_id, project.getProject_nm());
+            // UPSERT
+            LOGGER.info("사업 정보를 입력 및 수정합니다: user_id={}, project_seq={}, project_nm={}", user_id, project.getProject_seq(), project.getProject_nm());
             profileDAO.updateUsrProjectInfo(project);
 
             // CREATE HIST

@@ -20,6 +20,7 @@ mybatis:
   type-aliases-package: kr.co.itsmart.projectdemo.vo
   configuration:
     map-underscore-to-camel-case: false
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
 debug: false
 management.endpoints.web.exposure.exclude: "*"
