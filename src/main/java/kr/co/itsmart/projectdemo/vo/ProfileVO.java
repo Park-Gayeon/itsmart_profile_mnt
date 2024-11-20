@@ -17,7 +17,7 @@ public class ProfileVO {
     private String user_address; // 주소
     private String user_role; // 권한
     private String use_yn; // 사용여부
-    private int file_id; // 파일 아이디
+    private int file_seq; // 파일 순번
     private String edu1_school_name; // 학력1_학교명
     private String edu1_grad_status; // 학력1_졸업상태
     private String edu1_start_date; // 학력1_입학년월
@@ -40,7 +40,6 @@ public class ProfileVO {
 
     // 이력관리
     private int hist_seq; // 이력 순번
-    private int file_seq; // 파일 순번
 
     // etc
     private String eduGubun; // 학교구분
@@ -158,14 +157,6 @@ public class ProfileVO {
 
     public void setUse_yn(String use_yn) {
         this.use_yn = use_yn;
-    }
-
-    public int getFile_id() {
-        return file_id;
-    }
-
-    public void setFile_id(int file_id) {
-        this.file_id = file_id;
     }
 
     public String getEdu1_school_name() {

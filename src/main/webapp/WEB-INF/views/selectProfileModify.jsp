@@ -490,7 +490,7 @@
                                             <input type="hidden"
                                                    name="projectList[${pjStatus.index}].project_seq"
                                                    value="${project_ing.project_seq}"/>
-                                            <input type="hidden" class="useYn" name="projectList[${pjStatus.index}].use_yn"/>
+                                            <input type="hidden" class="useYn" name="projectList[${pjStatus.index}].use_yn" value="${project_ing.use_yn}"/>
                                             <td><input type="text" name="projectList[${pjStatus.index}].project_client"
                                                        value="${project_ing.project_client}"/></td>
                                             <td><input type="text" name="projectList[${pjStatus.index}].project_nm"
@@ -577,7 +577,7 @@
                                             <input type="hidden"
                                                    name="projectList[${pjStatus.index}].project_seq"
                                                    value="${project_hist.project_seq}"/>
-                                            <input type="hidden" class="useYn" name="projectList[${pjStatus.index}].use_yn"/>
+                                            <input type="hidden" class="useYn" name="projectList[${pjStatus.index}].use_yn" value="${project_hist.use_yn}"/>
                                             <td><input type="text" name="projectList[${pjStatus.index}].project_client"
                                                        value="${project_hist.project_client}"/></td>
                                             <td><input type="text" name="projectList[${pjStatus.index}].project_nm"
@@ -837,7 +837,6 @@
         newRow = `<tr class="add">
                     <td>+</td>
                     <input type="hidden" name="projectList[].project_seq" value="` + project_seq + `"/>
-                    <input type="hidden" class="useYn" name="projectList[].use_yn"/>
                     <td><input type="text" name="projectList[].project_client"
                                value="` + data.project_client + `" readonly/></td>
                     <td><input type="text" name="projectList[].project_nm"

@@ -154,6 +154,7 @@
                   AND CODE_ID = PJ.ASSIGNED_TASK_MID) AS ASSIGNED_TASK_MID_NM
         FROM TB_PROJECT_INFO PJ
         WHERE USER_ID = #{user_id}
+          AND USE_YN = 'Y'
     </select>
 
     <!-- profile + qualificationList -->
@@ -173,7 +174,7 @@
         SELECT WORK_SEQ,
                WORK_PLACE,
                WORK_START_DATE,
-               WORk_END_DATE
+               WORK_END_DATE
         FROM TB_WORK_EXPERIENCE_INFO
         WHERE USER_ID = #{user_id}
           AND USE_YN = 'Y'
@@ -220,7 +221,7 @@
             DOUBLE_MAJOR     = #{double_major},
             TOTAL_GRADE      = #{total_grade},
             STANDARD_GRADE   = #{standard_grade},
-            MODIFIED_DATE    = sysdate(),
+            MODIFIED_DATE    = now(),
             MODIFIER         = #{user_id}
         WHERE USER_ID = #{user_id}
           AND USE_YN = 'Y'
@@ -264,14 +265,14 @@
                DOUBLE_MAJOR,
                TOTAL_GRADE,
                STANDARD_GRADE,
-               sysdate(),
+               now(),
                #{user_id}
         FROM TB_USER_PROFILE_INFO
         WHERE USER_ID = #{user_id}
           AND USE_YN = 'Y'
     </insert>
 
-    <!-- updateUsrProjectInfo : 사업 경력 INSERT -->
+    <!-- updateUsrProjectInfo : 사업 경력 UPSERT -->
     <insert id="updateUsrProjectInfo" parameterType="projectVO">
         INSERT INTO TB_PROJECT_INFO(USER_ID, PROJECT_SEQ, PROJECT_NM, PROJECT_START_DATE, PROJECT_END_DATE,
                                     PROJECT_ROLE, PROJECT_CLIENT, ASSIGNED_TASK_LAR, ASSIGNED_TASK_MID,
@@ -285,11 +286,20 @@
                 #{project_client},
                 #{assigned_task_lar},
                 #{assigned_task_mid},
-                sysdate(),
-                sysdate(),
+                now(),
+                now(),
                 #{user_id},
-                #{user_id}
-                )
+                #{user_id})
+        ON DUPLICATE KEY UPDATE PROJECT_NM         = #{project_nm},
+                                PROJECT_START_DATE = #{project_start_date},
+                                PROJECT_END_DATE   = #{project_end_date},
+                                PROJECT_ROLE       = #{project_role},
+                                PROJECT_CLIENT     = #{project_client},
+                                ASSIGNED_TASK_LAR  = #{assigned_task_lar},
+                                ASSIGNED_TASK_MID  = #{assigned_task_mid},
+                                MODIFIED_DATE      = now(),
+                                MODIFIER           = #{user_id},
+                                USE_YN             = #{use_yn}
     </insert>
 
     <!-- insertUsrProjectInfoHist : 사업 경력 이력 INSERT -->
@@ -307,10 +317,11 @@
                project_client,
                assigned_task_lar,
                assigned_task_mid,
-               sysdate(),
+               now(),
                #{user_id}
         FROM TB_PROJECT_INFO
         WHERE project_seq = #{project_seq}
+          AND use_yn = 'Y'
     </insert>
 
     <!-- updateUsrQualificationInfo : 자격증 INSERT -->
@@ -323,8 +334,8 @@
                 #{issuer},
                 #{acquisition_date},
                 #{expiry_date},
-                SYSDATE(),
-                SYSDATE(),
+                now(),
+                now(),
                 #{user_id},
                 #{user_id}
                )
@@ -341,7 +352,7 @@
                ISSUER,
                ACQUISITION_DATE,
                EXPIRY_DATE,
-               SYSDATE(),
+               now(),
                #{user_id}
         FROM TB_USER_QUALIFICATION_INFO
         WHERE QUALIFICATION_SEQ = #{qualification_seq}
@@ -356,8 +367,8 @@
                 #{work_place},
                 #{work_start_date},
                 #{work_end_date},
-                sysdate(),
-                sysdate(),
+                now(),
+                now(),
                 #{user_id},
                 #{user_id}
                 )
@@ -373,7 +384,7 @@
                WORK_PLACE,
                WORK_START_DATE,
                WORK_END_DATE,
-               SYSDATE(),
+               now(),
                #{user_id}
         FROM TB_WORK_EXPERIENCE_INFO
         WHERE WORK_SEQ = #{work_seq}

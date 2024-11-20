@@ -38,8 +38,6 @@ public interface ProfileDAO {
     void insertUsrWorkInfoHist(WorkExperienceVO workExperienceVO);
 
     /* TB 데이터 삭제 */
-    @Delete("DELETE FROM TB_PROJECT_INFO WHERE USER_ID = #{user_id}")
-    void deleteUsrProjectInfo(String userId);
     @Delete("DELETE FROM TB_USER_QUALIFICATION_INFO WHERE USER_ID = #{user_id}")
     void deleteUsrQualificationInfo(String userId);
     @Delete("DELETE FROM TB_WORK_EXPERIENCE_INFO WHERE USER_ID = #{user_id}")
@@ -56,7 +54,7 @@ public interface ProfileDAO {
     int selectWkMaxSeq(String userId);
 
     /* project max seq 조회 */
-    @Select("SELECT COALESCE(MAX(PROJECT_SEQ), 1) AS PROJECT_SEQ FROM TB_PROJECT_INFO WHERE USER_ID = #{user_id}")
+    @Select("SELECT COALESCE(MAX(PROJECT_SEQ), 0) AS PROJECT_SEQ FROM TB_PROJECT_INFO WHERE USER_ID = #{user_id}")
     int getProjectMaxSeq(String userId);
 
 }
