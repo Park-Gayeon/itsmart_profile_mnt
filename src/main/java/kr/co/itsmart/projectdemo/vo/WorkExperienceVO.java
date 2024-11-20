@@ -11,6 +11,9 @@ public class WorkExperienceVO {
     // 이력 관리
     private int hist_seq; // 이력 순번
 
+    // etc
+    private int totalMonth; // 총 근무 경력
+
     // meta_data
     private String created_date; // 생성일시
     private String modified_date; // 수정일시
@@ -71,6 +74,14 @@ public class WorkExperienceVO {
 
     public void setHist_seq(int hist_seq) {
         this.hist_seq = hist_seq;
+    }
+
+    public int getTotalMonth() {
+        return totalMonth;
+    }
+
+    public void setTotalMonth(int totalMonth) {
+        this.totalMonth = totalMonth;
     }
 
     public String getCreated_date() {

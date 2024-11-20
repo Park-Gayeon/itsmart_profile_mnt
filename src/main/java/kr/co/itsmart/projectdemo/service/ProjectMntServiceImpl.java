@@ -46,8 +46,14 @@ public class ProjectMntServiceImpl implements ProjectMntService{
             
         }
     }
+
     @Override
     public int getProjectMaxSeq(String user_id) {
         return profileDAO.getProjectMaxSeq(user_id);
+    }
+
+    @Override
+    public int calcTotalMonth(String user_id) {
+        return profileDAO.calcPjTotalMonth(user_id);
     }
 }

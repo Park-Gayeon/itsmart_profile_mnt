@@ -49,4 +49,9 @@ public class WorkExperienceMntServiceImpl implements WorkExperienceMntService{
             LOGGER.info("사용자 근무경력 정보 이력을 생성했습니다: user_id={}", user_id);
         }
     }
+
+    @Override
+    public int calcTotalMonth(String user_id) {
+        return profileDAO.calcWkTotalMonth(user_id);
+    }
 }

@@ -205,7 +205,7 @@
                 <div class="common-box row-box row mb-5 g-0">
                     <!-- 근무경력 form -->
                     <div class="pb-3">
-                        <header class="header">근무경력<span class="fw-bolder" style="font-size: 12px;">(총 n년 n개월)</span>
+                        <header class="header">근무경력<span id="wk_career" class="fw-bolder" style="font-size: 12px;"></span>
                         </header>
                         <div class="col-md g-0">
                             <div class="row mb-2 g-0">
@@ -236,7 +236,7 @@
                     <!-- 근무경력 form 끝-->
                     <!-- 사업경력 form -->
                     <div>
-                        <header class="header">사업경력<span class="fw-bolder" style="font-size: 12px;">(총 n년 n개월)</span>
+                        <header class="header">사업경력<span id="pj_career" class="fw-bolder" style="font-size: 12px;"></span>
                         </header>
                         <div class="table-responsive common-box p-3">
                             <header>진행사항</header>
@@ -395,6 +395,14 @@
 <script src="/js/bootstrap.bundle.js"></script>
 <script type="text/javascript">
     $(document).ready(function () {
+        const wk_totalMonth = [[${wk_totalMonth}]];
+        const pj_totalMonth = [[${pj_totalMonth}]];
+
+        let calc_wk_totalMonth = convertToString(wk_totalMonth);
+        let calc_pj_totalMonth = convertToString(pj_totalMonth);
+
+        document.getElementById("wk_career").innerText = calc_wk_totalMonth;
+        document.getElementById("pj_career").innerText = calc_pj_totalMonth;
 
     });
 
@@ -415,6 +423,20 @@
         frm.attr('action', '/profile/modify/info/' + user_id);
         frm.attr('method', 'post');
         frm.submit();
+    }
+
+    function convertToString(totalMonth){
+        const year = Math.floor(totalMonth / 12);
+        const months = totalMonth % 12;
+
+        let result = "";
+        if(year > 0){
+            result += year + '년 ';
+        }
+        if(months > 0){
+            result += months + '개월';
+        }
+        return result;
     }
 </script>
 

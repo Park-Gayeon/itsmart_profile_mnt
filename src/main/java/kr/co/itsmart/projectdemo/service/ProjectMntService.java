@@ -11,4 +11,7 @@ public interface ProjectMntService {
 
     /* 사업 테이블 max(project_seq) 조회 */
     int getProjectMaxSeq(String user_id);
+
+    /* 사업경력 계산 */
+    int calcTotalMonth(String user_id);
 }
