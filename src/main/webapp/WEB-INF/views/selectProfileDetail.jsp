@@ -281,9 +281,13 @@
                                                    value="${project_ing.project_start_date}"/>
                                             <input type="hidden" name="projectList[${pjStatus.index}].project_end_date"
                                                    value="${project_ing.project_end_date}"/>
+                                            <input type="hidden" name="projectList[${pjStatus.index}].assigned_task_lar"
+                                                   value="${project_ing.assigned_task_lar}"/>
                                             <input type="hidden"
                                                    name="projectList[${pjStatus.index}].assigned_task_lar_nm"
                                                    value="${project_ing.assigned_task_lar_nm}"/>
+                                            <input type="hidden" name="projectList[${pjStatus.index}].assigned_task_mid"
+                                                   value="${project_ing.assigned_task_mid}"/>
                                             <input type="hidden"
                                                    name="projectList[${pjStatus.index}].assigned_task_mid_nm"
                                                    value="${project_ing.assigned_task_mid_nm}"/>

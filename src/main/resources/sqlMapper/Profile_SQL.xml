@@ -48,7 +48,9 @@
             <result property="project_role" column="PROJECT_ROLE"/>
             <result property="project_client" column="PROJECT_CLIENT"/>
             <result property="assigned_task_lar_nm" column="ASSIGNED_TASK_LAR_NM"/>
+            <result property="assigned_task_lar" column="ASSIGNED_TASK_LAR"/>
             <result property="assigned_task_mid_nm" column="ASSIGNED_TASK_MID_NM"/>
+            <result property="assigned_task_mid" column="ASSIGNED_TASK_MID"/>
         </collection>
         <collection column="user_id" property="qualificationList" javaType="List" ofType="QualificationVO"
                     select="selectUsrQualificationList">

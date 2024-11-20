@@ -5,6 +5,7 @@ import kr.co.itsmart.projectdemo.vo.CommonVO;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class CommonServiceImpl implements CommonService{
@@ -15,8 +16,12 @@ public class CommonServiceImpl implements CommonService{
     }
 
     @Override
-    public List<CommonVO> selectCodeList(String code_group_id){
-        return commonDAO.selectCodeList(code_group_id);
+    public List<CommonVO> selectCodeList(Map<String, String> params){
+        return commonDAO.selectCodeList(params);
     };
 
+    @Override
+    public List<CommonVO> getTaskMidCode(String code_id) {
+        return commonDAO.getTaskMidCode(code_id);
+    }
 }

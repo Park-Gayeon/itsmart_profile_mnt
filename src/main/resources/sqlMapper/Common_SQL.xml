@@ -3,16 +3,30 @@
 <mapper namespace="kr.co.itsmart.projectdemo.dao.CommonDAO">
 
     <!-- code_group_id로 list 조회 -->
-    <select id="selectCodeList" parameterType="String" resultType="CommonVO">
+    <select id="selectCodeList" parameterType="Map" resultType="CommonVO">
         SELECT code_id, code_value
         FROM TB_COMMON_CODE AS A
         WHERE CODE_GROUP_ID = #{code_group_id}
-          AND A.CODE_ID NOT IN
+          <choose>
+              <when test="task_type == 'lar'">
+                AND A.CODE_ID IN
+              </when>
+              <otherwise>
+                AND A.CODE_ID NOT IN
+              </otherwise>
+          </choose>
               (SELECT DISTINCT B.PARENT_ID
                FROM TB_COMMON_CODE AS B
                WHERE B.CODE_GROUP_ID = #{code_group_id}
                  AND B.PARENT_ID IS NOT NULL
                  AND B.USE_YN = 'Y')
           AND A.USE_YN = 'Y'
+    </select>
+
+    <select id="getTaskMidCode" parameterType="String" resultType="CommonVO">
+        SELECT CODE_ID, CODE_VALUE
+        FROM TB_COMMON_CODE
+        WHERE CODE_GROUP_ID = 'TASK'
+          AND PARENT_ID = #{code_id}
     </select>
 </mapper>
