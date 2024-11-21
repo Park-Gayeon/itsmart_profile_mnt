@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="kr.co.itsmart.projectdemo.dao.ProfileDAO">
+<mapper namespace="kr.co.itsmart.profileMnt.dao.ProfileDAO">
     <!-- mybatis : https://mybatis.org/mybatis-3/ko/sqlmap-xml.html#result-maps -->
     <resultMap id="UsrProfileInfo" type="ProfileVO">
         <id property="user_id" column="USER_ID"/>
@@ -184,10 +184,10 @@
 
     <!-- project + usrSkillLIst -->
     <select id="selectUsrSkillList" resultMap="UsrProjectSkills">
-        SELECT PJ.PROJECT_SEQ,
-               PJ.PROJECT_NM,
+        SELECT PJ.PROJECT_NM,
                SK.SKILL_ID,
-               SK.SKILL_NM
+               SK.SKILL_NM,
+               SK.USE_YN
         FROM TB_PROJECT_INFO PJ
                  LEFT JOIN TB_USER_SKILL_INFO SK
                            ON PJ.USER_ID = SK.USER_ID AND PJ.PROJECT_SEQ = SK.PROJECT_SEQ AND SK.USE_YN = 'Y'

@@ -27,5 +27,5 @@ management.endpoints.web.exposure.exclude: "*"
 
 logging:
   level:
-    kr.co.itsmart.projectdemo: debug
+    kr.co.itsmart.profileMnt: debug
     org.springframework.web.servlet: debug

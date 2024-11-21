@@ -885,8 +885,7 @@
                                 <option>` + data.project_role_nm + `</option>
                         </select>
                     <td>
-                        <input type="button" class="btn btn-warning"
-                               onclick="viewSkill(` + project_seq + `)" value="등록"/>
+
                     </td>
                     <td>
                         <input type="button" class="btn btn-danger"
@@ -899,12 +898,19 @@
         updateRowIndex(frmId, listNm);
 
     }
-
     function viewSkill(project_seq) {
         let user_id = $('input[name=user_id]').val();
-        let url = "/profile/detail/skill/select?user_id=" + user_id + "&project_seq=" + project_seq;
+        let flag = 1;
+        let url = "/profile/detail/skill/select?user_id=" + user_id + "&project_seq=" + project_seq + "&flag=" + flag;
         let properties = "width=600, height=400";
         window.open(url, "registerNewProfile", properties)
+    }
+
+    function updateSkill(project_seq){
+        let user_id = $('input[name=user_id]').val();
+        let url = "/profile/modify/skill/update?user_id=" + user_id + "&project_seq=" + project_seq;
+        let properties = "width=600, height=400";
+        window.open(url, "updateSkill", properties);
     }
 
     function goSave(frm) {
