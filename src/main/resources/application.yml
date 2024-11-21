@@ -1,6 +1,6 @@
 spring:
   application:
-    name: project-demo
+    name: profileMnt
   mvc:
     view:
       prefix: /WEB-INF/views/
@@ -17,7 +17,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
 mybatis:
   mapper-locations: classpath:sqlMapper/*.xml
-  type-aliases-package: kr.co.itsmart.projectdemo.vo
+  type-aliases-package: kr.co.itsmart.profileMnt.vo
   configuration:
     map-underscore-to-camel-case: false
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

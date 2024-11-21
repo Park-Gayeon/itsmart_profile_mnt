@@ -3,7 +3,7 @@ CREATE DATABASE IF NOT EXISTS demo_db DEFAULT CHARACTER SET utf8mb4 COLLATE utf8
 USE demo_db;
 
 -- user 생성
-create user IF NOT EXISTS 'itsmart'@'%' IDENTIFIED BY 'itsmart1!';
+create user IF NOT EXISTS 'itsmart'@'%' IDENTIFIED WITH caching_sha2_password BY 'itsmart1!';
 
 -- 권한 부여
 GRANT ALL PRIVILEGES ON `demo_db`.* TO 'itsmart'@'%' with grant option;
