@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="kr.co.itsmart.projectdemo.dao.CommonDAO">
+<mapper namespace="kr.co.itsmart.profileMnt.dao.CommonDAO">
 
     <!-- code_group_id로 list 조회 -->
     <select id="selectCodeList" parameterType="Map" resultType="CommonVO">

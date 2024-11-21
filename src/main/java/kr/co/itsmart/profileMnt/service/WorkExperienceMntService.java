@@ -1,0 +1,14 @@
+package kr.co.itsmart.profileMnt.service;
+
+import kr.co.itsmart.profileMnt.vo.ProfileVO;
+
+public interface WorkExperienceMntService {
+    /* 근무경력 이력 테이블 hist_seq 조회 */
+    int selectMaxSeq(String user_id);
+
+    /* 프로필 수정(근무경력) */
+    void updateUsrWorkExperience(ProfileVO profileVO);
+
+    /* 근무경력 계산 */
+    int calcTotalMonth(String user_id);
+}
