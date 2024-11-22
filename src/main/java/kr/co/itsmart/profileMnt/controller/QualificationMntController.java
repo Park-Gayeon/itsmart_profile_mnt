@@ -20,10 +20,6 @@ public class QualificationMntController {
     @PostMapping("/{user_id}")
     @ResponseBody
     public String updateQualificationInfo(@PathVariable("user_id")String user_id, @ModelAttribute ProfileVO profile){
-
-        for(int i = 0; i<profile.getQualificationList().size(); i++){
-            LOGGER.info("자격증 명 qualification_nm={}", profile.getQualificationList().get(i).getQualification_nm());
-        }
         try {
             // hist_seq
             int hist_seq = qualificationMntService.selectMaxSeq(user_id);

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.itsmart.profileMnt.dao.ProjectDAO">
+
+    <!-- updateUsrProjectInfo : 사업 경력 UPSERT -->
+    <insert id="updateUsrProjectInfo" parameterType="projectVO">
+        INSERT INTO TB_PROJECT_INFO(USER_ID, PROJECT_SEQ, PROJECT_NM, PROJECT_START_DATE, PROJECT_END_DATE,
+                                    PROJECT_ROLE, PROJECT_CLIENT, ASSIGNED_TASK_LAR, ASSIGNED_TASK_MID,
+                                    CREATE_DATE, MODIFIED_DATE, CREATOR, MODIFIER)
+        VALUES (#{user_id},
+                #{project_seq},
+                #{project_nm},
+                #{project_start_date},
+                #{project_end_date},
+                #{project_role},
+                #{project_client},
+                #{assigned_task_lar},
+                #{assigned_task_mid},
+                now(),
+                now(),
+                #{user_id},
+                #{user_id})
+        ON DUPLICATE KEY UPDATE PROJECT_NM         = #{project_nm},
+                                PROJECT_START_DATE = #{project_start_date},
+                                PROJECT_END_DATE   = #{project_end_date},
+                                PROJECT_ROLE       = #{project_role},
+                                PROJECT_CLIENT     = #{project_client},
+                                ASSIGNED_TASK_LAR  = #{assigned_task_lar},
+                                ASSIGNED_TASK_MID  = #{assigned_task_mid},
+                                MODIFIED_DATE      = now(),
+                                MODIFIER           = #{user_id}
+    </insert>
+
+    <!-- insertUsrProjectInfoHist : 사업 경력 이력 INSERT -->
+    <insert id="insertUsrProjectInfoHist" parameterType="projectVO">
+        INSERT INTO TB_PROJECT_INFO_HIST(USER_ID, PROJECT_SEQ, HIST_SEQ, PROJECT_NM, PROJECT_START_DATE,
+                                         PROJECT_END_DATE, PROJECT_ROLE, PROJECT_CLIENT, ASSIGNED_TASK_LAR,
+                                         ASSIGNED_TASK_MID, CREATE_DATE, CREATOR)
+        SELECT user_id,
+               project_seq,
+               #{hist_seq},
+               project_nm,
+               project_start_date,
+               project_end_date,
+               project_role,
+               project_client,
+               assigned_task_lar,
+               assigned_task_mid,
+               now(),
+               #{user_id}
+        FROM TB_PROJECT_INFO
+        WHERE project_seq = #{project_seq}
+          AND use_yn = 'Y'
+    </insert>
+
+    <!-- updateUsrSkillInfo : 기술 정보 INSERT -->
+    <insert id="updateUsrSkillInfo" parameterType="userSkillVO">
+        INSERT INTO TB_USER_SKILL_INFO(USER_ID, PROJECT_SEQ, SKILL_ID, SKILL_NM, CREATED_DATE, MODIFIED_DATE,
+                                       CREATOR, MODIFIER)
+        VALUES (#{user_id},
+                #{project_seq},
+                #{skill_id},
+                #{skill_nm},
+                now(),
+                now(),
+                #{user_id},
+                #{user_id})
+    </insert>
+
+    <!-- insertUsrSkillInfoHist : 기술 이력 INSERT -->
+    <insert id="insertUsrSkillInfoHist" parameterType="userSkillVO">
+        INSERT INTO TB_USER_SKILL_INFO_HIST(USER_ID, PROJECT_SEQ, SKILL_ID, HIST_SEQ, SKILL_NM, CREATED_DATE, CREATOR)
+        SELECT user_id,
+               project_seq,
+               skill_id,
+               #{hist_seq},
+               skill_nm,
+               now(),
+               #{user_id}
+        FROM TB_USER_SKILL_INFO
+        WHERE USER_ID = #{user_id}
+          AND PROJECT_SEQ = #{project_seq}
+          AND SKILL_ID = #{skill_id}
+    </insert>
+
+</mapper>

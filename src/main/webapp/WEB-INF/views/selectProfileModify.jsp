@@ -274,7 +274,7 @@
                                     <div class="row mb-2 g-0 add" id="qualificationList_${qlStatus.index}">
                                         <input type="hidden" class="seq"
                                                name="qualificationList[${qlStatus.index}].qualification_seq"
-                                               value="${qlStatus.index+1}">
+                                               value="${qualification.qualification_seq}">
                                         <div class="col-sm-2 common-box input-box pt-4 me-2">
                                             <label>자격증명</label>
                                             <input type="text"

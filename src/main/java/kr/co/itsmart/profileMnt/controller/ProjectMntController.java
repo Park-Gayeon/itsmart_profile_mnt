@@ -4,6 +4,7 @@ import kr.co.itsmart.profileMnt.service.CommonService;
 import kr.co.itsmart.profileMnt.service.ProjectMntService;
 import kr.co.itsmart.profileMnt.vo.CommonVO;
 import kr.co.itsmart.profileMnt.vo.ProfileVO;
+import kr.co.itsmart.profileMnt.vo.ProjectVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -57,5 +58,25 @@ public class ProjectMntController {
         List<CommonVO> results =commonService.getTaskMidCode(code_id);
         LOGGER.debug("Returned list: {}", results);
         return results;
+    }
+
+    @PostMapping("/skill/update")
+    @ResponseBody
+    public String updateUsrSkill(@ModelAttribute ProjectVO project){
+        LOGGER.info("user_id={}, project_seq={}", project.getUser_id(), project.getProject_seq());
+        try {
+            // skill_hist_seq
+            int hist_seq = projectMntService.selectMaxSkillSeq(project);
+            LOGGER.info("사업 정보 hist_seq: hist_seq={}", hist_seq);
+            project.setHist_seq(hist_seq);
+
+            // 사용자 프로젝트별 기술 정보 처리
+            projectMntService.updateUsrSkill(project);
+
+        }catch (Exception e){
+            LOGGER.debug("기술 정보 처리 실패: user_id={}, project_seq={}", project.getUser_id(), project.getProject_seq(), e.getMessage());
+            return "FAIL";
+        }
+        return "SUCCESS";
     }
 }

@@ -27,13 +27,12 @@ public interface ProfileDAO {
 
     /*직원 : 프로필 수정*/
     boolean updateUsrProfileInfo(ProfileVO profileVO);
-    void updateUsrProjectInfo(ProjectVO projectVO);
     void updateUsrQualificationInfo(QualificationVO qualificationVO);
     void updateUsrWorkInfo(WorkExperienceVO workExperienceVO);
 
     /*이력 등록*/
     boolean insertUsrProfileInfoHist(ProfileVO profileVO);
-    void insertUsrProjectInfoHist(ProjectVO projectVO);
+
     void insertUsrQualificationInfoHist(QualificationVO qualificationVO);
     void insertUsrWorkInfoHist(WorkExperienceVO workExperienceVO);
 

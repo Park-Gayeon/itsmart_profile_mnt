@@ -170,6 +170,8 @@
                     <div class="col-md g-0">
                         <div class="row mb-2 g-0">
                             <c:forEach var="qualification" items="${profile.qualificationList}" varStatus="qlStatus">
+                                <input type="hidden" name="qualificationList[${qlStatus.index}].qualification_seq"
+                                       value="${qualification.qualification_seq}"/>
                                 <div class="col-sm-2 common-box input-box pt-4 me-2">
                                     <label for="qualification_nm">자격증명</label>
                                     <input type="text" name="qualificationList[${qlStatus.index}].qualification_nm"

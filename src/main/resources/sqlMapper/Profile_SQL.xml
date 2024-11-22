@@ -72,7 +72,7 @@
     <resultMap id="UsrProjectSkills" type="ProjectVO">
         <id property="project_seq" column="PROJECT_SEQ"/>
         <result property="project_nm" column="PROJECT_NM"/>
-        <collection property="skillList" column="project_seq" ofType="UserSkillVO">
+        <collection property="skillList" column="PROJECT_SEQ" ofType="UserSkillVO">
             <id property="skill_id" column="SKILL_ID"/>
             <result property="skill_nm" column="SKILL_NM"/>
         </collection>
@@ -184,7 +184,8 @@
 
     <!-- project + usrSkillLIst -->
     <select id="selectUsrSkillList" resultMap="UsrProjectSkills">
-        SELECT PJ.PROJECT_NM,
+        SELECT PJ.PROJECT_SEQ,
+               PJ.PROJECT_NM,
                SK.SKILL_ID,
                SK.SKILL_NM,
                SK.USE_YN
@@ -274,57 +275,7 @@
           AND USE_YN = 'Y'
     </insert>
 
-    <!-- updateUsrProjectInfo : 사업 경력 UPSERT -->
-    <insert id="updateUsrProjectInfo" parameterType="projectVO">
-        INSERT INTO TB_PROJECT_INFO(USER_ID, PROJECT_SEQ, PROJECT_NM, PROJECT_START_DATE, PROJECT_END_DATE,
-                                    PROJECT_ROLE, PROJECT_CLIENT, ASSIGNED_TASK_LAR, ASSIGNED_TASK_MID,
-                                    CREATE_DATE, MODIFIED_DATE, CREATOR, MODIFIER)
-        VALUES (#{user_id},
-                #{project_seq},
-                #{project_nm},
-                #{project_start_date},
-                #{project_end_date},
-                #{project_role},
-                #{project_client},
-                #{assigned_task_lar},
-                #{assigned_task_mid},
-                now(),
-                now(),
-                #{user_id},
-                #{user_id})
-        ON DUPLICATE KEY UPDATE PROJECT_NM         = #{project_nm},
-                                PROJECT_START_DATE = #{project_start_date},
-                                PROJECT_END_DATE   = #{project_end_date},
-                                PROJECT_ROLE       = #{project_role},
-                                PROJECT_CLIENT     = #{project_client},
-                                ASSIGNED_TASK_LAR  = #{assigned_task_lar},
-                                ASSIGNED_TASK_MID  = #{assigned_task_mid},
-                                MODIFIED_DATE      = now(),
-                                MODIFIER           = #{user_id},
-                                USE_YN             = #{use_yn}
-    </insert>
 
-    <!-- insertUsrProjectInfoHist : 사업 경력 이력 INSERT -->
-    <insert id="insertUsrProjectInfoHist" parameterType="projectVO">
-        INSERT INTO TB_PROJECT_INFO_HIST(USER_ID, PROJECT_SEQ, HIST_SEQ, PROJECT_NM, PROJECT_START_DATE,
-                                         PROJECT_END_DATE, PROJECT_ROLE, PROJECT_CLIENT, ASSIGNED_TASK_LAR,
-                                         ASSIGNED_TASK_MID, CREATE_DATE, CREATOR)
-        SELECT user_id,
-               project_seq,
-               #{hist_seq},
-               project_nm,
-               project_start_date,
-               project_end_date,
-               project_role,
-               project_client,
-               assigned_task_lar,
-               assigned_task_mid,
-               now(),
-               #{user_id}
-        FROM TB_PROJECT_INFO
-        WHERE project_seq = #{project_seq}
-          AND use_yn = 'Y'
-    </insert>
 
     <!-- updateUsrQualificationInfo : 자격증 INSERT -->
     <insert id="updateUsrQualificationInfo" parameterType="qualificationVO">
