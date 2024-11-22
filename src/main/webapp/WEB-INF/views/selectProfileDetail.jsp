@@ -414,7 +414,7 @@
 
     function viewSkill(project_seq) {
         let user_id = $('input[name=user_id]').val();
-        let url = "/profile/detail/skill/select?user_id=" + user_id + "&project_seq=" + project_seq;
+        let url = "/profile/project/modify/select/skill?user_id=" + user_id + "&project_seq=" + project_seq;
         let properties = "width=600, height=400";
         window.open(url, "registerNewProfile", properties)
     }

@@ -8,20 +8,22 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class CommonServiceImpl implements CommonService{
+public class CommonServiceImpl implements CommonService {
     private final CommonDAO commonDAO;
 
-    public CommonServiceImpl(CommonDAO commonDAO){
+    public CommonServiceImpl(CommonDAO commonDAO) {
         this.commonDAO = commonDAO;
     }
 
     @Override
-    public List<CommonVO> selectCodeList(Map<String, String> params){
+    public List<CommonVO> selectCodeList(Map<String, String> params) {
         return commonDAO.selectCodeList(params);
-    };
+    }
+
+    ;
 
     @Override
-    public List<CommonVO> getTaskMidCode(String code_id) {
-        return commonDAO.getTaskMidCode(code_id);
+    public List<CommonVO> getTaskMidCodeList(String code_id) {
+        return commonDAO.getTaskMidCodeList(code_id);
     }
 }

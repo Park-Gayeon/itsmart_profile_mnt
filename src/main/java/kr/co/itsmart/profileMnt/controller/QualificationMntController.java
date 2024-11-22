@@ -17,19 +17,20 @@ public class QualificationMntController {
         this.qualificationMntService = qualificationMntService;
     }
 
-    @PostMapping("/{user_id}")
+    @PostMapping("/save/{user_id}")
     @ResponseBody
     public String updateQualificationInfo(@PathVariable("user_id")String user_id, @ModelAttribute ProfileVO profile){
+        LOGGER.info("== Ajax[사용자 프로필 수정 처리(자격증)] ==");
         try {
-            // hist_seq
-            int hist_seq = qualificationMntService.selectMaxSeq(user_id);
+            // CREATE hist_seq
+            int hist_seq = qualificationMntService.selectMaxHistSeq(user_id);
             profile.setHist_seq(hist_seq);
-            LOGGER.info("사용자 자격정보 hist_seq: hist_seq={}", hist_seq);
+            LOGGER.info("자격증 정보 hist_seq: hist_seq={}", hist_seq);
 
-            // 사용자 자격 정보 처리
+            // 자격증 정보 수정 처리
             qualificationMntService.updateUsrQualification(profile);
         } catch (Exception e){
-            LOGGER.debug("사용자 자격 정보 처리 실패: user_id={}", user_id, e.getMessage());
+            LOGGER.debug("자격증 정보 처리 실패: user_id={}", user_id, e.getMessage());
             return "FAIL";
         }
         return "SUCCESS";

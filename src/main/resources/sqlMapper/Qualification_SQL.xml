@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.itsmart.profileMnt.dao.QualificationDAO">
+
+    <!-- updateUsrQualificationInfo : 자격증 INSERT -->
+    <insert id="updateUsrQualificationInfo" parameterType="qualificationVO">
+        INSERT INTO TB_USER_QUALIFICATION_INFO(USER_ID, QUALIFICATION_SEQ, QUALIFICATION_NM, ISSUER, ACQUISITION_DATE,
+                                               EXPIRY_DATE, CREATED_DATE, MODIFIED_DATE, CREATOR, MODIFIER)
+        VALUES (#{user_id},
+                #{qualification_seq},
+                #{qualification_nm},
+                #{issuer},
+                #{acquisition_date},
+                #{expiry_date},
+                now(),
+                now(),
+                #{user_id},
+                #{user_id}
+               )
+    </insert>
+
+    <!-- insertUsrQualificationInfoHist : 자격증 이력 INSERT -->
+    <insert id="insertUsrQualificationInfoHist" parameterType="qualificationVO">
+        INSERT INTO TB_USER_QUALIFICATION_INFO_HIST(USER_ID, QUALIFICATION_SEQ, HIST_SEQ, QUALIFICATION_NM, ISSUER,
+                                                    ACQUISITION_DATE, EXPIRY_DATE, CREATED_DATE, CREATOR)
+        SELECT USER_ID,
+               QUALIFICATION_SEQ,
+               #{hist_seq},
+               QUALIFICATION_NM,
+               ISSUER,
+               ACQUISITION_DATE,
+               EXPIRY_DATE,
+               now(),
+               #{user_id}
+        FROM TB_USER_QUALIFICATION_INFO
+        WHERE QUALIFICATION_SEQ = #{qualification_seq}
+    </insert>
+</mapper>

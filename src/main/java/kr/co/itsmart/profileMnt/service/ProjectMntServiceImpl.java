@@ -1,6 +1,5 @@
 package kr.co.itsmart.profileMnt.service;
 
-import kr.co.itsmart.profileMnt.dao.ProfileDAO;
 import kr.co.itsmart.profileMnt.dao.ProjectDAO;
 import kr.co.itsmart.profileMnt.vo.ProfileVO;
 import kr.co.itsmart.profileMnt.vo.ProjectVO;
@@ -11,18 +10,22 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class ProjectMntServiceImpl implements ProjectMntService{
+public class ProjectMntServiceImpl implements ProjectMntService {
     private static final Logger LOGGER = LoggerFactory.getLogger(ProjectMntServiceImpl.class);
-    private final ProfileDAO profileDAO;
     private final ProjectDAO projectDAO;
-    public ProjectMntServiceImpl(ProfileDAO profileDAO, ProjectDAO projectDAO){
-        this.profileDAO = profileDAO;
+
+    public ProjectMntServiceImpl(ProjectDAO projectDAO) {
         this.projectDAO = projectDAO;
     }
 
     @Override
-    public int selectMaxSeq(String user_id) {
-        return profileDAO.selectPjMaxSeq(user_id);
+    public int getProjectMaxSeq(String user_id) {
+        return projectDAO.getProjectMaxSeq(user_id);
+    }
+
+    @Override
+    public int selectMaxHistSeq(String user_id) {
+        return projectDAO.selectMaxHistSeq(user_id);
     }
 
     @Override
@@ -35,42 +38,40 @@ public class ProjectMntServiceImpl implements ProjectMntService{
     public void updateUsrProject(ProfileVO profile) {
         String user_id = profile.getUser_id();
         int hist_seq = profile.getHist_seq();
-        
-        if(profile.getProjectList() == null || profile.getProjectList().isEmpty()){
+
+        if (profile.getProjectList() == null || profile.getProjectList().isEmpty()) {
             LOGGER.info("사업 정보가 비어있습니다. 처리할 데이터가 없습니다: user_id={}", user_id);
             return;
         }
 
-        for(ProjectVO project : profile.getProjectList()){
+        for (ProjectVO project : profile.getProjectList()) {
             project.setUser_id(user_id);
             project.setHist_seq(hist_seq);
+            LOGGER.info("========================================================================");
+            LOGGER.info("프로젝트명: {}, 사용여부: {}", project.getProject_nm(), project.getUse_yn());
+            LOGGER.info("========================================================================");
 
-            if(project.getUse_yn() == "N"){ // remove를 눌렀을 때만 use_yn이 n 으로 세팅될거다. 확인 필요
-                //delete를 할건데 관련되어있는 skill tb도 같이 delete 날릴거다.
-                LOGGER.info("REMOVE누른 항목 project_nm={}, project_seq={}", project.getProject_nm(), project.getProject_seq());
+            if ("N".equals(project.getUse_yn())) {
+                LOGGER.info("프로젝트를 삭제합니다. project_nm={}, project_seq={}", project.getProject_nm(), project.getProject_seq());
                 projectDAO.deleteUsrSkillInfo(project);
                 projectDAO.deleteUsrProjectInfo(project);
-            } else { // 그냥 내용만 수정이 되었다면
+            } else {
                 // UPSERT
                 LOGGER.info("사업 정보를 입력 및 수정합니다: user_id={}, project_seq={}, project_nm={}", user_id, project.getProject_seq(), project.getProject_nm());
                 projectDAO.updateUsrProjectInfo(project);
+
                 // CREATE HIST
                 projectDAO.insertUsrProjectInfoHist(project);
                 LOGGER.info("사업 정보 이력을 생성했습니다: user_id={}, hist_seq={}", user_id, hist_seq);
             }
-
         }
     }
 
     @Override
-    public int getProjectMaxSeq(String user_id) {
-        return profileDAO.getProjectMaxSeq(user_id);
+    public ProjectVO selectUsrSkillList(ProjectVO project) {
+        return projectDAO.selectUsrSkillList(project);
     }
 
-    @Override
-    public int calcTotalMonth(String user_id) {
-        return profileDAO.calcPjTotalMonth(user_id);
-    }
 
     @Override
     @Transactional
@@ -79,7 +80,7 @@ public class ProjectMntServiceImpl implements ProjectMntService{
         int project_seq = project.getProject_seq();
         int hist_seq = project.getHist_seq();
 
-        if(project.getSkillList() == null || project.getSkillList().isEmpty()){
+        if (project.getSkillList() == null || project.getSkillList().isEmpty()) {
             LOGGER.info("기술 정보가 비어있습니다. 처리할 데이터가 없습니다: user_id={}, project_seq={}", user_id, project_seq);
             return;
         }
@@ -88,7 +89,7 @@ public class ProjectMntServiceImpl implements ProjectMntService{
         LOGGER.info("프로젝트와 관련된 기술 정보를 삭제합니다: user_id={}, project_seq={}", user_id, project_seq);
         projectDAO.deleteUsrSkillInfo(project);
 
-        for(UserSkillVO skill : project.getSkillList()){
+        for (UserSkillVO skill : project.getSkillList()) {
             skill.setUser_id(user_id);
             skill.setProject_seq(project_seq);
             skill.setHist_seq(hist_seq);
@@ -101,6 +102,10 @@ public class ProjectMntServiceImpl implements ProjectMntService{
             projectDAO.insertUsrSkillInfoHist(skill);
             LOGGER.info("기술 정보 이력을 생성했습니다: user_id={}, project_seq={}, hist_seq={}", skill.getUser_id(), skill.getProject_seq(), skill.getHist_seq());
         }
+    }
 
+    @Override
+    public int calcTotalMonth(String user_id) {
+        return projectDAO.calcTotalMonth(user_id);
     }
 }

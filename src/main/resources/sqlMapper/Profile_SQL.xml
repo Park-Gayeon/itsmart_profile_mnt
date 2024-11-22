@@ -69,16 +69,6 @@
         </collection>
     </resultMap>
 
-    <resultMap id="UsrProjectSkills" type="ProjectVO">
-        <id property="project_seq" column="PROJECT_SEQ"/>
-        <result property="project_nm" column="PROJECT_NM"/>
-        <collection property="skillList" column="PROJECT_SEQ" ofType="UserSkillVO">
-            <id property="skill_id" column="SKILL_ID"/>
-            <result property="skill_nm" column="SKILL_NM"/>
-        </collection>
-    </resultMap>
-
-
     <select id="selectUsrProfileDetail" parameterType="String" resultMap="UsrProfileInfo">
         <![CDATA[
         SELECT
@@ -182,20 +172,6 @@
           AND USE_YN = 'Y'
     </select>
 
-    <!-- project + usrSkillLIst -->
-    <select id="selectUsrSkillList" resultMap="UsrProjectSkills">
-        SELECT PJ.PROJECT_SEQ,
-               PJ.PROJECT_NM,
-               SK.SKILL_ID,
-               SK.SKILL_NM,
-               SK.USE_YN
-        FROM TB_PROJECT_INFO PJ
-                 LEFT JOIN TB_USER_SKILL_INFO SK
-                           ON PJ.USER_ID = SK.USER_ID AND PJ.PROJECT_SEQ = SK.PROJECT_SEQ AND SK.USE_YN = 'Y'
-        WHERE PJ.USER_ID = #{user_id}
-          AND PJ.PROJECT_SEQ = #{project_seq}
-    </select>
-
     <!--updateUsrProfileInfo : 직원 프로필 정보 테이블 UPDATE-->
     <update id="updateUsrProfileInfo" parameterType="profileVO">
         UPDATE TB_USER_PROFILE_INFO
@@ -274,73 +250,4 @@
         WHERE USER_ID = #{user_id}
           AND USE_YN = 'Y'
     </insert>
-
-
-
-    <!-- updateUsrQualificationInfo : 자격증 INSERT -->
-    <insert id="updateUsrQualificationInfo" parameterType="qualificationVO">
-        INSERT INTO TB_USER_QUALIFICATION_INFO(USER_ID, QUALIFICATION_SEQ, QUALIFICATION_NM, ISSUER, ACQUISITION_DATE,
-                                               EXPIRY_DATE, CREATED_DATE, MODIFIED_DATE, CREATOR, MODIFIER)
-        VALUES (#{user_id},
-                #{qualification_seq},
-                #{qualification_nm},
-                #{issuer},
-                #{acquisition_date},
-                #{expiry_date},
-                now(),
-                now(),
-                #{user_id},
-                #{user_id}
-               )
-    </insert>
-
-    <!-- insertUsrQualificationInfoHist : 자격증 이력 INSERT -->
-    <insert id="insertUsrQualificationInfoHist" parameterType="qualificationVO">
-        INSERT INTO TB_USER_QUALIFICATION_INFO_HIST(USER_ID, QUALIFICATION_SEQ, HIST_SEQ, QUALIFICATION_NM, ISSUER,
-                                                    ACQUISITION_DATE, EXPIRY_DATE, CREATED_DATE, CREATOR)
-        SELECT USER_ID,
-               QUALIFICATION_SEQ,
-               #{hist_seq},
-               QUALIFICATION_NM,
-               ISSUER,
-               ACQUISITION_DATE,
-               EXPIRY_DATE,
-               now(),
-               #{user_id}
-        FROM TB_USER_QUALIFICATION_INFO
-        WHERE QUALIFICATION_SEQ = #{qualification_seq}
-    </insert>
-
-    <!-- updateUsrWorkInfo : 근무 경력 INSERT -->
-    <insert id="updateUsrWorkInfo" parameterType="workExperienceVO">
-        INSERT INTO TB_WORK_EXPERIENCE_INFO(USER_ID, WORK_SEQ, WORK_PLACE, WORK_START_DATE, WORK_END_DATE, CREATED_DATE,
-                                            MODIFIED_DATE, CREATOR, MODIFIER)
-        VALUES (#{user_id},
-                #{work_seq},
-                #{work_place},
-                #{work_start_date},
-                #{work_end_date},
-                now(),
-                now(),
-                #{user_id},
-                #{user_id}
-                )
-    </insert>
-
-    <!-- insertUsrWorkInfoHist : 근무 경력 이력 INSERT -->
-    <insert id="insertUsrWorkInfoHist" parameterType="workExperienceVO">
-        INSERT INTO TB_WORK_EXPERIENCE_INFO_HIST(user_id, work_seq, hist_seq, work_place, work_start_date,
-                                                 work_end_date, created_date, creator)
-        SELECT USER_ID,
-               WORK_SEQ,
-               #{hist_seq},
-               WORK_PLACE,
-               WORK_START_DATE,
-               WORK_END_DATE,
-               now(),
-               #{user_id}
-        FROM TB_WORK_EXPERIENCE_INFO
-        WHERE WORK_SEQ = #{work_seq}
-    </insert>
-
 </mapper>

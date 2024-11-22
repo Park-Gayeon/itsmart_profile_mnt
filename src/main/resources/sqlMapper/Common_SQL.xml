@@ -23,7 +23,7 @@
           AND A.USE_YN = 'Y'
     </select>
 
-    <select id="getTaskMidCode" parameterType="String" resultType="CommonVO">
+    <select id="getTaskMidCodeList" parameterType="String" resultType="CommonVO">
         SELECT CODE_ID, CODE_VALUE
         FROM TB_COMMON_CODE
         WHERE CODE_GROUP_ID = 'TASK'
