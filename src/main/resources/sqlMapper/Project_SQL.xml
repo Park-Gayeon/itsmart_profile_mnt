@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.itsmart.profileMnt.dao.ProjectDAO">
+    <resultMap id="UsrProjectSkills" type="ProjectVO">
+        <id property="project_seq" column="PROJECT_SEQ"/>
+        <result property="project_nm" column="PROJECT_NM"/>
+        <collection property="skillList" column="PROJECT_SEQ" ofType="UserSkillVO">
+            <id property="skill_id" column="SKILL_ID"/>
+            <result property="skill_nm" column="SKILL_NM"/>
+        </collection>
+    </resultMap>
 
     <!-- updateUsrProjectInfo : 사업 경력 UPSERT -->
     <insert id="updateUsrProjectInfo" parameterType="projectVO">
@@ -52,6 +60,20 @@
         WHERE project_seq = #{project_seq}
           AND use_yn = 'Y'
     </insert>
+
+    <!-- project + usrSkillLIst -->
+    <select id="selectUsrSkillList" resultMap="UsrProjectSkills">
+        SELECT PJ.PROJECT_SEQ,
+               PJ.PROJECT_NM,
+               SK.SKILL_ID,
+               SK.SKILL_NM,
+               SK.USE_YN
+        FROM TB_PROJECT_INFO PJ
+                 LEFT JOIN TB_USER_SKILL_INFO SK
+                           ON PJ.USER_ID = SK.USER_ID AND PJ.PROJECT_SEQ = SK.PROJECT_SEQ AND SK.USE_YN = 'Y'
+        WHERE PJ.USER_ID = #{user_id}
+          AND PJ.PROJECT_SEQ = #{project_seq}
+    </select>
 
     <!-- updateUsrSkillInfo : 기술 정보 INSERT -->
     <insert id="updateUsrSkillInfo" parameterType="userSkillVO">

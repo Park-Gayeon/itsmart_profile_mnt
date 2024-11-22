@@ -1,6 +1,6 @@
 package kr.co.itsmart.profileMnt.service;
 
-import kr.co.itsmart.profileMnt.dao.ProfileDAO;
+import kr.co.itsmart.profileMnt.dao.WorkExperienceDAO;
 import kr.co.itsmart.profileMnt.vo.ProfileVO;
 import kr.co.itsmart.profileMnt.vo.WorkExperienceVO;
 import org.slf4j.Logger;
@@ -11,14 +11,14 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class WorkExperienceMntServiceImpl implements WorkExperienceMntService{
     private static final Logger LOGGER = LoggerFactory.getLogger((WorkExperienceMntServiceImpl.class));
-    private final ProfileDAO profileDAO;
+    private final WorkExperienceDAO workExperienceDAO;
 
-    public WorkExperienceMntServiceImpl(ProfileDAO profileDAO) {
-        this.profileDAO = profileDAO;
+    public WorkExperienceMntServiceImpl(WorkExperienceDAO workExperienceDAO) {
+        this.workExperienceDAO = workExperienceDAO;
     }
     @Override
-    public int selectMaxSeq(String user_id) {
-        return profileDAO.selectWkMaxSeq(user_id);
+    public int selectMaxHistSeq(String user_id) {
+        return workExperienceDAO.selectMaxHistSeq(user_id);
     }
 
     @Override
@@ -34,7 +34,7 @@ public class WorkExperienceMntServiceImpl implements WorkExperienceMntService{
 
         // DELETE TB
         LOGGER.info("사용자 근무경력 정보를 삭제합니다: user_id={}", user_id);
-        profileDAO.deleteUsrWorkInfo(user_id);
+        workExperienceDAO.deleteUsrWorkInfo(user_id);
 
         for(WorkExperienceVO work : profileVO.getWorkExperienceList()){
             work.setUser_id(user_id);
@@ -42,16 +42,16 @@ public class WorkExperienceMntServiceImpl implements WorkExperienceMntService{
 
             // UPDATE(=INSERT)
             LOGGER.info("사용자 근무경력 정보를 입력합니다: user_id={}, work_place", user_id, work.getWork_place());
-            profileDAO.updateUsrWorkInfo(work);
+            workExperienceDAO.updateUsrWorkInfo(work);
 
             // CREATE HIST
-            profileDAO.insertUsrWorkInfoHist(work);
+            workExperienceDAO.insertUsrWorkInfoHist(work);
             LOGGER.info("사용자 근무경력 정보 이력을 생성했습니다: user_id={}", user_id);
         }
     }
 
     @Override
     public int calcTotalMonth(String user_id) {
-        return profileDAO.calcWkTotalMonth(user_id);
+        return workExperienceDAO.calcWkTotalMonth(user_id);
     }
 }

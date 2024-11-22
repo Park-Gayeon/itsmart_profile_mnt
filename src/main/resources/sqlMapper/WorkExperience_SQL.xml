@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.itsmart.profileMnt.dao.WorkExperienceDAO">
+
+    <!-- updateUsrWorkInfo : 근무 경력 INSERT -->
+    <insert id="updateUsrWorkInfo" parameterType="workExperienceVO">
+        INSERT INTO TB_WORK_EXPERIENCE_INFO(USER_ID, WORK_SEQ, WORK_PLACE, WORK_START_DATE, WORK_END_DATE, CREATED_DATE,
+                                            MODIFIED_DATE, CREATOR, MODIFIER)
+        VALUES (#{user_id},
+                #{work_seq},
+                #{work_place},
+                #{work_start_date},
+                #{work_end_date},
+                now(),
+                now(),
+                #{user_id},
+                #{user_id}
+               )
+    </insert>
+
+
+    <!-- insertUsrWorkInfoHist : 근무 경력 이력 INSERT -->
+    <insert id="insertUsrWorkInfoHist" parameterType="workExperienceVO">
+        INSERT INTO TB_WORK_EXPERIENCE_INFO_HIST(user_id, work_seq, hist_seq, work_place, work_start_date,
+                                                 work_end_date, created_date, creator)
+        SELECT USER_ID,
+               WORK_SEQ,
+               #{hist_seq},
+               WORK_PLACE,
+               WORK_START_DATE,
+               WORK_END_DATE,
+               now(),
+               #{user_id}
+        FROM TB_WORK_EXPERIENCE_INFO
+        WHERE WORK_SEQ = #{work_seq}
+    </insert>
+
+
+</mapper>

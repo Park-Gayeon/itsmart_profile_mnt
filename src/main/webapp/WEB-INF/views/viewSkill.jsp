@@ -99,7 +99,7 @@
     function saveSkill(){
         if(confirm("저장하시겠습니까 ?")){
             let frm = $("#frm").serialize();
-            let url = "/profile/project/modify/skill/update";
+            let url = "/profile/project/modify/save/skill";
             $.ajax({
                 url: url,
                 type: "POST",

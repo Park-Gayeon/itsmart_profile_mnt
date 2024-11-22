@@ -12,6 +12,6 @@ public interface CommonDAO {
     /* code_group_id로 list 조회 */
     List<CommonVO> selectCodeList(Map<String, String> params);
 
-    /* 업무분류 동적 조회 */
-    List<CommonVO> getTaskMidCode(String code_id);
+    /* TASK 하위 코드 조회 */
+    List<CommonVO> getTaskMidCodeList(String code_id);
 }

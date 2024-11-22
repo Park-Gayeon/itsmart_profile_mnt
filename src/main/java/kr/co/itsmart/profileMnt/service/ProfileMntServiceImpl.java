@@ -17,8 +17,8 @@ public class ProfileMntServiceImpl implements ProfileMntService {
     }
 
     @Override
-    public int selectMaxSeq(String user_id) {
-        return profileDAO.selectPfMaxSeq(user_id);
+    public int selectMaxHistSeq(String user_id) {
+        return profileDAO.selectMaxHistSeq(user_id);
     }
 
     @Override
@@ -26,7 +26,7 @@ public class ProfileMntServiceImpl implements ProfileMntService {
     public void updateUsrProfileInfo(ProfileVO profile) {
         // UPDATE PROFILE INFO
         profileDAO.updateUsrProfileInfo(profile);
-        LOGGER.info("프로필 정보를 수정합니다: user_id={}", profile.getUser_id());
+        LOGGER.info("프로필 정보를 수정했습니다: user_id={}", profile.getUser_id());
 
         // CREATE HIST
         profileDAO.insertUsrProfileInfoHist(profile);

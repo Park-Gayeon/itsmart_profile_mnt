@@ -6,7 +6,6 @@ import kr.co.itsmart.profileMnt.service.ProjectMntService;
 import kr.co.itsmart.profileMnt.service.WorkExperienceMntService;
 import kr.co.itsmart.profileMnt.vo.CommonVO;
 import kr.co.itsmart.profileMnt.vo.ProfileVO;
-import kr.co.itsmart.profileMnt.vo.ProjectVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Lazy;
@@ -21,7 +20,7 @@ import java.util.Map;
 @Controller
 @RequestMapping("/profile/modify")
 public class ProfileMntController {
-private static final Logger LOGGER = LoggerFactory.getLogger(ProjectMntController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProjectMntController.class);
     private final ProfileMntService profileMntService;
     private final CommonService commonService;
     private final ProjectMntService projectMntService;
@@ -41,6 +40,8 @@ private static final Logger LOGGER = LoggerFactory.getLogger(ProjectMntControlle
 
     @PostMapping("/info/{user_id}")
     public String modifyUsrProfile(@ModelAttribute ProfileVO profile, Model model) {
+        LOGGER.info("== go selectProfileModify[사용자 프로필 상세 수정 화면] ==");
+
         Map<String, String> params = new HashMap<>();
         params.put("code_group_id", "TASK");
         params.put("task_type", "lar");
@@ -60,44 +61,35 @@ private static final Logger LOGGER = LoggerFactory.getLogger(ProjectMntControlle
         int wk_totalMonth = workExperienceMntService.calcTotalMonth(profile.getUser_id());
 
         model.addAttribute("profile", profile);
+        model.addAttribute("taskLarList", taskLarList);
+        model.addAttribute("taskMidList", taskMidList);
         model.addAttribute("orgList", orgList);
         model.addAttribute("psitList", psitList);
         model.addAttribute("roleList", roleList);
-        model.addAttribute("taskLarList", taskLarList);
-        model.addAttribute("taskMidList", taskMidList);
         model.addAttribute("pj_totalMonth", pj_totalMonth);
         model.addAttribute("wk_totalMonth", wk_totalMonth);
 
         return "selectProfileModify";
     }
 
-    @PostMapping("/{user_id}")
+    @PostMapping("/save/{user_id}")
     @ResponseBody
     public String updateUsrProfile(@PathVariable("user_id") String user_id, @ModelAttribute ProfileVO profile) {
+        LOGGER.info("== Ajax[사용자 프로필 수정 처리(인적사항)] ==");
         try {
-            // hist_seq
-            int hist_seq = profileMntService.selectMaxSeq(user_id);
+            // CREATE hist_seq
+            int hist_seq = profileMntService.selectMaxHistSeq(user_id);
             profile.setHist_seq(hist_seq);
             LOGGER.info("프로필 정보 hist_seq: hist_seq={}", hist_seq);
 
-            // 프로필 정보 처리
+            // 프로필 수정 처리
             profileMntService.updateUsrProfileInfo(profile);
-        }catch (Exception e){
+        } catch (Exception e) {
             LOGGER.debug("프로필 정보 처리 실패: user_id={}", user_id, e.getMessage());
             return "FAIL";
         }
         return "SUCCESS";
     }
 
-    @GetMapping("/skill/update")
-    public String updateUsrSkill(
-            @RequestParam("user_id") String user_id,
-            @RequestParam("projecct_seq") int project_seq,
-            Model model){
-        ProjectVO tmpVO = new ProjectVO();
-        tmpVO.setUser_id(user_id);
-        tmpVO.setProject_seq(project_seq);
-        return "";
-    }
 }
 
