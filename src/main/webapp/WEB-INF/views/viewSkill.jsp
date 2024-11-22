@@ -28,18 +28,20 @@
                 <div class="modal-body py-3">
                     <div class="container text-center">
                         <div class="col-md-auto g-0 add" style="margin-bottom: 10px;">
-                            <input type="hidden" name="project_seq" value="${projectSeq}"/>
-                            <c:forEach var="skill" items="${skill.skillList}">
+                            <input type="hidden" name="user_id" value="${project.user_id}"/>
+                            <input type="hidden" name="project_seq" value="${project.project_seq}"/>
+                            <c:forEach var="skill" items="${skill.skillList}" varStatus="status">
                                 <c:choose>
                                     <c:when test="${flag ne 1}">
                                         <div class="col-sm-3 common-box common-box input-box" style="margin-bottom: 5px;">
-
-                                            <input type="text" style="text-align: center" name="skill_nm" value="${skill.skill_nm}" readonly/>
+                                            <input type="hidden" name="skillList[${status.index}]skill_id" value="${skill.skill_id}"/>
+                                            <input type="text" style="text-align: center" name="skillList[${status.index}]skill_nm" value="${skill.skill_nm}" readonly/>
                                         </div>
                                     </c:when>
                                     <c:otherwise>
-                                        <div class="col-sm-3 common-box common-box input-box" style="margin-bottom: 5px;" onclick="removeEl(this, 'old')">
-                                            <input class="over" type="text" style="text-align: center" name="skill_nm" value="${skill.skill_nm}" readonly/>
+                                        <div class="col-sm-3 common-box common-box input-box sort" style="margin-bottom: 5px;" onclick="removeEl(this)">
+                                            <input type="hidden" class="idx" name="skillList[${status.index}].skill_id" value="${skill.skill_id}"/>
+                                            <input class="over" type="text" style="text-align: center" name="skillList[${status.index}].skill_nm" value="${skill.skill_nm}" readonly/>
                                         </div>
                                     </c:otherwise>
                                 </c:choose>
@@ -82,29 +84,58 @@
                return;
            }
            let newElement = `
-           <div class="col-sm-3 common-box common-box input-box" style="margin-bottom: 5px;" onclick="removeEl(this, 'new')">
-               <input class="over" type="text" style="text-align: center;" name="skill_nm" value="` +newSkill+ `" readonly/>
-           <div>
+               <div class="col-sm-3 common-box common-box input-box sort" style="margin-bottom: 5px;" onclick="removeEl(this)">
+                   <input class="idx" type="hidden" name="skillList[0].skill_id"/>
+                   <input class="over" type="text" style="text-align: center;" name="skillList[0].skill_nm" value="` +newSkill+ `" readonly/>
+               <div>
            `
-            tarDiv.append(newElement);
-            $('input[name=newSkill]').val('');
-            $('input[name=newSkill]').focus();
+           tarDiv.append(newElement);
+           updateIndex();
+           $('input[name=newSkill]').val('');
+           $('input[name=newSkill]').focus();
         });
     })
 
     function saveSkill(){
         if(confirm("저장하시겠습니까 ?")){
-            alert("저장되었습니다. - 로직구현이전");
-            window.close();
+            let frm = $("#frm").serialize();
+            let url = "/profile/project/modify/skill/update";
+            $.ajax({
+                url: url,
+                type: "POST",
+                data: frm,
+                success: function (response){
+                    if(response === "SUCCESS"){
+                        alert("저장 되었습니다");
+                        window.close();
+                    }else {
+                        alert("저장에 실패했습니다");
+                    }
+                },
+                error: function(){
+                    alert("서버 오류가 발생했습니다. 다시 시도해 주세요.");
+                }
+            });
         }
     }
 
-    function removeEl(div, str){
-        if(str == 'new'){
-            $(div).remove();
-        }else {
-            alert("db update 를 할거다");
-        }
+    function removeEl(div){
+        $(div).remove();
+        updateIndex();
+    }
+
+    function updateIndex(){
+        let listNm = 'skillList';
+        $(".add").find(".sort").each(function(i){
+            $(this).find("input").each(function (){
+                let name = $(this).attr("name");
+                if(name && name.startsWith(listNm)){
+                    let newName = name.replace(/\[\d*\]/, '[' + i + ']');
+                    $(this).attr("name", newName);
+                }
+            });
+            $(this).find(".idx").attr("value", i + 1);
+        });
     }
 
 

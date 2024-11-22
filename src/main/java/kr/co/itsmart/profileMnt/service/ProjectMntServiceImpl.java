@@ -1,8 +1,10 @@
 package kr.co.itsmart.profileMnt.service;
 
 import kr.co.itsmart.profileMnt.dao.ProfileDAO;
+import kr.co.itsmart.profileMnt.dao.ProjectDAO;
 import kr.co.itsmart.profileMnt.vo.ProfileVO;
 import kr.co.itsmart.profileMnt.vo.ProjectVO;
+import kr.co.itsmart.profileMnt.vo.UserSkillVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -12,13 +14,20 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProjectMntServiceImpl implements ProjectMntService{
     private static final Logger LOGGER = LoggerFactory.getLogger(ProjectMntServiceImpl.class);
     private final ProfileDAO profileDAO;
-    public ProjectMntServiceImpl(ProfileDAO profileDAO){
+    private final ProjectDAO projectDAO;
+    public ProjectMntServiceImpl(ProfileDAO profileDAO, ProjectDAO projectDAO){
         this.profileDAO = profileDAO;
+        this.projectDAO = projectDAO;
     }
 
     @Override
     public int selectMaxSeq(String user_id) {
         return profileDAO.selectPjMaxSeq(user_id);
+    }
+
+    @Override
+    public int selectMaxSkillSeq(ProjectVO project) {
+        return projectDAO.selectSkMaxSeq(project);
     }
 
     @Override
@@ -36,14 +45,20 @@ public class ProjectMntServiceImpl implements ProjectMntService{
             project.setUser_id(user_id);
             project.setHist_seq(hist_seq);
 
-            // UPSERT
-            LOGGER.info("사업 정보를 입력 및 수정합니다: user_id={}, project_seq={}, project_nm={}", user_id, project.getProject_seq(), project.getProject_nm());
-            profileDAO.updateUsrProjectInfo(project);
+            if(project.getUse_yn() == "N"){ // remove를 눌렀을 때만 use_yn이 n 으로 세팅될거다. 확인 필요
+                //delete를 할건데 관련되어있는 skill tb도 같이 delete 날릴거다.
+                LOGGER.info("REMOVE누른 항목 project_nm={}, project_seq={}", project.getProject_nm(), project.getProject_seq());
+                projectDAO.deleteUsrSkillInfo(project);
+                projectDAO.deleteUsrProjectInfo(project);
+            } else { // 그냥 내용만 수정이 되었다면
+                // UPSERT
+                LOGGER.info("사업 정보를 입력 및 수정합니다: user_id={}, project_seq={}, project_nm={}", user_id, project.getProject_seq(), project.getProject_nm());
+                projectDAO.updateUsrProjectInfo(project);
+                // CREATE HIST
+                projectDAO.insertUsrProjectInfoHist(project);
+                LOGGER.info("사업 정보 이력을 생성했습니다: user_id={}, hist_seq={}", user_id, hist_seq);
+            }
 
-            // CREATE HIST
-            profileDAO.insertUsrProjectInfoHist(project);
-            LOGGER.info("사업 정보 이력을 생성했습니다: user_id={}, hist_seq={}", user_id, hist_seq);
-            
         }
     }
 
@@ -55,5 +70,37 @@ public class ProjectMntServiceImpl implements ProjectMntService{
     @Override
     public int calcTotalMonth(String user_id) {
         return profileDAO.calcPjTotalMonth(user_id);
+    }
+
+    @Override
+    @Transactional
+    public void updateUsrSkill(ProjectVO project) {
+        String user_id = project.getUser_id();
+        int project_seq = project.getProject_seq();
+        int hist_seq = project.getHist_seq();
+
+        if(project.getSkillList() == null || project.getSkillList().isEmpty()){
+            LOGGER.info("기술 정보가 비어있습니다. 처리할 데이터가 없습니다: user_id={}, project_seq={}", user_id, project_seq);
+            return;
+        }
+
+        // DELETE TB
+        LOGGER.info("프로젝트와 관련된 기술 정보를 삭제합니다: user_id={}, project_seq={}", user_id, project_seq);
+        projectDAO.deleteUsrSkillInfo(project);
+
+        for(UserSkillVO skill : project.getSkillList()){
+            skill.setUser_id(user_id);
+            skill.setProject_seq(project_seq);
+            skill.setHist_seq(hist_seq);
+
+            // UPDATE(=INSERT)
+            LOGGER.info("기술 정보를 입력합니다: user_id={}, skill_id={}, skill_nm={}", skill.getUser_id(), skill.getSkill_id(), skill.getSkill_nm());
+            projectDAO.updateUsrSkillInfo(skill);
+
+            // CREATE HIST
+            projectDAO.insertUsrSkillInfoHist(skill);
+            LOGGER.info("기술 정보 이력을 생성했습니다: user_id={}, project_seq={}, hist_seq={}", skill.getUser_id(), skill.getProject_seq(), skill.getHist_seq());
+        }
+
     }
 }

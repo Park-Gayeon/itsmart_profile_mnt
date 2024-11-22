@@ -53,9 +53,9 @@ public class ProfileDetailController {
         tmpVO.setProject_seq(project_seq);
         ProjectVO skill = profileDetailService.selectUsrSkillList(tmpVO);
 
-        // flag : 1 => selectProfileModiry.jsp
+        // flag : 1 => selectProfileModify.jsp
         model.addAttribute("flag", flag);
-        model.addAttribute("projectSeq", project_seq);
+        model.addAttribute("project", tmpVO);
         model.addAttribute("skill", skill);
         return "viewSkill";
     }

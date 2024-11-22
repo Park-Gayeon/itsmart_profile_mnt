@@ -2,7 +2,7 @@
 <configuration>
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level [%thread] %logger{36} - %msg%n%ex</pattern>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level [%thread] %logger{36} - %msg%n%ex%n</pattern>
         </encoder>
     </appender>
 
@@ -14,7 +14,14 @@
     <logger name="kr.co.itsmart.profileMnt" level="DEBUG" additivity="false">
         <appender-ref ref="CONSOLE" />
     </logger>
-    <logger name="org.springframework.web.servlet" level="INFO" />
-    <logger name="org.apache.ibatis" level="DEBUG"/>
-    <logger name="org.mybatis" level="DEBUG"/>
+
+    <logger name="org.springframework.jdbc.core" level="DEBUG" />
+    <logger name="org.springframework.jdbc.datasource" level="DEBUG" />
+    <logger name="org.apache.ibatis" level="DEBUG" />
+    <logger name="org.mybatis" level="DEBUG" />
+    <logger name="org.apache.ibatis.executor" level="DEBUG" />
+    <logger name="org.apache.ibatis.transaction" level="DEBUG" />
+    <logger name="org.apache.ibatis.exceptions" level="ERROR" />
+    <logger name="org.springframework.web" level="DEBUG" />
+    <logger name="org.springframework.web.servlet" level="DEBUG" />
 </configuration>
