@@ -22,7 +22,7 @@
                     <form>
                         <input type="hidden" id="project_seq" name="project_seq" value="${maxSeq}"/>
                         <label for="project_nm">사업명:</label>
-                        <input type="text" id="project_nm" name="project_nm"><br><br>
+                        <input type="text" id="project_nm" name="project_nm" maxlength="18"><br><br>
 
                         <label for="project_start_date">투입시작일:</label>
                         <input type="date" id="project_start_date" name="project_start_date"><br><br>
@@ -42,7 +42,7 @@
                         </select><br><br>
 
                         <label for="project_client">발주처:</label>
-                        <input type="text" id="project_client" name="project_client"><br><br>
+                        <input type="text" id="project_client" name="project_client" maxlength="18"><br><br>
 
                         <label for="assigned_task_lar">담당업무(대분류):</label>
                         <select class="form-select" style="width: auto; justify-self: center;" id="assigned_task_lar" name="assigned_task_lar">
@@ -169,6 +169,11 @@
         }
         return chk;
     }
+
+    // 부트스트랩에서 제공하는 날짜form을 사용해보고 년도에 대한 유효성 검사가 되지 않으면 검사로직을 만들어야 한다.
+    // 업무뷴류체계 ajax 로 받는거 구현해야 한다.
+    // start_date, end_date에 대한 유효성검사가 추가되어야 한다.
+
 
 </script>
 </html>

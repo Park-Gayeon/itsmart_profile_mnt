@@ -212,6 +212,8 @@
                         <div class="col-md g-0">
                             <div class="row mb-2 g-0">
                                 <c:forEach var="work" items="${profile.workExperienceList}" varStatus="wkStatus">
+                                    <input type="hidden" name="workExperienceList[${wkStatus.index}].work_seq"
+                                           value="${work.work_seq}"/>
                                     <div class="col-sm-3 common-box input-box pt-4 me-2">
                                         <label for="work_place">회사명</label>
                                         <input type="text" name="workExperienceList[${wkStatus.index}].work_place"

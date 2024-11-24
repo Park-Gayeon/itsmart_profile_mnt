@@ -6,7 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <%-- 웹 앱 반응형 --%>
-    <meta name="viewport" content="width=device-width" , initial-scale="1">
+    <meta name="viewport" content="width=device-width", initial-scale="1">
     <link rel="stylesheet" href="/css/bootstrap.css">
     <link rel="stylesheet" href="/css/basic.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
@@ -32,6 +32,8 @@
                         정보입니다.
                         <input type="button" class="btn btn-warning" data-name="profile" onclick="goSave(this)"
                                value="SAVE"/>
+                        <input type="button" class="btn btn-warning" data-name="profile" onclick="goDetail()"
+                               value="TEMP"/>
                     </div>
                 </h2>
                 <div class="common-box row-box row mb-5 g-0">
@@ -49,12 +51,13 @@
                             </div>
                             <div class="col-sm-2 common-box common-box input-box pt-4 me-2">
                                 <label for="user_birth">생년월일 <span class="star">*</span></label>
-                                <input type="text" class="dateFmat" name="user_birth" id="user_birth"
+                                <input type="text" class="dateFmt" name="user_birth" id="user_birth" maxlength="10"
                                        value="${profile.user_birth}"/>
                             </div>
                             <div class="col-sm-2 common-box common-box input-box pt-4 me-2">
                                 <label for="user_phone">휴대전화 <span class="star">*</span></label>
-                                <input type="tel" name="user_phone" id="user_phone" value="${profile.user_phone}"/>
+                                <input type="text" class="telFmt" name="user_phone" id="user_phone" maxlength="13" value="${profile.user_phone}"
+                                />
                             </div>
                             <div class="col-sm-2 common-box common-box input-box pt-4 me-2">
                                 <label for="user_id">직원ID</label>
@@ -62,7 +65,7 @@
                             </div>
                             <div class="col-sm common-box common-box input-box pt-4 me-2">
                                 <label for="user_email">이메일</label>
-                                <input type="email" id="user_email" value="${profile.user_id}@itsmart.co.kr" readonly/>
+                                <input type="text" id="user_email" value="${profile.user_id}@itsmart.co.kr" readonly/>
                             </div>
                         </div>
                         <!-- 두번째 row -->
@@ -87,13 +90,12 @@
                             </div>
                             <div class="col-sm-2 common-box common-box input-box pt-4 me-2">
                                 <label for="hire_date">입사일자</label>
-                                <input type="text" class="dateFmat" name="hire_date" id="hire_date"
-                                       value="${profile.hire_date}"
-                                       readonly/>
+                                <input type="text" class="dateFmt" name="hire_date" id="hire_date" maxlength="10"
+                                       value="${profile.hire_date}" readonly/>
                             </div>
                             <div class="col-sm common-box common-box input-box pt-4 me-2">
                                 <label for="user_address">주소 <span class="star">*</span></label>
-                                <input type="text" name="user_address" id="user_address"
+                                <input type="text" name="user_address" id="user_address" maxlength="40"
                                        value="${profile.user_address}"/>
                             </div>
                         </div>
@@ -118,7 +120,7 @@
                                         <label>학교구분</label>
                                         <select class="form-select schGb" style="width: 100px; font-size: 12px;"
                                                 name="edu${i}_gubun">
-                                            <option>선택해주세요</option>
+                                            <option value="">선택해주세요</option>
                                             <option value="010" ${profile[gubunKey] == '010' ? 'selected' : ''}>
                                                 고등학교
                                             </option>
@@ -135,27 +137,27 @@
                                     </div>
                                     <div class="col-sm-3 common-box input-box pt-4 me-2">
                                         <label for="edu${i}_school_name">학교명</label>
-                                        <input type="text" name="edu${i}_school_name" id="edu${i}_school_name"
+                                        <input type="text" name="edu${i}_school_name" id="edu${i}_school_name" maxlength="15"
                                                value="${profile[eduKey]}"/>
                                     </div>
                                     <div class="col-sm-2 common-box input-box pt-4">
                                         <c:set var="startDateKey" value="edu${i}_start_date"/>
                                         <label for="edu${i}_start_date">입학년월</label>
-                                        <input type="text" name="edu${i}_start_date" id="edu${i}_start_date"
-                                               value="${profile[startDateKey]}"/>
+                                        <input type="text" class="dateFmt" name="edu${i}_start_date" id="edu${i}_start_date"
+                                               maxlength="10" value="${profile[startDateKey]}"/>
                                     </div>
                                     <div class="col-sm-2 common-box input-box pt-4 me-2">
                                         <c:set var="endDateKey" value="edu${i}_end_date"/>
                                         <label for="edu${i}_end_date">졸업년월</label>
-                                        <input type="text" name="edu${i}_end_date" id="edu${i}_end_date"
-                                               value="${profile[endDateKey]}"/>
+                                        <input type="text" class="dateFmt" name="edu${i}_end_date" id="edu${i}_end_date"
+                                               maxlength="10" value="${profile[endDateKey]}"/>
                                     </div>
                                     <div class="col-sm-1 common-box input-box pt-4 me-2">
                                         <c:set var="statusKey" value="edu${i}_grad_status"/>
                                         <label>졸업상태</label>
                                         <select class="form-select" style="width: 100px; font-size: 12px"
                                                 name="edu${i}_grad_status">
-                                            <option>선택해주세요</option>
+                                            <option value="">선택해주세요</option>
                                             <option value="001" ${profile[statusKey] == '001' ? 'selected' : ''}>
                                                 졸업
                                             </option>
@@ -191,7 +193,7 @@
                                     <label>학교구분</label>
                                     <select class="form-select schGb" style="width: 100px; font-size: 12px"
                                             name="edu1_gubun">
-                                        <option>선택해주세요</option>
+                                        <option value="">선택해주세요</option>
                                         <option value="010">고등학교</option>
                                         <option value="011">대학교(2,3년)</option>
                                         <option value="012">대학교(4년)</option>
@@ -200,7 +202,7 @@
                                 </div>
                                 <div class="col-sm-3 common-box input-box pt-4 me-2">
                                     <label>학교명</label>
-                                    <input type="text" name="edu1_school_name"/>
+                                    <input type="text" name="edu1_school_name" maxlength="15"/>
                                 </div>
                                 <div class="col-sm-2 common-box input-box pt-4">
                                     <label>입학년월</label>
@@ -214,7 +216,7 @@
                                     <label>졸업상태</label>
                                     <select class="form-select" style="width: 100px; font-size: 12px"
                                             name="edu1_grad_status">
-                                        <option>선택해주세요</option>
+                                        <option value="">선택해주세요</option>
                                         <option value="001">졸업</option>
                                         <option value="002">졸업예정</option>
                                         <option value="003">재학중</option>
@@ -233,21 +235,20 @@
                     <div class="row mb-2 g-0" id="schSub" style="<c:if test="${profile.major eq ''}">display: none;</c:if>">
                         <div class="col-sm-3 common-box input-box pt-4 me-2">
                             <label for="major">전공명</label>
-                            <input type="text" name="major" id="major" value="${profile.major}"/>
+                            <input type="text" name="major" id="major" maxlength="18" value="${profile.major}"/>
                         </div>
                         <div class="col-sm-3 common-box input-box pt-4 me-2">
                             <label for="double_major">복수전공명</label>
-                            <input type="text" name="double_major" id="double_major"
+                            <input type="text" name="double_major" id="double_major" maxlength="18"
                                    value="${profile.double_major}"/>
                         </div>
                         <div class="col-sm-1 common-box input-box pt-4">
                             <label for="total_grade">학점</label>
-                            <input type="text" name="total_grade" id="total_grade" value="${profile.total_grade}"/>
+                            <input type="text" class="grade" name="total_grade" id="total_grade" maxlength="3" onkeyup="onlyDot(this)" value="${profile.total_grade}"/>
                         </div>
                         <div class="col-sm-1 common-box input-box pt-4">
                             <label for="standard_grade">총점</label>
-                            <input type="text" name="standard_grade" id="standard_grade"
-                                   value="${profile.standard_grade}"/>
+                            <input type="text" class="grade" name="standard_grade" id="standard_grade" maxlength="3" onkeyup="onlyDot(this)" value="${profile.standard_grade}"/>
                         </div>
                     </div>
                 </div>
@@ -278,23 +279,23 @@
                                         <div class="col-sm-2 common-box input-box pt-4 me-2">
                                             <label>자격증명</label>
                                             <input type="text"
-                                                   name="qualificationList[${qlStatus.index}].qualification_nm"
+                                                   name="qualificationList[${qlStatus.index}].qualification_nm" maxlength="18"
                                                    value="${qualification.qualification_nm}">
                                         </div>
                                         <div class="col-sm-2 common-box input-box pt-4 me-2">
                                             <label>발행기관</label>
-                                            <input type="text" name="qualificationList[${qlStatus.index}].issuer"
+                                            <input type="text" name="qualificationList[${qlStatus.index}].issuer" maxlength="18"
                                                    value="${qualification.issuer}"/>
                                         </div>
                                         <div class="col-sm-2 common-box input-box pt-4">
                                             <label>취득일자</label>
-                                            <input type="text" class="dateFmat"
+                                            <input type="text" class="dateFmt" maxlength="10"
                                                    name="qualificationList[${qlStatus.index}].acquisition_date"
                                                    value="${qualification.acquisition_date}"/>
                                         </div>
                                         <div class="col-sm-2 common-box input-box pt-4">
                                             <label>만기일자</label>
-                                            <input type="text" class="dateFmat"
+                                            <input type="text" class="dateFmt" maxlength="10"
                                                    name="qualificationList[${qlStatus.index}].expiry_date"
                                                    value="${qualification.expiry_date}"/>
                                         </div>
@@ -321,20 +322,21 @@
                                            value="1">
                                     <div class="col-sm-2 common-box input-box pt-4 me-2">
                                         <label>자격증명</label>
-                                        <input type="text" name="qualificationList[0].qualification_nm"/>
+                                        <input type="text" name="qualificationList[0].qualification_nm" maxlength="18"/>
                                     </div>
                                     <div class="col-sm-2 common-box input-box pt-4 me-2">
                                         <label>발행기관</label>
-                                        <input type="text" name="qualificationList[0].issuer"/>
+                                        <input type="text" name="qualificationList[0].issuer" maxlength="18"/>
                                     </div>
                                     <div class="col-sm-2 common-box input-box pt-4">
                                         <label>취득일자</label>
-                                        <input type="text" class="dateFmat"
+                                        <input type="text" class="dateFmt" maxlength="10"
                                                name="qualificationList[0].acquisition_date"/>
                                     </div>
                                     <div class="col-sm-2 common-box input-box pt-4">
                                         <label>만기일자</label>
-                                        <input type="text" class="dateFmat" name="qualificationList[0].expiry_date"/>
+                                        <input type="text" class="dateFmt" maxlength="10"
+                                               name="qualificationList[0].expiry_date"/>
                                     </div>
                                     <div class="col-sm-1" style="text-align: center; padding-top: 15px;">
                                         <button type="button" class="btn btn-danger clear_field"
@@ -377,19 +379,19 @@
                                                    value="${work.work_seq}"/>
                                             <div class="col-sm-3 common-box input-box pt-4 me-2">
                                                 <label>회사명</label>
-                                                <input type="text"
+                                                <input type="text" maxlength="18"
                                                        name="workExperienceList[${wkStatus.index}].work_place"
                                                        value="${work.work_place}"/>
                                             </div>
                                             <div class="col-sm-2 common-box input-box pt-4">
                                                 <label>입사일자</label>
-                                                <input type="text" class="dateFmat"
+                                                <input type="text" class="dateFmt" maxlength="10"
                                                        name="workExperienceList[${wkStatus.index}].work_start_date"
                                                        value="${work.work_start_date}"/>
                                             </div>
                                             <div class="col-sm-2 common-box input-box pt-4">
                                                 <label>퇴사일자</label>
-                                                <input type="text" class="dateFmat"
+                                                <input type="text" class="dateFmt" maxlength="10"
                                                        name="workExperienceList[${wkStatus.index}].work_end_date"
                                                        value="${work.work_end_date}"/>
                                             </div>
@@ -415,15 +417,17 @@
                                         <input type="hidden" class="seq" name="workExperienceList[0].work_seq"/>
                                         <div class="col-sm-3 common-box input-box pt-4 me-2">
                                             <label>회사명</label>
-                                            <input type="text" name="workExperienceList[0].work_place"/>
+                                            <input type="text" name="workExperienceList[0].work_place" maxlength="18"/>
                                         </div>
                                         <div class="col-sm-2 common-box input-box pt-4">
                                             <label>입사일자</label>
-                                            <input type="text" name="workExperienceList[0].work_start_date"/>
+                                            <input type="text" class="dateFmt" maxlength="10"
+                                                   name="workExperienceList[0].work_start_date"/>
                                         </div>
                                         <div class="col-sm-2 common-box input-box pt-4">
                                             <label>퇴사일자</label>
-                                            <input type="text" name="workExperienceList[0].work_end_date"/>
+                                            <input type="text" class="dateFmt" maxlength="10"
+                                                   name="workExperienceList[0].work_end_date"/>
                                         </div>
                                         <div class="col-sm-1" style="text-align: center; padding-top: 15px;">
                                             <button type="button" class="btn btn-danger clear_field"
@@ -491,14 +495,14 @@
                                                    name="projectList[${pjStatus.index}].project_seq"
                                                    value="${project_ing.project_seq}"/>
                                             <input type="hidden" class="useYn" name="projectList[${pjStatus.index}].use_yn" value="${project_ing.use_yn}"/>
-                                            <td><input type="text" name="projectList[${pjStatus.index}].project_client"
+                                            <td><input type="text" name="projectList[${pjStatus.index}].project_client" maxlength="18"
                                                        value="${project_ing.project_client}"/></td>
-                                            <td><input type="text" name="projectList[${pjStatus.index}].project_nm"
+                                            <td><input type="text" name="projectList[${pjStatus.index}].project_nm" maxlength="18"
                                                        value="${project_ing.project_nm}"/></td>
-                                            <td><input type="text"
+                                            <td><input type="text" class="dateFmt" maxlength="10"
                                                        name="projectList[${pjStatus.index}].project_start_date"
                                                        value="${project_ing.project_start_date}"/>
-                                                ~ <input type="text"
+                                                ~ <input type="text" class="dateFmt" maxlength="10"
                                                          name="projectList[${pjStatus.index}].project_end_date"
                                                          value="${project_ing.project_end_date}"/></td>
                                             <td>
@@ -578,18 +582,17 @@
                                                    name="projectList[${pjStatus.index}].project_seq"
                                                    value="${project_hist.project_seq}"/>
                                             <input type="hidden" class="useYn" name="projectList[${pjStatus.index}].use_yn" value="${project_hist.use_yn}"/>
-                                            <td><input type="text" name="projectList[${pjStatus.index}].project_client"
+                                            <td><input type="text" name="projectList[${pjStatus.index}].project_client" maxlength="18"
                                                        value="${project_hist.project_client}"/></td>
-                                            <td><input type="text" name="projectList[${pjStatus.index}].project_nm"
+                                            <td><input type="text" name="projectList[${pjStatus.index}].project_nm" maxlength="18"
                                                        value="${project_hist.project_nm}"/></td>
-                                            <td><input type="text"
+                                            <td><input type="text" class="dateFmt" maxlength="10"
                                                        name="projectList[${pjStatus.index}].project_start_date"
                                                        value="${project_hist.project_start_date}"/>
-                                                ~ <input type="text"
+                                                ~ <input type="text" class="dateFmt" maxlength="10"
                                                          name="projectList[${pjStatus.index}].project_end_date"
                                                          value="${project_hist.project_end_date}"/></td>
                                             <td>
-                                                    <%--해당 구역은 ajax 개발 예정중 (업무분류)--%>
                                                 <select class="form-select" style="width: auto"
                                                         name="projectList[${pjStatus.index}].assigned_task_lar">
                                                     <c:forEach var="taskLarList" items="${taskLarList}">
@@ -646,6 +649,7 @@
 <!-- footer.jsp -->
 <script src="//code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="/js/bootstrap.bundle.js"></script>
+<script src="/js/common.js"></script>
 <script type="text/javascript">
     $(document).ready(function () {
         const wk_totalMonth = [[${wk_totalMonth}]];
@@ -656,6 +660,11 @@
 
         document.getElementById("wk_career").innerText = calc_wk_totalMonth;
         document.getElementById("pj_career").innerText = calc_pj_totalMonth;
+
+        // 날짜 및 휴대전화 포맷
+        $(".container").find(".dateFmt, .telFmt").each(function(){
+            formatInput($(this));
+        });
 
         $(".add_field").click(function () {
             let frmId = $(this).data("target");
@@ -670,19 +679,19 @@
                             <input type="hidden" class="seq" name="qualificationList[].qualification_seq" value=""/>
                             <div class="col-sm-2 common-box input-box pt-4 me-2">
                                 <label>자격증명</label>
-                                <input type="text" name="qualificationList[].qualification_nm"/>
+                                <input type="text" name="qualificationList[].qualification_nm" maxlength="18"/>
                             </div>
                             <div class="col-sm-2 common-box input-box pt-4 me-2">
                                 <label>발행기관</label>
-                                <input type="text" name="qualificationList[].issuer"/>
+                                <input type="text" name="qualificationList[].issuer" maxlength="18"/>
                             </div>
                             <div class="col-sm-2 common-box input-box pt-4">
                                 <label>취득일자</label>
-                                <input type="text" name="qualificationList[].acquisition_date"/>
+                                <input type="text" class="dateFmt" maxlength="10" name="qualificationList[].acquisition_date"/>
                             </div>
                             <div class="col-sm-2 common-box input-box pt-4">
                                 <label>만기일자</label>
-                                <input type="text" name="qualificationList[].expiry_date"/>
+                                <input type="text" class="dateFmt" maxlength="10" name="qualificationList[].expiry_date"/>
                             </div>
                             <div class="col-sm-1" style="text-align: center; padding-top: 15px;"><button type="button" class="btn btn-danger remove-field" data-target="qlFrm">REMOVE</button></div>
                         </div>`;
@@ -693,15 +702,15 @@
                                         <input type="hidden" class="seq" name="workExperienceList[].work_seq" value=""/>
                                         <div class="col-sm-3 common-box input-box pt-4 me-2">
                                             <label>회사명</label>
-                                            <input type="text" name="workExperienceList[].work_place"/>
+                                            <input type="text" name="workExperienceList[].work_place" maxlength="18"/>
                                         </div>
                                         <div class="col-sm-2 common-box input-box pt-4">
                                             <label>입사일자</label>
-                                            <input type="text" name="workExperienceList[].work_start_date"/>
+                                            <input type="text" class="dateFmt" maxlength="10" name="workExperienceList[].work_start_date"/>
                                         </div>
                                         <div class="col-sm-2 common-box input-box pt-4">
                                             <label>퇴사일자</label>
-                                            <input type="text" name="workExperienceList[].work_end_date"/>
+                                            <input type="text" class="dateFmt" maxlength="10" name="workExperienceList[].work_end_date"/>
                                         </div>
                                         <div class="col-sm-1" style="text-align: center; padding-top: 15px;">
                                             <button type="button" class="btn btn-danger remove-field" data-target="workFrm">REMOVE</button>
@@ -714,7 +723,7 @@
                                 <label>학교구분</label>
                                 <select class="form-select schGb" style="width: 100px; font-size: 12px"
                                         name="edu1_gubun">
-                                    <option>선택해주세요</option>
+                                    <option value="">선택해주세요</option>
                                     <option value="010">고등학교</option>
                                     <option value="011">대학교(2,3년)</option>
                                     <option value="012">대학교(4년)</option>
@@ -723,21 +732,21 @@
                             </div>
                             <div class="col-sm-3 common-box input-box pt-4 me-2">
                                 <label>학교명</label>
-                                <input type="text" name="edu1_school_name"/>
+                                <input type="text" name="edu1_school_name" maxlength="15"/>
                             </div>
                             <div class="col-sm-2 common-box input-box pt-4">
                                 <label>입학년월</label>
-                                <input type="text" name="edu1_start_date"/>
+                                <input type="text" class="dateFmt" maxlength="10" name="edu1_start_date"/>
                             </div>
                             <div class="col-sm-2 common-box input-box pt-4 me-2">
                                 <label>졸업년월</label>
-                                <input type="text" name="edu1_end_date"/>
+                                <input type="text" class="dateFmt" maxlength="10" name="edu1_end_date"/>
                             </div>
                             <div class="col-sm-1 common-box input-box pt-4 me-2">
                                 <label>졸업상태</label>
                                 <select class="form-select" style="width: 100px; font-size: 12px"
                                         name="edu1_grad_status">
-                                    <option>선택해주세요</option>
+                                    <option value="">선택해주세요</option>
                                     <option value="001">졸업</option>
                                     <option value="002">졸업예정</option>
                                     <option value="003">재학중</option>
@@ -791,6 +800,12 @@
                $("#schSub").hide();
            }
         });
+
+        $(".container").on("keyup", ".dateFmt, .telFmt", function(){
+            formatInput($(this));
+        });
+
+
     });
     // 전역변수로 선언
     let addCnt = 0;
@@ -863,14 +878,14 @@
         newRow = `<tr class="add">
                     <td>+</td>
                     <input type="hidden" name="projectList[].project_seq" value="` + project_seq + `"/>
-                    <td><input type="text" name="projectList[].project_client"
+                    <td><input type="text" name="projectList[].project_client" maxlength="18"
                                value="` + data.project_client + `" readonly/></td>
-                    <td><input type="text" name="projectList[].project_nm"
+                    <td><input type="text" name="projectList[].project_nm" maxlength="18"
                                value="` + data.project_nm + `" readonly/></td>
-                    <td><input type="text" class="dateFmat"
+                    <td><input type="text" class="dateFmt" maxlength="10"
                                name="projectList[].project_start_date"
                                value="` + data.project_start_date + `" readonly/>
-                        ~ <input type="text" class="dateFmat"
+                        ~ <input type="text" class="dateFmt" maxlength="10"
                                  name="projectList[].project_end_date"
                                  value="` + data.project_end_date + `" readonly/></td>
                     <td>
@@ -911,43 +926,136 @@
         window.open(url, "viewSkill", properties)
     }
 
-    function goSave(frm) {
-        let frmId = $(frm).data("name");
-        let url;
-
-        // 날짜 포맷
-        $(".dateFmat").each(function () {
-            let date = $(this).val();
-            date = date.replaceAll('-', '');
-            $(this).attr("value", date);
-        });
-
-
-        if (confirm("저장하시겠습니까?")) {
-            let frm = $("#" + frmId).serialize();
-            let user_id = $('input[name=user_id]').val();
-
-            if (frmId == 'profile') {
-                url = "/profile/modify/save/" + user_id;
-            } else {
-                url = "/profile/" + frmId + "/modify/save/" + user_id;
+    function validateForm(frmId){
+        if(frmId === "profile"){
+            // 휴대폰번호 검증
+            const phoneNum = $(".telFmt").val();
+            if(!chkTel(phoneNum)){
+                alert("휴대폰번호를 확인해주세요.");
+                $(".telFmt").focus();
+                return false;
             }
+            // 학점 검증
+            if (!validateGrades()) return false;
+        }
 
-            $.ajax({
-                url: url,
-                type: "POST",
-                data: frm,
-                success: function (response) {
-                    if (response === "SUCCESS") {
-                        alert("저장되었습니다.");
-                    } else {
-                        alert("저장에 실패했습니다.");
-                    }
-                },
-                error: function () {
-                    alert("서버 오류가 발생했습니다. 다시 시도해 주세요.")
+        // 날짜 검증
+        if(!validateDates(frmId)) return false;
+
+        // 데이터 빈 값 검증
+        if(!chkInputs(frmId)) return false;
+
+        return true;
+    }
+
+    function validateGrades() {
+        const chkArr = ["011", "012", "013"];
+        let isValid = true;
+        let cnt = 0;
+
+        $(".schGb").each(function (){
+            const schGbValue = $(this).val();
+            if(chkArr.includes(schGbValue)){
+                cnt++;
+            }
+        });
+        if(cnt > 0){
+            $(".grade").each(function(){
+                const grade = $(this).val();
+                if(!chkGrade(grade)){
+                    alert("학점, 혹은 총점 입력값이 올바르지 않습니다");
+                    $(this).focus();
+                    isValid = false;
+                    return false;
                 }
             });
+        } else {
+            $(".grade").val('');
+            $("#major").val('');
+            $("#double_major").val('');
+        }
+
+        return isValid;
+    }
+
+    function validateDates(frmId){
+        let isValidDates = true;
+        $("#" + frmId).find(".dateFmt").each(function (){
+            const date = $(this).val();
+            if(!chkDate(date)){
+                alert("입력일자를 확인해주세요");
+                $(this).focus();
+                isValidDates = false;
+                return false;
+            }
+        });
+
+        if(!isValidDates) return false;
+
+        // 날짜 start_date < end_date && 날짜 빈값 검증
+        if(!chkDateForm(frmId)) return false;
+
+        return true;
+    }
+
+    function formatDates(frmId){
+        // 날짜 포맷
+        $("#" + frmId).find(".dateFmt").each(function () {
+            const date = $(this).val().replaceAll('-', '');
+            $(this).val(date);
+        });
+    }
+
+    function formatPhone(){
+        const phone = $(".telFmt").val().replaceAll('-', '');
+        $(".telFmt").val(phone);
+    }
+
+    function buildUrl(frmId, userId){
+        if (frmId == 'profile') {
+            return "/profile/modify/save/" + userId;
+        } else {
+            return "/profile/" + frmId + "/modify/save/" + userId;
+        }
+    }
+
+    function sendAjaxRequest(url, data){
+        $.ajax({
+            url: url,
+            type: "POST",
+            data: data,
+            success: function (response) {
+                if (response === "SUCCESS") {
+                    alert("저장되었습니다.");
+                    location.reload();
+                } else {
+                    alert("저장에 실패했습니다.");
+                }
+            },
+            error: function () {
+                alert("서버 오류가 발생했습니다. 다시 시도해 주세요.")
+            }
+        });
+    }
+
+    function goSave(frm) {
+        let frmId = $(frm).data("name");
+
+        // 검증 실패시 종료
+        if(!validateForm(frmId)) return;
+
+        // 날짜 포맷 변경
+        formatDates(frmId);
+
+        // 휴대폰 포맷 변경
+        formatPhone();
+
+        if(confirm("저장하시겠습니까?")){
+            const frmData = $("#" + frmId).serialize();
+            const userId = $('input[name=user_id]').val();
+            const url = buildUrl(frmId, userId);
+
+            sendAjaxRequest(url, frmData);
         }
     }
 
@@ -988,6 +1096,116 @@
             }
         });
     }
+
+    // 임시로 생성한 상세화면 이동 버튼
+    function goDetail(){
+        let url = "http://localhost:8081/profile/detail/gypark";
+        window.location = url;
+        /* 모두 같은 기능으로 동작한다
+        * window.location.href = url;
+        * window.location.assign(url);
+        * */
+    }
+
+    function formatInput($input){ // $를 붙이는 이유 : jQuery 객체임을 명시하기 위함 $input = $(this)
+        const value = $input.val();
+        let formattedValue = value;
+
+        if($input.hasClass("dateFmt")){
+            formattedValue = formatDate(value);
+        } else if ($input.hasClass("telFmt")){
+            formattedValue = formatTel(value);
+        }
+
+        $input.val(formattedValue);
+    }
+
+    // start_date, end_date에 대한 유효성 검사
+    function compareDate(frm, startDt, endDt){
+        let isValid = true;
+
+        $("#" + frm).find(".add").each(function(i){
+            if(!isValid) return false; // 이전 반복에서 실패하면 즉시 중단
+            let startVal = null;
+            let endVal = null;
+
+            // 현재 항목의 input 요소 순회
+            $(this).find("input").each(function(){
+                const name = $(this).attr("name");
+
+                if(name && name.endsWith(startDt)) {
+                    startVal = $(this).val();
+                    if(!startVal){
+                        alert("입력값을 확인해주세요");
+                        $(this).focus();
+                        isValid = false;
+                        return false; // 반복중단
+                    }
+                }
+                if(name && name.endsWith(endDt)) {
+                    endVal = $(this).val();
+                    if(!endVal){
+                        alert("입력값을 확인해주세요");
+                        $(this).focus();
+                        isValid = false;
+                        return false; // 반복중단
+                    }
+                }
+            });
+            // 시작일과 종료일 비교
+            if(startVal && endVal){
+                const fmtStartDt = new Date(startVal);
+                const fmtEndDt = new Date(endVal);
+                if(fmtStartDt > fmtEndDt){
+                    alert("입력날짜가 적합하지 않습니다.");
+                    isValid = false;
+                    return false; // 반복중단
+                }
+            }
+        });
+        return isValid;
+    }
+
+    function chkDateForm(frmId){
+        let frm = null;
+        if(frmId == "profile"){
+            frm = { frmNm: "schFrm", startDt: "start_date", endDt: "end_date"}
+        } else if(frmId == "qualification"){
+            frm = { frmNm: "qlFrm", startDt: "acquisition_date", endDt: "expiry_date"}
+        } else if(frmId == "workExperience"){
+            frm = { frmNm: "workFrm", startDt: "work_start_date", endDt: "work_end_date"}
+        } else { // project
+            frm = { frmNm: "pjFrm", startDt: "project_start_date", endDt: "project_end_date"}
+        }
+        const isVaild = compareDate(frm.frmNm, frm.startDt, frm.endDt);
+        if(!isVaild){
+            return false;
+        }
+        return true;
+    }
+
+    // 빈 값에 대한 유효성 검사
+    function chkInputs(frmId){
+        let isValid = true;
+
+        $("#" + frmId).find("input, select").each(function (){
+            if(!isValid) return false;
+            const name = $(this).attr("name");
+            if(name){
+                let input = $(this).val();
+                console.log(name + " - " +input);
+                const nullable = ['major', 'double_major', 'total_grade', 'standard_grade'];
+                if(!nullable.includes(name) && input === ''){
+                    alert("항목을 입력하세요");
+                    $(this).focus();
+                    isValid = false;
+                    return false;
+                }
+            }
+        });
+        return isValid;
+    }
+
 
 
 </script>
