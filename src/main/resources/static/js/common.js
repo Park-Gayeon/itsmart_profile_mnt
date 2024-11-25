@@ -12,6 +12,16 @@ function formatTel(phone){
         .replace(/(\-{1,2})$/g, "");
 }
 
+function onlyCharKo(str){
+    return str
+        .replace(/[^가-힣]/g, "");
+}
+
+function onlyCharEn(str){
+    return str
+        .replace(/[^a-zA-Z]/g, "");
+}
+
 // 숫자 + dot
 function onlyDot(el){
     const input = $(el).val();
@@ -48,7 +58,7 @@ function chkGrade(grade){
     return true;
 }
 
-// 날짜 유효성 검사
+// 날짜 검증(정규식 체크)
 function chkDate(date){
     const regEx = /^(19|20)\d{2}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[0-1])$/;
     let rtn = false;
@@ -103,7 +113,7 @@ function chkDate2(date){
     return rtn;
 }
 
-// 휴대전화 유효성 검사
+// 휴대폰번호 검증(정규식 체크)
 function chkTel(phoneNum){
     const regEx = /(01[0|1|6|9|7])[-](\d{3}|\d{4})[-](\d{4}$)/g;
     let rtn = false;
@@ -111,4 +121,56 @@ function chkTel(phoneNum){
         return rtn;
     }
     return true;
+}
+
+/*
+* dateFmt, telFmt DOM을 읽어올때
+* 포맷팅 하여 표기
+* */
+function formatInput($input){
+    const value = $input.val();
+    let formattedValue = value;
+
+    if($input.hasClass("dateFmt")){
+        formattedValue = formatDate(value);
+    } else if ($input.hasClass("telFmt")){
+        formattedValue = formatTel(value);
+    }
+
+    $input.val(formattedValue);
+}
+
+function convertToString(totalMonth){
+    const year = Math.floor(totalMonth / 12);
+    const months = totalMonth % 12;
+
+    let result = "";
+    if(year > 0){
+        result += year + '년 ';
+    }
+    if(months > 0){
+        result += months + '개월';
+    }
+    return result;
+}
+
+/*
+* html 내의 모든 input/select 요소에 대해
+* empty 값을 검증한다
+* */
+function chkEmptyData(){
+    let inputEls = Array.from(document.getElementsByTagName("input"));
+    let selectEls = Array.from(document.getElementsByTagName("select"))
+    let els = [...inputEls, ...selectEls];
+    let chk = true;
+    for(let i = 0; i < els.length; i++){
+        let elVal = els[i].value;
+        let elNm = els[i].previousElementSibling.innerText;
+        if(elVal == ''){
+            chk = false;
+            alert(elNm +" 항목을 확인해주세요");
+            break;
+        }
+    }
+    return chk;
 }

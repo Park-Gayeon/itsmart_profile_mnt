@@ -116,7 +116,8 @@
             AT.FILE_EXTENSION                    AS FILE_EXTENSION
 
         FROM TB_USER_PROFILE_INFO PF
-                 JOIN TB_ATTACHMENT_INFO AT ON PF.USER_ID = AT.USER_ID AND PF.FILE_SEQ = AT.FILE_SEQ AND AT.USE_YN = 'Y'
+                 LEFT JOIN TB_ATTACHMENT_INFO AT
+                           ON PF.USER_ID = AT.USER_ID AND PF.FILE_SEQ = AT.FILE_SEQ AND AT.USE_YN = 'Y'
         WHERE PF.USER_ID = #{user_id}
           AND PF.USE_YN = 'Y'
         ]]>
@@ -249,5 +250,52 @@
         FROM TB_USER_PROFILE_INFO
         WHERE USER_ID = #{user_id}
           AND USE_YN = 'Y'
+    </insert>
+
+    <!-- getUsrProfileInfoList : 직원 프로필 정보 목록 SELECT -->
+    <select id="getUsrProfileInfoList" parameterType="ProfileVO" resultType="ProfileVO">
+        select row_number() over () as idx, TB.*
+        from (select pf.user_id,
+                     pf.user_nm,
+                     (select code_value
+                      from TB_COMMON_CODE
+                      where code_group_id = 'ORG' and code_id = pf.user_department)            as user_department_nm,
+                     pj.project_nm,
+                     pj.project_start_date,
+                     pj.project_end_date,
+                     pj.project_client,
+                     row_number() over (partition by user_id order by project_start_date desc) as no
+              from TB_USER_PROFILE_INFO pf
+                       left join TB_PROJECT_INFO pj
+                                 on pf.user_id = pj.user_id
+                                     and str_to_date(pj.project_end_date, '%Y%m%d') > now()) TB
+        where TB.no = 1
+    </select>
+
+    <!-- checkUsrExists : USER_ID 중복체크 -->
+    <select id="checkUsrExists" parameterType="string" resultType="boolean">
+        SELECT (EXISTS(SELECT 1
+                       FROM TB_USER_PROFILE_INFO
+                       WHERE USER_ID = #{user_id}))
+    </select>
+
+    <!-- insertUsrProfile : 신규 직원 프로필 등록  -->
+    <insert id="insertUsrProfile" parameterType="profileVO">
+        INSERT INTO TB_USER_PROFILE_INFO(user_id, user_pw, user_nm, user_position, user_birth, user_department,
+                                         hire_date, user_phone, user_address, create_date, modified_date,
+                                         creator, modifier)
+        VALUES (#{user_id},
+                #{user_pw},
+                #{user_nm},
+                #{user_position},
+                #{user_birth},
+                #{user_department},
+                #{hire_date},
+                #{user_phone},
+                #{user_address},
+                now(),
+                now(),
+                #{user_id},
+                #{user_id})
     </insert>
 </mapper>

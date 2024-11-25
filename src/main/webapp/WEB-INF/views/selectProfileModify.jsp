@@ -32,8 +32,6 @@
                         정보입니다.
                         <input type="button" class="btn btn-warning" data-name="profile" onclick="goSave(this)"
                                value="SAVE"/>
-                        <input type="button" class="btn btn-warning" data-name="profile" onclick="goDetail()"
-                               value="TEMP"/>
                     </div>
                 </h2>
                 <div class="common-box row-box row mb-5 g-0">
@@ -810,20 +808,6 @@
     // 전역변수로 선언
     let addCnt = 0;
 
-    function convertToString(totalMonth){
-        const year = Math.floor(totalMonth / 12);
-        const months = totalMonth % 12;
-
-        let result = "";
-        if(year > 0){
-            result += year + '년 ';
-        }
-        if(months > 0){
-            result += months + '개월';
-        }
-        return result;
-    }
-
     function updateRowIndex(frmId, listNm) {
         $("#" + frmId + " .add").each(function (i) {
             if(frmId == 'schFrm'){
@@ -1095,29 +1079,6 @@
                 alert("서버 오류가 발생했습니다. 다시 시도해 주세요.")
             }
         });
-    }
-
-    // 임시로 생성한 상세화면 이동 버튼
-    function goDetail(){
-        let url = "http://localhost:8081/profile/detail/gypark";
-        window.location = url;
-        /* 모두 같은 기능으로 동작한다
-        * window.location.href = url;
-        * window.location.assign(url);
-        * */
-    }
-
-    function formatInput($input){ // $를 붙이는 이유 : jQuery 객체임을 명시하기 위함 $input = $(this)
-        const value = $input.val();
-        let formattedValue = value;
-
-        if($input.hasClass("dateFmt")){
-            formattedValue = formatDate(value);
-        } else if ($input.hasClass("telFmt")){
-            formattedValue = formatTel(value);
-        }
-
-        $input.val(formattedValue);
     }
 
     // start_date, end_date에 대한 유효성 검사

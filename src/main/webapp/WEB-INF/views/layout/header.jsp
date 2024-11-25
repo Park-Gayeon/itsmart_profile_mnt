@@ -35,13 +35,13 @@
                         <!-- 사이드바 BODY -->
                         <ul class="navbar-nav justify-content-end flex-grow-1 pe-3 mb-auto">
                             <li class="nav-item">
-                                <a class="nav-link active" aria-current="page" href="/">HOME</a>
+                                <a class="nav-link active" aria-current="page" href="http://localhost:8081/api/login">HOME</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">직원 프로필관리</a>
+                                <a class="nav-link" href="http://localhost:8081/profile/info/list">직원 프로필관리</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">내 프로필관리</a>
+                                <a class="nav-link" href="http://localhost:8081/profile/detail/gypark">내 프로필관리</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="#">회사조직도</a>
