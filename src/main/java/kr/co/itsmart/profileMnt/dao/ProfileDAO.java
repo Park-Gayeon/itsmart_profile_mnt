@@ -21,9 +21,12 @@ public interface ProfileDAO {
     /* 프로필 이력 등록 */
     void insertUsrProfileInfoHist(ProfileVO profileVO);
 
-    /*관리자 : 직원 프로필 등록*/
-    void registUsrProfile(ProfileVO profileVO);
-
     /*관리자 : 직원 목록 조회*/
-    List<ProfileVO> selectUsrProfileInfo(ProfileVO profileVO);
+    List<ProfileVO> getUsrProfileInfoList(ProfileVO profileVO);
+
+    /* USER_ID 중복 체크 */
+    boolean checkUsrExists(String user_id);
+
+    /* 신규 직원 프로필 등록 */
+    void insertUsrProfile(ProfileVO profile);
 }

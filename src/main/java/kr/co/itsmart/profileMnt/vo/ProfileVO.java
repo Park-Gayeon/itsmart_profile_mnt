@@ -42,7 +42,11 @@ public class ProfileVO {
     private int hist_seq; // 이력 순번
 
     // etc
-    private String eduGubun; // 학교구분
+    private int idx; // 순번
+    private String project_nm; // 프로젝트 명
+    private String project_start_date; // 프로젝트 시작일
+    private String project_end_dete; // 프로젝트 종료일
+    private String project_client; // 발주처
 
     private List<ProjectVO> projectList;
     private List<QualificationVO> qualificationList;
@@ -328,20 +332,52 @@ public class ProfileVO {
         this.hist_seq = hist_seq;
     }
 
+    public int getIdx() {
+        return idx;
+    }
+
+    public void setIdx(int idx) {
+        this.idx = idx;
+    }
+
+    public String getProject_nm() {
+        return project_nm;
+    }
+
+    public void setProject_nm(String project_nm) {
+        this.project_nm = project_nm;
+    }
+
+    public String getProject_start_date() {
+        return project_start_date;
+    }
+
+    public void setProject_start_date(String project_start_date) {
+        this.project_start_date = project_start_date;
+    }
+
+    public String getProject_end_dete() {
+        return project_end_dete;
+    }
+
+    public void setProject_end_dete(String project_end_dete) {
+        this.project_end_dete = project_end_dete;
+    }
+
+    public String getProject_client() {
+        return project_client;
+    }
+
+    public void setProject_client(String project_client) {
+        this.project_client = project_client;
+    }
+
     public int getFile_seq() {
         return file_seq;
     }
 
     public void setFile_seq(int file_seq) {
         this.file_seq = file_seq;
-    }
-
-    public String getEduGubun() {
-        return eduGubun;
-    }
-
-    public void setEduGubun(String eduGubun) {
-        this.eduGubun = eduGubun;
     }
 
     public List<ProjectVO> getProjectList() {
