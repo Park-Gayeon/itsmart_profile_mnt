@@ -24,6 +24,9 @@ public interface ProfileDAO {
     /*관리자 : 직원 목록 조회*/
     List<ProfileVO> getUsrProfileInfoList(ProfileVO profileVO);
 
+    /* 직원 목록 조회 건수 */
+    int getUsrProfileInfoCnt(ProfileVO profile);
+
     /* USER_ID 중복 체크 */
     boolean checkUsrExists(String user_id);
 

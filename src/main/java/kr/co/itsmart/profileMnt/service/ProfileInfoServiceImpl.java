@@ -32,6 +32,11 @@ public class ProfileInfoServiceImpl implements ProfileInfoService{
     }
 
     @Override
+    public int getUsrProfileInfoCnt(ProfileVO profile) {
+        return profileDAO.getUsrProfileInfoCnt(profile);
+    }
+
+    @Override
     public boolean checkUsrExists(String user_id) {
         return profileDAO.checkUsrExists(user_id);
     }

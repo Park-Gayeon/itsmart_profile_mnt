@@ -26,18 +26,18 @@ public class ProfileInfoController {
     }
 
     @GetMapping("/list")
-    public String getUsrProfileInfoList(Model model){
+    public String getUsrProfileInfoList(@ModelAttribute ProfileVO profile, Model model){
         LOGGER.info("== go usersProfileInfo[사용자 프로필 목록 조회 화면] ==");
-        ProfileVO tmp = new ProfileVO();
-        List<ProfileVO> profile = profileInfoService.getUsrProfileInfoList(tmp);
-        for (ProfileVO list : profile) {
-            System.out.println("사용자 이름: " + list.getUser_nm());
-            System.out.println("부서: " + list.getUser_department_nm());
-            System.out.println("프로젝트 이름: " + list.getProject_nm());
-            System.out.println("클라이언트: " + list.getProject_client());
-        }
 
-        model.addAttribute("info", profile);
+        LOGGER.info("검색조건 확인 searchType={}, searchText={}", profile.getSearchType(), profile.getSearchText());
+        List<ProfileVO> profileList = profileInfoService.getUsrProfileInfoList(profile);
+
+        int userProfileCnt = profileInfoService.getUsrProfileInfoCnt(profile);
+
+        model.addAttribute("info", profileList);
+        model.addAttribute("cnt", userProfileCnt);
+        model.addAttribute("searchType", profile.getSearchType());
+        model.addAttribute("searchText", profile.getSearchText());
         return "usersProfileInfo";
     }
 

@@ -24,11 +24,58 @@
 <div class="content">
     <form id="frm">
         <div class="container">
-            <input type="button" class="btn btn-warning" onclick="register()" value="register"/>
+            <div>
+                <select name="searchType">
+                    <option value="userNm"<c:if test="${searchType eq 'userNm'}">selected</c:if>>이름</option>
+                    <option value="userId"<c:if test="${searchType eq 'userId'}">selected</c:if>>ID</option>
+                    <option value="userDepartment"<c:if test="${searchType eq 'userDepartment'}">selected</c:if>>소속</option>
+                </select>
+                <input type="text" name="searchText" value="${searchText}"/>
+                <input type="button" value="FIND" onclick="goFind()"/>
+            </div>
+            <div>
+                <input type="button" class="btn btn-warning" onclick="register()" value="register"/>
+                <input type="button" class="btn btn-warning" value="excel"/>
+            </div>
+            <div>
+                <header>총 ${cnt}건</header>
+                <table class="table table-hover mb-5">
+                    <colgroup>
+                        <col style="width: 15%;">
+                        <col style="width: 30%;">
+                        <col style="width: 20%;">
+                        <col style="width: auto;">
+                        <col style="width: 5%;">
+                        <col style="width: 10%;">
+                    <colgroup>
+                    <thead>
+                    <tr>
+                        <th scope="col">NO</th>
+                        <th scope="col">이름</th>
+                        <th scope="col">소속</th>
+                        <th scope="col">사업명</th>
+                        <th scope="col">사업기간</th>
+                        <th scope="col">발주처</th>
+                    </tr>
+                    </thead>
+                    <tbody class="table-group-divider">
+                    <c:forEach var="info" items="${info}">
+                        <tr style="cursor:pointer;" onclick="goDetail('${info.user_id}')">
+                            <td>${info.idx}</td>
+                            <td>${info.user_nm}</td>
+                            <td>${info.user_department_nm}</td>
+                            <td>${info.project_nm}</td>
+                            <td>${info.project_start_date} ~ ${info.project_end_date}</td>
+                            <td>${info.project_client}</td>
+                        </tr>
+                    </c:forEach>
+                    </tbody>
+                </table>
+            </div>
+
         </div>
     </form>
 </div>
-<!-- 자격증 form 끝 -->
 
 
 </div>
@@ -48,6 +95,19 @@
         let url = "/profile/info/register";
         let properties ="width=1000, height=400"
         window.open(url, "registerUser", properties);
+    }
+
+    function goDetail(user_id){
+        const userId = user_id;
+        const url = "/profile/detail/" + userId;
+        window.location.href = url;
+    }
+
+    function goFind(){
+        const frm = $("#frm");
+        frm.attr('action', '/profile/info/list');
+        frm.attr('method', 'get');
+        frm.submit();
     }
 
 </script>
