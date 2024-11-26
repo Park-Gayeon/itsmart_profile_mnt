@@ -1,4 +1,4 @@
-package kr.co.itsmart.profileMnt.util;
+package kr.co.itsmart.profileMnt.configuration;
 
 import org.springframework.beans.propertyeditors.CustomNumberEditor;
 import org.springframework.web.bind.WebDataBinder;

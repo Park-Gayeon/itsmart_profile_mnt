@@ -73,9 +73,6 @@ public class ProfileInfoController {
                 return "아이디가 중복되었습니다";
             }
 
-            // PASSWORD 암호화 로직 적용
-            profile.setUser_pw("itsmart1!");
-
             // 신규 정보 입력
             profileInfoService.insertUsrProfile(profile);
 
