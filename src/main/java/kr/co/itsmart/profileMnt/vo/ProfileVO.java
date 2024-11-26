@@ -43,10 +43,15 @@ public class ProfileVO {
 
     // etc
     private int idx; // 순번
+    private int cnt; // 건수
     private String project_nm; // 프로젝트 명
     private String project_start_date; // 프로젝트 시작일
-    private String project_end_dete; // 프로젝트 종료일
+    private String project_end_date; // 프로젝트 종료일
     private String project_client; // 발주처
+
+    // 검색조건
+    private String searchType; // 검색타입
+    private String searchText; // 검색내용
 
     private List<ProjectVO> projectList;
     private List<QualificationVO> qualificationList;
@@ -340,6 +345,14 @@ public class ProfileVO {
         this.idx = idx;
     }
 
+    public int getCnt() {
+        return cnt;
+    }
+
+    public void setCnt(int cnt) {
+        this.cnt = cnt;
+    }
+
     public String getProject_nm() {
         return project_nm;
     }
@@ -356,12 +369,12 @@ public class ProfileVO {
         this.project_start_date = project_start_date;
     }
 
-    public String getProject_end_dete() {
-        return project_end_dete;
+    public String getProject_end_date() {
+        return project_end_date;
     }
 
-    public void setProject_end_dete(String project_end_dete) {
-        this.project_end_dete = project_end_dete;
+    public void setProject_end_date(String project_end_date) {
+        this.project_end_date = project_end_date;
     }
 
     public String getProject_client() {
@@ -370,6 +383,26 @@ public class ProfileVO {
 
     public void setProject_client(String project_client) {
         this.project_client = project_client;
+    }
+
+    public String getSearchType() {
+        if (searchType == null)
+            searchType = "";
+        return searchType;
+    }
+
+    public void setSearchType(String searchType) {
+        this.searchType = searchType;
+    }
+
+    public String getSearchText() {
+        if(searchText == null)
+            searchText = "";
+        return searchText;
+    }
+
+    public void setSearchText(String searchText) {
+        this.searchText = searchText;
     }
 
     public int getFile_seq() {

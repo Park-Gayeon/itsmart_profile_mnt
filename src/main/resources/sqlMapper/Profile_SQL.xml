@@ -254,22 +254,68 @@
 
     <!-- getUsrProfileInfoList : 직원 프로필 정보 목록 SELECT -->
     <select id="getUsrProfileInfoList" parameterType="ProfileVO" resultType="ProfileVO">
-        select row_number() over () as idx, TB.*
+        select lpad(row_number() over (), 3, 0) as idx,
+               TB.*
         from (select pf.user_id,
                      pf.user_nm,
-                     (select code_value
-                      from TB_COMMON_CODE
-                      where code_group_id = 'ORG' and code_id = pf.user_department)            as user_department_nm,
+                     cd.code_value                                                                   as user_department_nm,
                      pj.project_nm,
                      pj.project_start_date,
                      pj.project_end_date,
                      pj.project_client,
-                     row_number() over (partition by user_id order by project_start_date desc) as no
+                     row_number() over (partition by pf.user_id order by pj.project_start_date desc) as no
               from TB_USER_PROFILE_INFO pf
-                       left join TB_PROJECT_INFO pj
+                       left join (select user_id,
+                                         project_nm,
+                                         project_start_date,
+                                         project_end_date,
+                                         project_client
+                                  from TB_PROJECT_INFO
+                                  where project_end_date > now()
+              ) pj
                                  on pf.user_id = pj.user_id
-                                     and str_to_date(pj.project_end_date, '%Y%m%d') > now()) TB
+                       join (select code_id,
+                                    code_value
+                             from TB_COMMON_CODE a
+                             where a.code_group_id = 'ORG') cd
+                            on pf.user_department = cd.code_id
+              <if test="searchText != ''">
+                  <choose>
+                      <when test="searchType == 'userNm'">
+                          where pf.user_nm like concat('%', #{searchText}, '%')
+                      </when>
+                      <when test="searchType == 'userId'">
+                          where pf.user_id like concat('%', #{searchText}, '%')
+                      </when>
+                      <otherwise>
+                          where cd.code_value like concat('%', #{searchText}, '%')
+                      </otherwise>
+                  </choose>
+              </if>
+             ) TB
         where TB.no = 1
+    </select>
+
+    <!-- getUsrProfileInfoCnt : 직원 프로필 정보 목록 건수 SELECT-->
+    <select id="getUsrProfileInfoCnt" parameterType="ProfileVO" resultType="int">
+        SELECT COUNT(*) AS cnt
+        FROM TB_USER_PROFILE_INFO PF
+                 JOIN TB_COMMON_CODE CD
+                      ON PF.USER_DEPARTMENT = CD.CODE_ID
+        WHERE CD.CODE_GROUP_ID = 'ORG'
+        <if test="searchText != ''">
+            <choose>
+                <when test="searchType == 'userNm'">
+                    AND PF.USER_NM LIKE CONCAT('%', #{searchText}, '%')
+                </when>
+                <when test="searchType == 'userId'">
+                    AND PF.USER_ID LIKE CONCAT('%', #{searchText}, '%')
+                </when>
+                <otherwise>
+                    AND CD.CODE_VALUE LIKE CONCAT('%', #{searchText}, '%')
+                </otherwise>
+            </choose>
+        </if>
     </select>
 
     <!-- checkUsrExists : USER_ID 중복체크 -->
