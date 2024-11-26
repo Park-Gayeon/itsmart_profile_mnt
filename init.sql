@@ -29,17 +29,17 @@ VALUES ('00000000',
 -- 테이블 생성
 CREATE TABLE TB_USER_PROFILE_INFO
 (
-    user_id          VARCHAR(10) NOT NULL COMMENT '직원 아이디',
-    user_pw          VARCHAR(20) NOT NULL COMMENT '비밀번호',
-    user_nm          VARCHAR(6)  NOT NULL COMMENT '직원명',
-    user_position    VARCHAR(3)  NOT NULL COMMENT '직급/직위',
-    user_birth       VARCHAR(8)  NOT NULL COMMENT '직원 생년월일',
-    user_department  VARCHAR(3)  NOT NULL COMMENT '소속',
-    hire_date        VARCHAR(8)  NOT NULL COMMENT '입사일',
-    user_phone       VARCHAR(11) NOT NULL COMMENT '휴대전화',
-    user_address     VARCHAR(50) NOT NULL COMMENT '주소',
-    user_role        CHAR(1)     NOT NULL DEFAULT '1' COMMENT '권한 (0: admin, 1: user)',
-    use_yn           CHAR(1)     NOT NULL DEFAULT 'Y' COMMENT '사용 여부',
+    user_id          VARCHAR(10)  NOT NULL COMMENT '직원 아이디',
+    user_pw          VARCHAR(120) NOT NULL COMMENT '비밀번호',
+    user_nm          VARCHAR(6)   NOT NULL COMMENT '직원명',
+    user_position    VARCHAR(3)   NOT NULL COMMENT '직급/직위',
+    user_birth       VARCHAR(8)   NOT NULL COMMENT '직원 생년월일',
+    user_department  VARCHAR(3)   NOT NULL COMMENT '소속',
+    hire_date        VARCHAR(8)   NOT NULL COMMENT '입사일',
+    user_phone       VARCHAR(11)  NOT NULL COMMENT '휴대전화',
+    user_address     VARCHAR(50)  NOT NULL COMMENT '주소',
+    user_role        CHAR(1)      NOT NULL DEFAULT '1' COMMENT '권한 (0: admin, 1: user)',
+    use_yn           CHAR(1)      NOT NULL DEFAULT 'Y' COMMENT '사용 여부',
     file_seq         INT COMMENT '파일 순번',
     edu1_school_name VARCHAR(20) COMMENT '학력1_학교명',
     edu1_grad_status VARCHAR(3) COMMENT '학력1_졸업상태',
@@ -60,10 +60,10 @@ CREATE TABLE TB_USER_PROFILE_INFO
     double_major     VARCHAR(20) COMMENT '복수 전공',
     total_grade      DECIMAL(2, 1) COMMENT '졸업 학점',
     standard_grade   DECIMAL(2, 1) COMMENT '기준 학점',
-    create_date      TIMESTAMP   NOT NULL COMMENT '생성일시',
-    modified_date    TIMESTAMP   NOT NULL COMMENT '수정일시',
-    creator          VARCHAR(10) NOT NULL COMMENT '생성자',
-    modifier         VARCHAR(10) NOT NULL COMMENT '수정자',
+    create_date      TIMESTAMP    NOT NULL COMMENT '생성일시',
+    modified_date    TIMESTAMP    NOT NULL COMMENT '수정일시',
+    creator          VARCHAR(10)  NOT NULL COMMENT '생성자',
+    modifier         VARCHAR(10)  NOT NULL COMMENT '수정자',
 
     PRIMARY KEY (user_id)
 ) COMMENT ='직원 프로필 정보 테이블';
@@ -315,8 +315,8 @@ VALUES ( 'gypark'
        , '01011111111'
        , '대구광역시 남구 우리집303호'
        , '0'
-       , sysdate()
-       , sysdate()
+       , now()
+       , now()
        , 'gypark'
        , 'gypark');
 

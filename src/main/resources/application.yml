@@ -29,3 +29,6 @@ logging:
   level:
     kr.co.itsmart.profileMnt: debug
     org.springframework.web.servlet: debug
+
+user:
+  default-password: itsmart1!
