@@ -6,11 +6,13 @@ services:
       dockerfile: Dockerfile
     ports:
       - '8081:8080'
+    image: my-app-image
     volumes:
       - .:/app # 로컬 소스 코드 디렉토리와 컨테이너의 /app 디렉토리를 동기화
       - ./src/main/webapp/WEB-INF/views:/app/src/main/webapp/WEB-INF/views # JSP 파일 동기화
       - ./src/main/resources/static:/app/static # 로컬 static 파일과 컨테이너 경로 동기화
       - ./application.yaml:/src/main/resources/application.yaml
+      - /opt/profileMnt/uploads:/opt/profileMnt/uploads
     depends_on:
       - mysqlDB
   mysqlDB:
