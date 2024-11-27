@@ -25,7 +25,7 @@
 <div class="content">
     <div class="container">
         <!-- 인적사항 form -->
-        <form id="profile">
+        <form id="profile" enctype="multipart/form-data">
             <div class="form-floating pt-5">
                 <h2 class="header">인적사항
                     <div class="description" style="position: relative; top: 0px"><span class="star">*</span> 필수 입력
@@ -36,8 +36,10 @@
                 </h2>
                 <div class="common-box row-box row mb-5 g-0">
                     <!-- 사진 -->
-                    <div class="col-md text-center">
-                        <img src="/image/image.png" class="img-profile" alt="Profile Picture">
+                    <div class="col-md text-center mb-3">
+                        <img id="profileImg" src="/image/image.png" class="img-profile" alt="Profile Picture"/>
+                        <label for="imgFile" class="form-label"></label>
+                        <input type="file" class="form-control form-control-sm" id="imgFile" name="imgFile" accept=".jpg, .png, .jpeg"/>
                     </div>
                     <!-- 개인정보 -->
                     <div class="col-md-auto g-0">
@@ -649,6 +651,10 @@
 <script src="/js/bootstrap.bundle.js"></script>
 <script src="/js/common.js"></script>
 <script type="text/javascript">
+    // 전역변수로 선언
+    let addCnt = 0;
+    let chgImg = false;
+
     $(document).ready(function () {
         const wk_totalMonth = [[${wk_totalMonth}]];
         const pj_totalMonth = [[${pj_totalMonth}]];
@@ -662,6 +668,39 @@
         // 날짜 및 휴대전화 포맷
         $(".container").find(".dateFmt, .telFmt").each(function(){
             formatInput($(this));
+        });
+
+        $("#imgFile").change(function(e){
+            /*최대 파일크기 2MB(2097152) */
+            const fileInfo = e.target.files[0];
+            const maxSize = 1024*1024*2; // 최대 크기 2MB
+            const basicImg = "/image/image.png"; // 기본 이미지 경로
+            chgImg = true;
+
+            // 파일 선택 취소
+            if(!fileInfo){
+                $("#profileImg").attr("src", basicImg);
+                chgImg = false;
+                return;
+            }
+            // 파일 크기 검증
+            if(fileInfo.size > maxSize){
+                alert("이미지 사진의 용량이 2MB를 초과합니다.");
+                return;
+            }
+            // 파일 형식 검증
+            const allowedExtensions = ['image/jpeg', 'image/png', 'image/jpg'];
+            if(!allowedExtensions.includes(fileInfo.type)){
+                alert("이미지 파일만 업로드 가능합니다.");
+                return;
+            }
+            // 파일 미리보기
+            const reader = new FileReader();
+            reader.onload = function(e){
+                const url = e.target.result;
+                $("#profileImg").attr("src", url);
+            };
+            reader.readAsDataURL(fileInfo);
         });
 
         $(".add_field").click(function () {
@@ -805,8 +844,6 @@
 
 
     });
-    // 전역변수로 선언
-    let addCnt = 0;
 
     function updateRowIndex(frmId, listNm) {
         $("#" + frmId + " .add").each(function (i) {
@@ -1003,11 +1040,13 @@
         }
     }
 
-    function sendAjaxRequest(url, data){
+    function sendAjaxRequest(url, data, flag){
         $.ajax({
             url: url,
             type: "POST",
             data: data,
+            processData: flag, // 파일 처리 : false
+            contentType: flag ? "application/x-www-form-urlencoded; charset=UTF-8" : false,
             success: function (response) {
                 if (response === "SUCCESS") {
                     alert("저장되었습니다.");
@@ -1024,6 +1063,9 @@
 
     function goSave(frm) {
         let frmId = $(frm).data("name");
+        // 파일 전송을 위한 flag 설정
+        let flag = true;
+        let data;
 
         // 검증 실패시 종료
         if(!validateForm(frmId)) return;
@@ -1034,12 +1076,25 @@
         // 휴대폰 포맷 변경
         formatPhone();
 
+        if(frmId === 'profile'){
+            if(chgImg){
+                // 프로필 사진이 변경된 경우
+                flag = false; // FormData 사용
+                data = new FormData($("#"+frmId)[0]);
+            } else {
+                // 사진이 변경되지 않은 경우
+                $("imgFile").attr("disabled", true);
+                data = $("#" + frmId).serialize();
+            }
+        } else {
+            data = $("#" + frmId).serialize();
+        }
+
         if(confirm("저장하시겠습니까?")){
-            const frmData = $("#" + frmId).serialize();
             const userId = $('input[name=user_id]').val();
             const url = buildUrl(frmId, userId);
 
-            sendAjaxRequest(url, frmData);
+            sendAjaxRequest(url, data, flag);
         }
     }
 
@@ -1155,7 +1210,7 @@
             if(name){
                 let input = $(this).val();
                 console.log(name + " - " +input);
-                const nullable = ['major', 'double_major', 'total_grade', 'standard_grade'];
+                const nullable = ['major', 'double_major', 'total_grade', 'standard_grade', 'imgFile'];
                 if(!nullable.includes(name) && input === ''){
                     alert("항목을 입력하세요");
                     $(this).focus();
@@ -1166,7 +1221,6 @@
         });
         return isValid;
     }
-
 
 
 </script>

@@ -6,4 +6,5 @@ public interface ProfileMntService {
     int selectMaxHistSeq(String user_id);
 
     void updateUsrProfileInfo(ProfileVO profileVO);
+
 }

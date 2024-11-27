@@ -32,5 +32,6 @@ public class ProfileMntServiceImpl implements ProfileMntService {
         profileDAO.insertUsrProfileInfoHist(profile);
         LOGGER.info("프로필 이력을 생성했습니다: user_id={}, hist_seq={}", profile.getUser_id(), profile.getHist_seq());
     }
+
 }
 
