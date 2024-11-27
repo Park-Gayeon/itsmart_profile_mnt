@@ -29,4 +29,18 @@
         WHERE CODE_GROUP_ID = 'TASK'
           AND PARENT_ID = #{code_id}
     </select>
+
+    <!-- insertUsrFileInfo : 파일 정보 저장 -->
+    <insert id="insertUsrFileInfo" parameterType="FileVO">
+        INSERT INTO TB_ATTACHMENT_INFO(USER_ID, FILE_SEQ, FILE_ORI_NM, FILE_SVER_NM, FILE_SVER_PATH, FILE_EXTENSION,
+                                       CREATED_DATE, CREATOR)
+        VALUES (#{user_id},
+                #{file_seq},
+                #{file_ori_nm},
+                #{file_sver_nm},
+                #{file_sver_path},
+                #{file_extension},
+                now(),
+                #{user_id})
+    </insert>
 </mapper>

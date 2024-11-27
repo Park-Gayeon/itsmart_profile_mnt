@@ -181,7 +181,10 @@
             USER_DEPARTMENT  = #{user_department},
             USER_PHONE       = #{user_phone},
             USER_ADDRESS     = #{user_address},
-            FILE_SEQ         = #{file_seq},
+            FILE_SEQ         = (SELECT COALESCE(MAX(FILE_SEQ), 0)
+                                FROM TB_ATTACHMENT_INFO
+                                WHERE USER_ID = #{user_id}
+                                  AND USE_YN = 'Y'),
             EDU1_SCHOOL_NAME = #{edu1_school_name},
             EDU1_GRAD_STATUS = #{edu1_grad_status},
             EDU1_START_DATE  = #{edu1_start_date},

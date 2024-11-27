@@ -5,13 +5,16 @@ import kr.co.itsmart.profileMnt.service.ProfileMntService;
 import kr.co.itsmart.profileMnt.service.ProjectMntService;
 import kr.co.itsmart.profileMnt.service.WorkExperienceMntService;
 import kr.co.itsmart.profileMnt.vo.CommonVO;
+import kr.co.itsmart.profileMnt.vo.FileVO;
 import kr.co.itsmart.profileMnt.vo.ProfileVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.List;
@@ -74,9 +77,26 @@ public class ProfileMntController {
 
     @PostMapping("/save/{user_id}")
     @ResponseBody
-    public String updateUsrProfile(@PathVariable("user_id") String user_id, @ModelAttribute ProfileVO profile) {
+    public ResponseEntity<String> updateUsrProfile(@PathVariable("user_id") String user_id,
+                                           @ModelAttribute ProfileVO profile,
+                                           @RequestParam(required = false, value = "imgFile") MultipartFile file) {
         LOGGER.info("== Ajax[사용자 프로필 수정 처리(인적사항)] ==");
         try {
+            // CREATE file_seq
+            int file_seq = commonService.selectMaxHistSeq(user_id);
+            LOGGER.info("파일 정보 file_seq: file_seq={}", file_seq);
+
+            if(file != null){
+                // 파일 서버 저장
+                FileVO fileVO = commonService.saveImageFile(file);
+
+
+                // 파일 정보 DB 저장
+                fileVO.setUser_id(user_id);
+                fileVO.setFile_seq(file_seq);
+                commonService.insertUsrFileInfo(fileVO);
+            }
+
             // CREATE hist_seq
             int hist_seq = profileMntService.selectMaxHistSeq(user_id);
             profile.setHist_seq(hist_seq);
@@ -84,12 +104,13 @@ public class ProfileMntController {
 
             // 프로필 수정 처리
             profileMntService.updateUsrProfileInfo(profile);
+
+            return ResponseEntity.ok("SUCCESS");
+
         } catch (Exception e) {
             LOGGER.debug("프로필 정보 처리 실패: user_id={}", user_id, e.getMessage());
-            return "FAIL";
+            return ResponseEntity.internalServerError().body("프로필 정보 처리에 실패했습니다." + e.getMessage());
         }
-        return "SUCCESS";
     }
-
 }
 
