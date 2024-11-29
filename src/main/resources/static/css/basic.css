@@ -71,7 +71,7 @@
     text-align: left;
 }
 
-.input-box > label {
+.input-box > span {
     top: 9px;
     left: 15px;
     font-size: 11px;
@@ -79,7 +79,6 @@
     color: #a8a8a8;
     visibility: visible;
     position: absolute;
-    cursor: pointer;
     vertical-align: middle;
 }
 

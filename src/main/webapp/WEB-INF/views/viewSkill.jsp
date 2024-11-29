@@ -99,7 +99,7 @@
     function saveSkill(){
         if(confirm("저장하시겠습니까 ?")){
             let frm = $("#frm").serialize();
-            let url = "/profile/project/modify/save/skill";
+            let url = "/profile/project/save/skill";
             $.ajax({
                 url: url,
                 type: "POST",
@@ -107,6 +107,9 @@
                 success: function (response){
                     if(response === "SUCCESS"){
                         alert("저장 되었습니다");
+                        if (window.opener && !window.opener.closed) {
+                            window.opener.location.reload(); // 부모 창 리로드
+                        }
                         window.close();
                     }else {
                         alert("저장에 실패했습니다");

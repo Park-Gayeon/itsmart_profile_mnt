@@ -124,20 +124,20 @@ function chkTel(phoneNum){
 }
 
 /*
-* dateFmt, telFmt DOM을 읽어올때
+* dateFmt, telFmt DOM을 읽어올때 & 실시간 포맷
 * 포맷팅 하여 표기
 * */
-function formatInput($input){
-    const value = $input.val();
+function formatInput(input){
+    const value = input.val();
     let formattedValue = value;
 
-    if($input.hasClass("dateFmt")){
+    if(input.hasClass("dateFmt")){
         formattedValue = formatDate(value);
-    } else if ($input.hasClass("telFmt")){
+    } else if (input.hasClass("telFmt")){
         formattedValue = formatTel(value);
     }
 
-    $input.val(formattedValue);
+    input.val(formattedValue);
 }
 
 function convertToString(totalMonth){
@@ -158,18 +158,20 @@ function convertToString(totalMonth){
 * html 내의 모든 input/select 요소에 대해
 * empty 값을 검증한다
 * */
-function chkEmptyData(){
+function chkEmptyData(nullable){
     let inputEls = Array.from(document.getElementsByTagName("input"));
     let selectEls = Array.from(document.getElementsByTagName("select"))
     let els = [...inputEls, ...selectEls];
     let chk = true;
     for(let i = 0; i < els.length; i++){
         let elVal = els[i].value;
-        let elNm = els[i].previousElementSibling.innerText;
-        if(elVal == ''){
+        let elNm = els[i].name;
+        let elNmKor = els[i].previousElementSibling.innerText;
+        if(!nullable.includes(elNm) && elVal === ''){
             chk = false;
-            alert(elNm +" 항목을 확인해주세요");
-            break;
+            alert(elNmKor + "항목을 확인해주세요");
+            $(this).focus();
+            return false;
         }
     }
     return chk;

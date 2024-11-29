@@ -99,7 +99,7 @@
 
     function goDetail(user_id){
         const userId = user_id;
-        const url = "/profile/detail/" + userId;
+        const url = "/profile/" + userId;
         window.location.href = url;
     }
 

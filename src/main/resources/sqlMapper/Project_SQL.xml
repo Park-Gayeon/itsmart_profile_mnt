@@ -58,6 +58,7 @@
                #{user_id}
         FROM TB_PROJECT_INFO
         WHERE project_seq = #{project_seq}
+          AND user_id = #{user_id}
           AND use_yn = 'Y'
     </insert>
 
