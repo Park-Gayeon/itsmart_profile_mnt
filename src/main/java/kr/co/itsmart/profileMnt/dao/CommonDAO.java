@@ -17,7 +17,7 @@ public interface CommonDAO {
     /* TASK 하위 코드 조회 */
     List<CommonVO> getTaskMidCodeList(String code_id);
 
-    /* 파일 테이블 file_seq 조회 */
+    /* 파일 테이블 file_seq 생성 */
     @Select("SELECT COALESCE(MAX(FILE_SEQ + 1), 1) AS FILE_SEQ FROM TB_ATTACHMENT_INFO WHERE USER_ID = #{user_id}")
     int selectMaxHistSeq(String user_id);
 

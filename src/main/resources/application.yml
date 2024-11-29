@@ -11,6 +11,9 @@ spring:
     username: itsmart
     password: itsmart1!
     driver-class-name: com.mysql.cj.jdbc.Driver
+  web:
+    resources:
+      static-locations: classpath:static/, file:/opt/profileMnt/uploads/images/ # 정적 리소스 경로설정
 mybatis:
   mapper-locations: classpath:sqlMapper/*.xml
   type-aliases-package: kr.co.itsmart.profileMnt.vo
@@ -30,4 +33,4 @@ user:
   default-password: itsmart1!
 
 file:
-  upload-dir: /opt/profileMnt/uploads
+  upload-dir: /opt/profileMnt/uploads/images

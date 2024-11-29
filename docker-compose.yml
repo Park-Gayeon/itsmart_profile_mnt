@@ -1,4 +1,3 @@
-version: '3'
 services:
   app:
     build:
@@ -10,9 +9,14 @@ services:
     volumes:
       - .:/app # 로컬 소스 코드 디렉토리와 컨테이너의 /app 디렉토리를 동기화
       - ./src/main/webapp/WEB-INF/views:/app/src/main/webapp/WEB-INF/views # JSP 파일 동기화
-      - ./src/main/resources/static:/app/static # 로컬 static 파일과 컨테이너 경로 동기화
-      - ./application.yaml:/src/main/resources/application.yaml
-      - /opt/profileMnt/uploads:/opt/profileMnt/uploads
+      - ./src/main/resources/static:/app/src/main/resources/static # 로컬 static 파일과 컨테이너 경로 동기화
+#      - ./src/main/resources/application.yaml:/app/src/main/resources/application.yaml
+      - /opt/profileMnt/uploads/images:/opt/profileMnt/uploads/images
+    command: >
+      sh -c "mkdir -p /opt/profileMnt/uploads/images &&
+             chmod -R 755 /opt/profileMnt/uploads/images &&
+             chown -R 1000:1000 /opt/profileMnt/uploads/images &&
+             ./gradlew bootRun"
     depends_on:
       - mysqlDB
   mysqlDB:
