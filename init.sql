@@ -291,7 +291,7 @@ CREATE INDEX idx_tb_common_code_parent_id ON TB_COMMON_CODE (parent_id);
 -- 최초 적재 데이터
 -- 초기 데이터
 -- TB_USER_PROFILE_INFO
-insert into tb_user_profile_info ( user_id
+insert into TB_USER_PROFILE_INFO ( user_id
                                  , user_pw
                                  , user_nm
                                  , user_position
@@ -322,7 +322,7 @@ VALUES ( 'gypark'
 
 
 -- TB_USER_PROFILE_INFO_HIST
-INSERT INTO tb_user_profile_info_hist(USER_ID, hist_seq, USER_NM, USER_POSITION, USER_BIRTH, user_department, hire_date,
+INSERT INTO TB_USER_PROFILE_INFO_HIST(USER_ID, hist_seq, USER_NM, USER_POSITION, USER_BIRTH, user_department, hire_date,
                                       user_phone, user_address, create_date, creator)
 SELECT USER_ID,
        0 AS HIST_SEQ,

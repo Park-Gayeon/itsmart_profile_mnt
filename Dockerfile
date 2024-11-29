@@ -8,6 +8,3 @@ WORKDIR /app
 COPY gradlew /app/gradlew
 COPY gradle /app/gradle
 RUN chmod +x ./gradlew
-
-# 4. 로컬 소스가 변경될 때마다 빌드
-CMD ["./gradlew", "bootRun"]

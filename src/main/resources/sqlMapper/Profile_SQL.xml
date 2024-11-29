@@ -112,8 +112,7 @@
             /* 파일 */
             AT.FILE_ORI_NM                       AS FILE_ORI_NM,
             AT.FILE_SVER_NM                      AS FILE_SVER_NM,
-            AT.FILE_SVER_PATH                    AS FILE_SVER_PATH,
-            AT.FILE_EXTENSION                    AS FILE_EXTENSION
+            AT.FILE_SVER_PATH                    AS FILE_SVER_PATH
 
         FROM TB_USER_PROFILE_INFO PF
                  LEFT JOIN TB_ATTACHMENT_INFO AT
@@ -331,7 +330,7 @@
     <!-- insertUsrProfile : 신규 직원 프로필 등록  -->
     <insert id="insertUsrProfile" parameterType="profileVO">
         INSERT INTO TB_USER_PROFILE_INFO(user_id, user_pw, user_nm, user_position, user_birth, user_department,
-                                         hire_date, user_phone, user_address, create_date, modified_date,
+                                         hire_date, user_phone, user_address, file_seq, create_date, modified_date,
                                          creator, modifier)
         VALUES (#{user_id},
                 #{user_pw},
@@ -342,6 +341,10 @@
                 #{hire_date},
                 #{user_phone},
                 #{user_address},
+                (SELECT COALESCE(MAX(FILE_SEQ), 0)
+                 FROM TB_ATTACHMENT_INFO
+                 WHERE USER_ID = #{user_id}
+                   AND USE_YN = 'Y'),
                 now(),
                 now(),
                 #{user_id},

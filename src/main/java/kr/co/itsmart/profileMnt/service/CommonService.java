@@ -18,4 +18,5 @@ public interface CommonService {
     int selectMaxHistSeq(String user_id);
 
     void insertUsrFileInfo(FileVO file);
+
 }

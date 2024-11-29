@@ -48,11 +48,6 @@ public class CommonServiceImpl implements CommonService {
                 String extension = oriFileNm.substring(oriFileNm.lastIndexOf(".") + 1);
                 LOGGER.info("oriFileNm={}, extension={}", oriFileNm, extension);
 
-                // 디렉토리 확인 후 생성
-                File directory = new File(uploadDir);
-                if (!directory.exists()) {
-                    directory.mkdirs();
-                }
                 // 파일 저장 경로 생성
                 String sverFileNm = UUID.randomUUID().toString().replaceAll("-", "") + "." + extension;
                 File uploadPath = new File(uploadDir, sverFileNm);
@@ -88,6 +83,5 @@ public class CommonServiceImpl implements CommonService {
             LOGGER.debug("파일 정보 저장 실패: user_id={}, file_seq={}", file.getUser_id(), file.getFile_seq(), e.getMessage());
         }
     }
-
 
 }
