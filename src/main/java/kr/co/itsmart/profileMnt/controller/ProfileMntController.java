@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-@RequestMapping("/profile/modify")
+@RequestMapping("/profile")
 public class ProfileMntController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ProjectMntController.class);
     private final ProfileMntService profileMntService;
@@ -40,10 +40,10 @@ public class ProfileMntController {
         this.workExperienceMntService = workExperienceMntService;
     }
 
-
-    @PostMapping("/info/{user_id}")
-    public String modifyUsrProfile(@ModelAttribute ProfileVO profile, Model model) {
-        LOGGER.info("== go selectProfileModify[사용자 프로필 상세 수정 화면] ==");
+    @GetMapping("/{user_id}")
+    public String selectDetailInfo(@PathVariable("user_id") String user_id, Model model) {
+        LOGGER.info("== go selectProfileDetail[사용자 프로필 상세 화면] ==");
+        ProfileVO profile = profileMntService.selectUsrProfileDetail(user_id);
 
         Map<String, String> params = new HashMap<>();
         params.put("code_group_id", "TASK");
@@ -59,9 +59,8 @@ public class ProfileMntController {
         List<CommonVO> psitList = commonService.selectCodeList(params);
         params.put("code_group_id", "ROLE");
         List<CommonVO> roleList = commonService.selectCodeList(params);
-
-        int pj_totalMonth = projectMntService.calcTotalMonth(profile.getUser_id());
-        int wk_totalMonth = workExperienceMntService.calcTotalMonth(profile.getUser_id());
+        int pj_totalMonth = projectMntService.calcTotalMonth(user_id);
+        int wk_totalMonth = workExperienceMntService.calcTotalMonth(user_id);
 
         model.addAttribute("profile", profile);
         model.addAttribute("taskLarList", taskLarList);
@@ -71,8 +70,7 @@ public class ProfileMntController {
         model.addAttribute("roleList", roleList);
         model.addAttribute("pj_totalMonth", pj_totalMonth);
         model.addAttribute("wk_totalMonth", wk_totalMonth);
-
-        return "selectProfileModify";
+        return "selectProfileDetail";
     }
 
     @PostMapping("/save/{user_id}")
@@ -82,14 +80,13 @@ public class ProfileMntController {
                                            @RequestParam(required = false, value = "imgFile") MultipartFile file) {
         LOGGER.info("== Ajax[사용자 프로필 수정 처리(인적사항)] ==");
         try {
-            // CREATE file_seq
-            int file_seq = commonService.selectMaxHistSeq(user_id);
-            LOGGER.info("파일 정보 file_seq: file_seq={}", file_seq);
-
             if(file != null){
+                // CREATE file_seq
+                int file_seq = commonService.selectMaxHistSeq(user_id);
+                LOGGER.info("파일 정보 file_seq: file_seq={}", file_seq);
+
                 // 파일 서버 저장
                 FileVO fileVO = commonService.saveImageFile(file);
-
 
                 // 파일 정보 DB 저장
                 fileVO.setUser_id(user_id);
@@ -111,6 +108,12 @@ public class ProfileMntController {
             LOGGER.debug("프로필 정보 처리 실패: user_id={}", user_id, e.getMessage());
             return ResponseEntity.internalServerError().body("프로필 정보 처리에 실패했습니다." + e.getMessage());
         }
+    }
+
+    // TODO : 엑셀다운로드 준비중
+    @GetMapping("/excel/{user_id}/download")
+    public String exceldown(@PathVariable("user_id") String user_id, Model model) {
+        return "";
     }
 }
 

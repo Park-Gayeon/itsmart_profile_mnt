@@ -34,5 +34,6 @@
                #{user_id}
         FROM TB_USER_QUALIFICATION_INFO
         WHERE QUALIFICATION_SEQ = #{qualification_seq}
+          AND USER_ID = #{user_id}
     </insert>
 </mapper>

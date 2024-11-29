@@ -17,6 +17,11 @@ public class ProfileMntServiceImpl implements ProfileMntService {
     }
 
     @Override
+    public ProfileVO selectUsrProfileDetail(String user_id) {
+        return profileDAO.selectUsrProfileDetail(user_id);
+    }
+
+    @Override
     public int selectMaxHistSeq(String user_id) {
         return profileDAO.selectMaxHistSeq(user_id);
     }

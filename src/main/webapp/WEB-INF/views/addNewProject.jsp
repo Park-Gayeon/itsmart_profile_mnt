@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="/css/bootstrap.css">
     <link rel="stylesheet" href="/css/basic.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
-    <title>직원 프로젝트 기술</title>
+    <title>수행이력 작성</title>
 </head>
 <body>
 <div class="content" tabindex="-1">
@@ -45,60 +45,20 @@
                         <input type="text" id="project_client" name="project_client" maxlength="18"><br><br>
 
                         <label for="assigned_task_lar">담당업무(대분류):</label>
-                        <select class="form-select" style="width: auto; justify-self: center;" id="assigned_task_lar" name="assigned_task_lar">
-                            <option value="">선택해주세요</option>
-                            <option value="001">IT컨설팅</option>
-                            <option value="002">IT프로젝트관리</option>
-                            <option value="003">IT아키텍처</option>
-                            <option value="004">SW개발</option>
-                            <option value="005">시스템 구축 및 운영</option>
-                            <option value="006">IT마케팅</option>
-                            <option value="007">IT품질관리</option>
-                            <option value="008">정보보호</option>
-                            <option value="009">IT기술교육</option>
+                        <select class="form-select" style="width: auto; justify-self: center;" id="assigned_task_lar" name="assigned_task_lar"
+                                onchange="selectTaskLar(this)">
+                            <option value="" selected>선택해주세요</option>
+                            <c:forEach var="taskLarList" items="${taskLarList}">
+                                <option value="${taskLarList.code_id}">${taskLarList.code_value}</option>
+                            </c:forEach>
                         </select><br><br>
 
                         <label for="assigned_task_mid">담당업무(소분류):</label>
                         <select class="form-select" style="width: auto; justify-self: center;" id="assigned_task_mid" name="assigned_task_mid">
-                            <option value="">선택해주세요</option>
-                            <option value="010">정보기술기획</option>
-                            <option value="011">정보기술컨설팅</option>
-                            <option value="012">정보보호컨설팅</option>
-                            <option value="013">데이터분석</option>
-                            <option value="014">업무분석</option>
-                            <option value="015">빅데이터기획</option>
-                            <option value="016">UI/UX기획</option>
-                            <option value="017">인공지능서비스기획</option>
-                            <option value="018">IT프로젝트관리</option>
-                            <option value="019">IT프로젝트사업관리</option>
-                            <option value="020">SW아키텍처</option>
-                            <option value="021">infrastructure아키텍처</option>
-                            <option value="022">데이터아키텍처</option>
-                            <option value="023">빅데이터아키텍처</option>
-                            <option value="024">인공지능아키텍처</option>
-                            <option value="025">UI/UX개발</option>
-                            <option value="026">UI/UX디자인</option>
-                            <option value="027">응용SW개발</option>
-                            <option value="028">빅데이터개발</option>
-                            <option value="029">시스템SW개발</option>
-                            <option value="030">임베디드SW개발</option>
-                            <option value="031">인공지능SW개발</option>
-                            <option value="032">데이터베이스관리</option>
-                            <option value="033">NW엔지니어링</option>
-                            <option value="034">IT시스템관리</option>
-                            <option value="035">IT시스템기술지원</option>
-                            <option value="036">빅데이터엔지니어링</option>
-                            <option value="037">인공지능서비스관리</option>
-                            <option value="038">SW제품기획</option>
-                            <option value="039">IT기술영업</option>
-                            <option value="040">IT서비스기획</option>
-                            <option value="041">IT품질관리</option>
-                            <option value="042">IT테스트</option>
-                            <option value="043">IT감리</option>
-                            <option value="044">IT감사</option>
-                            <option value="045">정보보호관리</option>
-                            <option value="046">보안사고대응</option>
-                            <option value="047">IT기술교육</option>
+                            <option value="" selected>선택해주세요</option>
+                            <c:forEach var="taskMidList" items="${taskMidList}">
+                                <option value="${taskMidList.code_id}">${taskMidList.code_value}</option>
+                            </c:forEach>
                         </select><br><br>
                         <button type="button" onclick="sendDataToParent()">입력</button>
                     </form>
@@ -108,7 +68,9 @@
     </div>
 </div>
 </body>
-<script>
+<script src="//code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="/js/common.js"></script>
+<script type="text/javascript">
     // 부모 창으로 데이터를 전달 하고 팝업창을 닫는다
     function sendDataToParent() {
         const project_seq = document.getElementById("project_seq").value;
@@ -172,6 +134,30 @@
 
     // 부트스트랩에서 제공하는 날짜form을 사용해보고 년도에 대한 유효성 검사가 되지 않으면 검사로직을 만들어야 한다.
     // 업무뷴류체계 ajax 로 받는거 구현해야 한다.
+    // 업무분류 BOX 서버 데이터 조회
+    function selectTaskLar(ob) {
+        const parentId = $(ob).val();
+        const url = "/profile/project/select/task";
+        const $subCategory = $("select[name=assigned_task_mid]");
+
+        // 중분류를 초기화 한다.
+        $subCategory.empty().append('<option value="">-- 중분류 선택 --</option>');
+
+        $.ajax({
+            url: url,
+            type: "GET",
+            data: {code_id: parentId},
+            dataType: 'json',
+            success: function (response) {
+                response.forEach(data => {
+                    $subCategory.append('<option value="' + data.code_id + '">' + data.code_value + '</option>');
+                });
+            },
+            error: function () {
+                alert("서버 오류가 발생했습니다. 다시 시도해 주세요.")
+            }
+        });
+    }
     // start_date, end_date에 대한 유효성검사가 추가되어야 한다.
 
 

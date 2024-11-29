@@ -33,6 +33,7 @@
                #{user_id}
         FROM TB_WORK_EXPERIENCE_INFO
         WHERE WORK_SEQ = #{work_seq}
+          AND USER_ID = #{user_id}
     </insert>
 
 

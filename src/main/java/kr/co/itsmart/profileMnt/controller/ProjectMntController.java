@@ -12,10 +12,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
-@RequestMapping("/profile/project/modify")
+@RequestMapping("/profile/project")
 public class ProjectMntController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ProjectMntController.class);
     private final ProjectMntService projectMntService;
@@ -31,6 +33,17 @@ public class ProjectMntController {
     public String addProject(@RequestParam("user_id") String user_id, Model model) {
         LOGGER.info("== open addNewProject[프로젝트 추가 팝업] ==");
         int maxSeq = projectMntService.getProjectMaxSeq(user_id);
+
+        Map<String, String> params = new HashMap<>();
+        params.put("code_group_id", "TASK");
+        params.put("task_type", "lar");
+        List<CommonVO> taskLarList = commonService.selectCodeList(params);
+
+        params.clear();
+        params.put("code_group_id", "TASK");
+        List<CommonVO> taskMidList = commonService.selectCodeList(params);
+        model.addAttribute("taskLarList", taskLarList);
+        model.addAttribute("taskMidList", taskMidList);
         model.addAttribute("maxSeq", maxSeq);
         return "addNewProject";
     }
@@ -76,7 +89,7 @@ public class ProjectMntController {
         project.setProject_seq(project_seq);
         ProjectVO skill = projectMntService.selectUsrSkillList(project);
 
-        // flag : 1 => selectProfileModify.jsp
+        // flag : 1 => edit
         model.addAttribute("flag", flag);
         model.addAttribute("project", project);
         model.addAttribute("skill", skill);
