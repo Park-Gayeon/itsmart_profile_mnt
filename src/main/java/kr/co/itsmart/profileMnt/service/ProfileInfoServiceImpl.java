@@ -1,6 +1,7 @@
 package kr.co.itsmart.profileMnt.service;
 
 import kr.co.itsmart.profileMnt.dao.ProfileDAO;
+import kr.co.itsmart.profileMnt.vo.LoginVO;
 import kr.co.itsmart.profileMnt.vo.ProfileVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProfileInfoServiceImpl implements ProfileInfoService{
@@ -17,7 +19,7 @@ public class ProfileInfoServiceImpl implements ProfileInfoService{
     private final ProfileDAO profileDAO;
     private final PasswordEncoder passwordEncoder;
 
-    @Value("{user.default-password}")
+    @Value("${user.default-password}")
     private String defaultPassword;
 
     public ProfileInfoServiceImpl(ProfileDAO profileDAO, PasswordEncoder passwordEncoder){
@@ -62,5 +64,10 @@ public class ProfileInfoServiceImpl implements ProfileInfoService{
     @Override
     public int selectMaxHistSeq(String user_id) {
         return profileDAO.selectMaxHistSeq(user_id);
+    }
+
+    @Override
+    public Optional<LoginVO> getUsrInfo(String user_id) {
+        return profileDAO.getUsrInfo(user_id);
     }
 }

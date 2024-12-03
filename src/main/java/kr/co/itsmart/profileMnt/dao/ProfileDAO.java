@@ -1,10 +1,12 @@
 package kr.co.itsmart.profileMnt.dao;
 
+import kr.co.itsmart.profileMnt.vo.LoginVO;
 import kr.co.itsmart.profileMnt.vo.ProfileVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
+import java.util.Optional;
 
 @Mapper
 public interface ProfileDAO {
@@ -32,4 +34,8 @@ public interface ProfileDAO {
 
     /* 신규 직원 프로필 등록 */
     void insertUsrProfile(ProfileVO profile);
+
+    /* 로그인 유저 조회 */
+    @Select("SELECT USER_ID, USER_PW FROM TB_USER_PROFILE_INFO WHERE USER_ID = #{user_id}")
+    Optional<LoginVO> getUsrInfo(String user_id);
 }
