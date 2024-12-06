@@ -3,6 +3,7 @@ package kr.co.itsmart.profileMnt.service;
 import kr.co.itsmart.profileMnt.dao.CommonDAO;
 import kr.co.itsmart.profileMnt.vo.CommonVO;
 import kr.co.itsmart.profileMnt.vo.FileVO;
+import kr.co.itsmart.profileMnt.vo.LoginVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -82,6 +84,11 @@ public class CommonServiceImpl implements CommonService {
         } catch (Exception e){
             LOGGER.debug("파일 정보 저장 실패: user_id={}, file_seq={}", file.getUser_id(), file.getFile_seq(), e.getMessage());
         }
+    }
+
+    @Override
+    public Optional<LoginVO> getUsrInfo(String user_id) {
+        return commonDAO.getUsrInfo(user_id);
     }
 
 }

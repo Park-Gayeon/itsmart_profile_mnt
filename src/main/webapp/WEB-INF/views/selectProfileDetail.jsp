@@ -42,7 +42,7 @@
                         <div class="col-md text-center mb-3">
                             <c:choose>
                                 <c:when test="${profile.fileInfo.file_sver_nm eq null || profile.fileInfo.file_sver_nm eq ''}">
-                                    <img class="img-profile detail" src="/image/image.png"/>
+                                    <img class="img-profile detail" src="/images/image.png"/>
                                 </c:when>
                                 <c:otherwise>
                                     <img class="img-profile detail" src="/${profile.fileInfo.file_sver_nm}"/>
@@ -430,7 +430,7 @@
                             <div class="col-md text-center mb-3">
                                 <c:choose>
                                     <c:when test="${profile.fileInfo.file_sver_nm eq null || profile.fileInfo.file_sver_nm eq ''}">
-                                        <img class="img-profile edit" src="/image/image.png"/>
+                                        <img class="img-profile edit" src="/images/image.png"/>
                                     </c:when>
                                     <c:otherwise>
                                         <img class="img-profile edit" src="/${profile.fileInfo.file_sver_nm}"/>
@@ -1136,7 +1136,7 @@
             /*최대 파일크기 2MB(2097152) */
             const fileInfo = e.target.files[0];
             const maxSize = 1024*1024*2; // 최대 크기 2MB
-            const basicImg = "/image/image.png"; // 기본 이미지 경로
+            const basicImg = "/images/image.png"; // 기본 이미지 경로
             chgImg = true;
 
             // 파일 선택 취소

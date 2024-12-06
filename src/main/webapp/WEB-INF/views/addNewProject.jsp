@@ -132,8 +132,6 @@
         return chk;
     }
 
-    // 부트스트랩에서 제공하는 날짜form을 사용해보고 년도에 대한 유효성 검사가 되지 않으면 검사로직을 만들어야 한다.
-    // 업무뷴류체계 ajax 로 받는거 구현해야 한다.
     // 업무분류 BOX 서버 데이터 조회
     function selectTaskLar(ob) {
         const parentId = $(ob).val();
@@ -142,7 +140,6 @@
 
         // 중분류를 초기화 한다.
         $subCategory.empty().append('<option value="">-- 중분류 선택 --</option>');
-
         $.ajax({
             url: url,
             type: "GET",
@@ -158,8 +155,6 @@
             }
         });
     }
-    // start_date, end_date에 대한 유효성검사가 추가되어야 한다.
-
 
 </script>
 </html>

@@ -24,9 +24,9 @@
                     <div class="d-flex flex-column flex-shrink-0 p-3 text-bg-dark" style="width: 280px;">
                         <!-- 사이드바 헤더 -->
                         <!-- TODO : 아이티스마트 로고 추가 -->
-                        <a href="/"
+                        <a href="/home"
                            class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
-                            <img src="/image/arrow-through-heart.svg" alt="" width="32" height="32"
+                            <img src="/images/arrow-through-heart.svg" alt="" width="32" height="32"
                                  class="bi pe-none me-2">
                             <strong>ITSMART</strong>
                         </a>
@@ -35,13 +35,13 @@
                         <!-- 사이드바 BODY -->
                         <ul class="navbar-nav justify-content-end flex-grow-1 pe-3 mb-auto">
                             <li class="nav-item">
-                                <a class="nav-link active" aria-current="page" href="http://localhost:8081/api/login">HOME</a>
+                                <a class="nav-link active" aria-current="page" href="/home">HOME</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="http://localhost:8081/profile/info/list">직원 프로필관리</a>
+                                <a class="nav-link" href="/profile/info/list">직원 프로필관리</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="http://localhost:8081/profile/detail/gypark">내 프로필관리</a>
+                                <a class="nav-link" href="#">내 프로필관리</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="#">회사조직도</a>
@@ -58,8 +58,8 @@
                             </a>
                             <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
                                 <!-- TODO : login 페이지 이동 -->
-                                <li><a class="dropdown-item" href="/logout">로그아웃
-                                    <img src="/image/box-arrow-right.svg" alt="" class="bi pe-none me-2">
+                                <li><a class="dropdown-item" onclick="logout()">로그아웃
+                                    <img src="/images/box-arrow-right.svg" alt="" class="bi pe-none me-2">
                                 </a></li>
                             </ul>
                         </div>
@@ -71,7 +71,7 @@
             </div>
             <!-- 메뉴바 활성화 끝 -->
             <!-- NAV - LOGO -->
-            <a class="navbar-brand" href="/">ITSMART LOGO</a>
+            <a class="navbar-brand" href="/home">ITSMART LOGO</a>
             <!-- NAV - LOGO END -->
         </div>
     </nav>

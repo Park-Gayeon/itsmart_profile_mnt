@@ -176,3 +176,13 @@ function chkEmptyData(nullable){
     }
     return chk;
 }
+
+function logout() {
+    $.ajax({
+        url: '/auth/logout',
+        type: 'POST',
+        success: function () {
+            window.location.href = '/auth/login/main';
+        }
+    });
+}
