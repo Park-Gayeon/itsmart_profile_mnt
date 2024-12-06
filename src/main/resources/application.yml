@@ -3,8 +3,8 @@ spring:
     name: profileMnt
   security:
     jwt:
-      secret-key: DKSSUDGKTPDYDURLSMSDKDLXLTMAKXMVMFHVLFRHKSFLTJQLTMDLQSLEK
-      expiration: 60000 # 86400000 # 1 day
+      secret-key: 7JWI64WV7ZWY7IS47JqU7J206rKD7J2A7Iuc7YGs66a/7YKk7JiI7Jes7JWE7J207Yuw7Iqk66eI7Yq4
+      expiration: 300000 # 5 min
       refresh-token:
         expiration: 604800000 # 7 days
 

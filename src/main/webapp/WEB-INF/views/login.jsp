@@ -20,18 +20,20 @@
     <div class="form-signin w-100 m-auto">
         <div class="logo">
             <div class="logo-image">
-                <img src="/image/arrow-through-heart.svg" alt="logo" class="bi pe-none me-2">
+                <img src="/images/arrow-through-heart.svg" alt="logo" class="bi pe-none me-2">
             </div>
             <p>LOGIN</p>
         </div>
-        <div class="form-floating">
-            <input type="text" class="form-control" id="floatingInput" name="user_id" placeholder="ID">
-            <label for="floatingInput">ID</label>
-        </div>
-        <div class="form-floating">
-            <input type="password" class="form-control" id="floatingPassword" name="user_pw" placeholder="PW">
-            <label for="floatingPassword">PW</label>
-        </div>
+        <form id="frm">
+            <div class="form-floating">
+                <input type="text" class="form-control" id="floatingInput" name="user_id" placeholder="ID">
+                <label for="floatingInput">ID</label>
+            </div>
+            <div class="form-floating">
+                <input type="password" class="form-control" id="floatingPassword" name="user_pw" placeholder="PW">
+                <label for="floatingPassword">PW</label>
+            </div>
+        </form>
         <button class="btn btn-dark w-100 py-2" style="margin-top: 30px" onclick="goLogin()">로그인</button>
     </div>
 </main>
@@ -43,16 +45,15 @@
 
 </body>
 <script src="//code.jquery.com/jquery-3.7.1.min.js"></script>
-<script src="/js/bootstrap.bundle.js"></script>
-<script src="js/bootstrap.js"></script>
 <script type="text/javascript">
     function goLogin() {
         const user_id = $("input[name=user_id]").val();
         const user_pw = $("input[name=user_pw]").val();
         if (user_id == "" || user_pw == "") {
-            alert("입력해주세요");
+            alert("ID와 PW를 확인하세요");
             return false;
         }
+
         $.ajax({
             url: "/auth/login",
             type: "POST",
@@ -62,10 +63,13 @@
                 user_pw: user_pw
             }),
             success: function () {
-                alert("확인");
+                window.location.href = "/home";
             },
             error: function () {
-                alert("서버 오류 발생");
+                alert("아이디 및 비밀번호를 확인하시기 바랍니다.");
+                $("input[name=user_id]").val('');
+                $("input[name=user_pw]").val('');
+                return;
             }
         });
     }

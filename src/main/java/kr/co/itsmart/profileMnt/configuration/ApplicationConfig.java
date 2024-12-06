@@ -1,11 +1,10 @@
 package kr.co.itsmart.profileMnt.configuration;
 
-import kr.co.itsmart.profileMnt.service.ProfileInfoService;
+import kr.co.itsmart.profileMnt.service.CommonService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -19,10 +18,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class ApplicationConfig {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    private final ProfileInfoService profileInfoService;
+    private final CommonService commonService;
 
-    public ApplicationConfig(@Lazy ProfileInfoService profileInfoService) {
-        this.profileInfoService = profileInfoService;
+    public ApplicationConfig(CommonService commonService) {
+        this.commonService = commonService;
     }
 
     @Bean
@@ -34,7 +33,7 @@ public class ApplicationConfig {
     @Bean
     public UserDetailsService userDetailsService() {
         return username -> {
-            return profileInfoService.getUsrInfo(username)
+            return commonService.getUsrInfo(username)
                     .orElseThrow(() -> {
                         logger.warn("사용자를 찾을 수 없습니다: {}", username);
                         return new UsernameNotFoundException("사용자를 찾을 수 없습니다. ID: " + username);

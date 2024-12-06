@@ -1,15 +1,14 @@
 package kr.co.itsmart.profileMnt.controller;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import kr.co.itsmart.profileMnt.service.LoginService;
 import kr.co.itsmart.profileMnt.vo.LoginVO;
 import kr.co.itsmart.profileMnt.vo.auth.AuthRequest;
 import kr.co.itsmart.profileMnt.vo.auth.AuthResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,25 +26,39 @@ public class LoginController {
     }
 
     @GetMapping("/login/main")
-    public String loginView() {
+    public String loginView(HttpServletResponse response) {
+        // 로그인 페이지를 호출하면 기존에 Cookie 에 저장된 Access Token 을 무효화 시킨다.
+        Cookie deleteAccessCookie = new Cookie("accessToken", null);
+        deleteAccessCookie.setHttpOnly(true);
+        deleteAccessCookie.setPath("/");
+        deleteAccessCookie.setMaxAge(0); // cookie 만료
+
+        response.addCookie(deleteAccessCookie);
         return "login";
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> authenticate(@RequestBody AuthRequest login) {
-        LoginVO user = LoginVO.builder()
-                .user_id(login.user_id())
-                .user_pw(login.user_pw())
-                .build();
-        try {
-            AuthResponse response = loginService.authenticate(user);
-            return ResponseEntity.ok(response);
-        } catch (BadCredentialsException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new AuthResponse("비밀번호가 올바르지 않습니다."));
-        } catch (UsernameNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new AuthResponse("사용자를 찾을 수 없습니다."));
-        }
+    public ResponseEntity<Object> authenticate(@RequestBody AuthRequest login, HttpServletResponse response) {
+        LoginVO user = new LoginVO();
+        user.setUser_id(login.user_id());
+        user.setUser_pw(login.user_pw());
+
+        // [인증 및 Token 발급]
+        AuthResponse tokenInfo = loginService.authenticate(user);
+
+        // [cookie - access token]
+        Cookie accessTokenCookie = new Cookie("accessToken", tokenInfo.accessToken());
+        accessTokenCookie.setHttpOnly(true);       // HttpOnly 설정 (스크립트 접근 불가)
+        accessTokenCookie.setPath("/");            // 전체경로에서 유효
+        accessTokenCookie.setMaxAge(60 * 10);      // 10 min
+
+        response.addCookie(accessTokenCookie);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(){
+        return ResponseEntity.ok().build();
     }
 }
-
-

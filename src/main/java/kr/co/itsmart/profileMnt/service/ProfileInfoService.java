@@ -16,6 +16,4 @@ public interface ProfileInfoService {
     void insertUsrProfile(ProfileVO profile);
 
     int selectMaxHistSeq(String user_id);
-
-    Optional<LoginVO> getUsrInfo(String user_id);
 }

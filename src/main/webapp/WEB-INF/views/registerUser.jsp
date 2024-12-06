@@ -22,7 +22,7 @@
                     <form id="frm">
                         <!-- 사진 -->
                         <div class="col-md text-center">
-                            <img id="profileImg" src="/image/image.png" class="img-profile">
+                            <img id="profileImg" src="/images/image.png" class="img-profile">
                             <input type="file" class="form-control form-control-sm" id="imgFile" name="imgFile" accept=".jpg, .png, .jpeg"/>
                         </div>
                         <!-- 개인정보 -->
@@ -121,7 +121,7 @@
             /*최대 파일크기 2MB(2097152) */
             const fileInfo = e.target.files[0];
             const maxSize = 1024*1024*2; // 최대 크기 2MB
-            const basicImg = "/image/image.png"; // 기본 이미지 경로
+            const basicImg = "/images/image.png"; // 기본 이미지 경로
             chgImg = true;
 
             // 파일 선택 취소

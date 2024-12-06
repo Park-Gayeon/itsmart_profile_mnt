@@ -16,7 +16,7 @@
 
 <!-- main-content -->
 <div class="">
-    <img src="/image/sample.jpg" width="100%" height="500">
+    <img src="/images/sample.jpg" width="100%" height="500">
 </div>
 <!-- main-content -->
 
@@ -24,8 +24,15 @@
 <%@ include file="layout/footer.jsp" %>
 <!-- footer.jsp -->
 
-<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
-<script src="js/bootstrap.js"></script>
-<script src="js/bootstrap.bundle.js"></script>
+<script src="//code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="/js/bootstrap.bundle.js"></script>
+<script src="/js/common.js"></script>
+<script type="text/javascript">
+    $(document).ready(function (){
+
+    });
+
+
+</script>
 </body>
 </html>

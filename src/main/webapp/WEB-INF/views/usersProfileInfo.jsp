@@ -86,10 +86,8 @@
 <!-- footer.jsp -->
 <script src="//code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="/js/bootstrap.bundle.js"></script>
+<script src="/js/common.js"></script>
 <script type="text/javascript">
-    $(document).ready(function () {
-
-    });
 
     function register(){
         let url = "/profile/info/register";
