@@ -285,8 +285,20 @@ CREATE TABLE TB_COMMON_CODE
 ) COMMENT ='공통코드 테이블';
 
 
+
+CREATE TABLE TB_USER_REFRESH_TOKEN_INFO
+(
+    user_id     VARCHAR(10)  NOT NULL COMMENT '직원 아이디',
+    token       VARCHAR(256) NOT NULL COMMENT 'REFRESH TOKEN',
+    create_date TIMESTAMP    NOT NULL COMMENT '생성일시'
+) COMMENT ='TOKEN 테이블';
+
+
+
 -- parent_id 컬럼에 인덱스 추가
 CREATE INDEX idx_tb_common_code_parent_id ON TB_COMMON_CODE (parent_id);
+
+
 
 -- 최초 적재 데이터
 -- 초기 데이터
