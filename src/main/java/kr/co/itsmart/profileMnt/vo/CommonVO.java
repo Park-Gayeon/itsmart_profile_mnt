@@ -10,6 +10,10 @@ public class CommonVO {
     private int level;
     private String use_yn;
 
+    // etc
+    private String hierarchy_value;
+    private String full_path;
+
     // meta_data
     private String created_date;
     private String modified_date;
@@ -71,6 +75,22 @@ public class CommonVO {
 
     public void setUse_yn(String use_yn) {
         this.use_yn = use_yn;
+    }
+
+    public String getHierarchy_value() {
+        return hierarchy_value;
+    }
+
+    public void setHierarchy_value(String hierarchy_value) {
+        this.hierarchy_value = hierarchy_value;
+    }
+
+    public String getFull_path() {
+        return full_path;
+    }
+
+    public void setFull_path(String full_path) {
+        this.full_path = full_path;
     }
 
     public String getCreated_date() {
