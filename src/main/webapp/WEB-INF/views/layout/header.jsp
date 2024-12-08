@@ -44,7 +44,7 @@
                                 <a class="nav-link" href="#">내 프로필관리</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">회사조직도</a>
+                                <a class="nav-link" href="/orgChart">회사조직도</a>
                             </li>
                         </ul>
                         <!-- 사이드바 BODY 끝-->
