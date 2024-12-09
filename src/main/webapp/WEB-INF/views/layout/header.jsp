@@ -37,11 +37,13 @@
                             <li class="nav-item">
                                 <a class="nav-link active" aria-current="page" href="/home">HOME</a>
                             </li>
+                            <c:if test="${userRole[0] eq 'ROLE_ADMIN'}">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/profile/info/list">직원 프로필관리</a>
+                                </li>
+                            </c:if>
                             <li class="nav-item">
-                                <a class="nav-link" href="/profile/info/list">직원 프로필관리</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">내 프로필관리</a>
+                                <a class="nav-link" href="/profile/${loginUser}">내 프로필관리</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="/orgChart">회사조직도</a>
@@ -54,7 +56,7 @@
                             <a href="#"
                                class="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
                                data-bs-toggle="dropdown" data-bs-auto-close="true" aria-expanded="false">
-                                <strong>${model.user_id}</strong>
+                                <strong>${loginUser}</strong>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
                                 <!-- TODO : login 페이지 이동 -->

@@ -18,7 +18,7 @@ import java.util.UUID;
 
 @Service
 public class CommonServiceImpl implements CommonService {
-    private static final Logger LOGGER = LoggerFactory.getLogger(CommonServiceImpl.class);
+    private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     private final CommonDAO commonDAO;
     @Value("${file.upload-dir}")
     private String uploadDir;

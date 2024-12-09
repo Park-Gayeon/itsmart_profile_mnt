@@ -28,7 +28,7 @@ public interface CommonDAO {
     void insertUsrFileInfo(FileVO file);
 
     /* 로그인 유저 조회 */
-    @Select("SELECT USER_ID, USER_PW FROM TB_USER_PROFILE_INFO WHERE USER_ID = #{user_id}")
+    @Select("SELECT USER_ID, USER_PW, USER_ROLE FROM TB_USER_PROFILE_INFO WHERE USER_ID = #{user_id}")
     Optional<LoginVO> getUsrInfo(String user_id);
 
     /* 로그인 유저 token 조회 */

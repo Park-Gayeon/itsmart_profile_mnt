@@ -4,10 +4,12 @@ import kr.co.itsmart.profileMnt.service.CommonService;
 import kr.co.itsmart.profileMnt.service.ProfileInfoService;
 import kr.co.itsmart.profileMnt.vo.CommonVO;
 import kr.co.itsmart.profileMnt.vo.FileVO;
+import kr.co.itsmart.profileMnt.vo.LoginVO;
 import kr.co.itsmart.profileMnt.vo.ProfileVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +22,7 @@ import java.util.Map;
 @Controller
 @RequestMapping("/profile/info")
 public class ProfileInfoController {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ProfileInfoController.class);
+    private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     private final ProfileInfoService profileInfoService;
     private final CommonService commonService;
 
@@ -30,7 +32,9 @@ public class ProfileInfoController {
     }
 
     @GetMapping("/list")
-    public String getUsrProfileInfoList(@ModelAttribute ProfileVO profile, Model model) {
+    public String getUsrProfileInfoList(@AuthenticationPrincipal LoginVO login,
+                                        @ModelAttribute ProfileVO profile,
+                                        Model model) {
         LOGGER.info("== go usersProfileInfo[사용자 프로필 목록 조회 화면] ==");
 
         LOGGER.info("검색조건 확인 searchType={}, searchText={}", profile.getSearchType(), profile.getSearchText());
@@ -38,6 +42,8 @@ public class ProfileInfoController {
 
         int userProfileCnt = profileInfoService.getUsrProfileInfoCnt(profile);
 
+        model.addAttribute("loginUser", login.getUser_id());
+        model.addAttribute("userRole", login.getAuthorities());
         model.addAttribute("info", profileList);
         model.addAttribute("cnt", userProfileCnt);
         model.addAttribute("searchType", profile.getSearchType());

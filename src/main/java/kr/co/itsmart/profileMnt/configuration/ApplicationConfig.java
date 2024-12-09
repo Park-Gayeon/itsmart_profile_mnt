@@ -32,13 +32,12 @@ public class ApplicationConfig {
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return username -> {
-            return commonService.getUsrInfo(username)
-                    .orElseThrow(() -> {
-                        logger.warn("사용자를 찾을 수 없습니다: {}", username);
-                        return new UsernameNotFoundException("사용자를 찾을 수 없습니다. ID: " + username);
-                    });
-        };
+        return username -> commonService.getUsrInfo(username)
+                .orElseThrow(() -> {
+                    logger.warn("사용자를 찾을 수 없습니다: {}", username);
+                    return new UsernameNotFoundException("사용자를 찾을 수 없습니다. ID: " + username);
+                });
+
     }
 
     @Bean

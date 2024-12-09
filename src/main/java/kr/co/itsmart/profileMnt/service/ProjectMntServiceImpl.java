@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ProjectMntServiceImpl implements ProjectMntService {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ProjectMntServiceImpl.class);
+    private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     private final ProjectDAO projectDAO;
 
     public ProjectMntServiceImpl(ProjectDAO projectDAO) {

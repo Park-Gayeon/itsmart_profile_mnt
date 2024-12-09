@@ -6,11 +6,13 @@ import kr.co.itsmart.profileMnt.service.ProjectMntService;
 import kr.co.itsmart.profileMnt.service.WorkExperienceMntService;
 import kr.co.itsmart.profileMnt.vo.CommonVO;
 import kr.co.itsmart.profileMnt.vo.FileVO;
+import kr.co.itsmart.profileMnt.vo.LoginVO;
 import kr.co.itsmart.profileMnt.vo.ProfileVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +25,7 @@ import java.util.Map;
 @Controller
 @RequestMapping("/profile")
 public class ProfileMntController {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ProjectMntController.class);
+    private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     private final ProfileMntService profileMntService;
     private final CommonService commonService;
     private final ProjectMntService projectMntService;
@@ -41,7 +43,9 @@ public class ProfileMntController {
     }
 
     @GetMapping("/{user_id}")
-    public String selectDetailInfo(@PathVariable("user_id") String user_id, Model model) {
+    public String selectDetailInfo(@AuthenticationPrincipal LoginVO login,
+                                   @PathVariable("user_id") String user_id,
+                                   Model model) {
         LOGGER.info("== go selectProfileDetail[사용자 프로필 상세 화면] ==");
         ProfileVO profile = profileMntService.selectUsrProfileDetail(user_id);
 
@@ -62,6 +66,8 @@ public class ProfileMntController {
         int pj_totalMonth = projectMntService.calcTotalMonth(user_id);
         int wk_totalMonth = workExperienceMntService.calcTotalMonth(user_id);
 
+        model.addAttribute("loginUser", login.getUser_id());
+        model.addAttribute("userRole", login.getAuthorities());
         model.addAttribute("profile", profile);
         model.addAttribute("taskLarList", taskLarList);
         model.addAttribute("taskMidList", taskMidList);

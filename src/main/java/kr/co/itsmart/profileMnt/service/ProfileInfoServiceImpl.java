@@ -13,7 +13,7 @@ import java.util.List;
 
 @Service
 public class ProfileInfoServiceImpl implements ProfileInfoService{
-    private static final Logger LOGGER = LoggerFactory.getLogger(ProfileInfoServiceImpl.class);
+    private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     private final ProfileDAO profileDAO;
     private final PasswordEncoder passwordEncoder;
 

@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,7 +21,7 @@ import java.util.Map;
 
 @Service
 public class LoginServiceImpl implements LoginService {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ProfileInfoServiceImpl.class);
+    private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
 
@@ -40,16 +41,20 @@ public class LoginServiceImpl implements LoginService {
         LOGGER.info("[Login] user_id : {}", user.getUser_id());
         try {
             // [인증]
-            authenticationManager.authenticate(
+            Authentication authenticate = authenticationManager.authenticate(
                     // 1.   AuthenticationProvider 호출 : 인증 작업을 수행
                     // 1-1. DaoAuthenticationProvider 를 사용
-                    // 1-2. UserDetailsService 호출 : UserDetails 객체 반환(사용자ID, 암호화된 PW)
+                    // 1-2. UserDetailsService 호출 : UserDetails 객체 반환(사용자ID, 암호화된 PW, ROLE)
                     // 1-3. DaoAuthenticationProvider 에서 비밀번호를 검증( UserDetails PW랑, 입력된 PW 비교 )
                     // 2.   인증성공 Authentication 반환
                     new UsernamePasswordAuthenticationToken(user.getUser_id(), user.getUser_pw())
-            );
+                );
+            // 인증된 사용자 정보 확인
+            user = (LoginVO) authenticate.getPrincipal();
+            LOGGER.info("[LoginServiceImpl] : {}", user.getAuthorities());
+
             // [발급] access token, refresh token
-            String accessToken = jwtService.generateToken(user);
+            String accessToken = jwtService.generateAccessToken(user);
             String refreshToken = jwtService.generateRefreshToken(user);
 
             // DB에 refresh token 저장

@@ -9,14 +9,17 @@ import io.jsonwebtoken.security.Keys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 public class JwtService {
@@ -30,57 +33,58 @@ public class JwtService {
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     /**
-     * access token 생성
+     * token 생성
      *
-     * @param userDetails (username, password)
+     * @param userDetails
+     * @param expiration
      */
-    public String generateToken(UserDetails userDetails) {
-        return generateToken(new HashMap<>(), userDetails);
+    public String generateToken(UserDetails userDetails, long expiration) {
+        Map<String, Object> extraClaims = new HashMap<>();
+        extraClaims.put("roles", extractRoles(userDetails));
+
+        return buildToken(extraClaims, userDetails, expiration);
     }
 
     /**
      * access token 생성
      *
-     * @param extraClaims
-     * @param userDetails (username, password)
+     * @param userDetails
      */
-    public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
-        return buildToken(extraClaims, userDetails, jwtExpiration);
+    public String generateAccessToken(UserDetails userDetails) {
+        return generateToken(userDetails, jwtExpiration);
     }
 
     /**
      * refresh token 생성
      *
-     * @param userDetails (username, password)
+     * @param userDetails
      */
     public String generateRefreshToken(UserDetails userDetails) {
-        return buildToken(new HashMap<>(), userDetails, refreshExpiration);
+        return generateToken(userDetails, refreshExpiration);
     }
 
     /**
      * JWT token 생성
      *
      * @param extraClaims
-     * @param userDetails (username, password)
+     * @param userDetails
      * @param expiration
      * @return token
      */
     private String buildToken(Map<String, Object> extraClaims, UserDetails userDetails, long expiration) {
         return Jwts.builder()
                 .setClaims(extraClaims)
-                .setId(userDetails.getUsername())
+                .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256).compact();
     }
 
-
     /**
      * token 검증
-     * token 의 username = 전달받은 username && 토큰 유효
      *
      * @param token
-     * @param userDetails (username, password)
+     * @param userDetails
      */
     public boolean isTokenValid(String token, UserDetails userDetails) {
         log.info("[isTokenValid]");
@@ -94,14 +98,25 @@ public class JwtService {
      * @param token
      */
     public String extractUsername(String token) {
-        return extractClaim(token, Claims::getId);
+        return extractClaim(token, Claims::getSubject);
     }
 
+    /**
+     * token payload 조회
+     *
+     * @param token
+     * @param claimResolver
+     */
     public <T> T extractClaim(String token, Function<Claims, T> claimResolver) {
         final Claims claims = extractAllClaims(token);
         return claimResolver.apply(claims);
     }
 
+    /**
+     * token parsing
+     *
+     * @param token
+     */
     private Claims extractAllClaims(String token) {
         try {
             return Jwts.parserBuilder()
@@ -115,16 +130,40 @@ public class JwtService {
         }
     }
 
+    /**
+     * token 유효성 여부 조회
+     *
+     * */
     private boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
     }
 
+    /**
+     * token 유효기간 조회
+     *
+     * @param token
+     * */
     private Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
     }
 
+    /**
+     * secretKey 조회
+     *
+     * */
     private Key getSignInKey() {
         byte[] keyByte = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyByte);
+    }
+
+    /**
+     * token userRole 조회
+     *
+     * @param userDetails
+     * */
+    private List<String> extractRoles(UserDetails userDetails){
+        return userDetails.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toList());
     }
 }

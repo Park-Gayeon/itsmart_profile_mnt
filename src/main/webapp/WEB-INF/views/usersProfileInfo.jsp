@@ -88,6 +88,13 @@
 <script src="/js/bootstrap.bundle.js"></script>
 <script src="/js/common.js"></script>
 <script type="text/javascript">
+    $(document).ready(function (){
+        const user_role = `${userRole[0]}`;
+        if(user_role === 'ROLE_USER'){
+            alert("접근권한이 없습니다");
+            window.location.href = "/home";
+        }
+    });
 
     function register(){
         let url = "/profile/info/register";
