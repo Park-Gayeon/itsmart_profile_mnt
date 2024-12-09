@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
     <meta charset="UTF-8">
@@ -29,7 +30,8 @@
 <script src="/js/common.js"></script>
 <script type="text/javascript">
     $(document).ready(function (){
-
+        const user_role = `${userRole[0]}`;
+        alert(user_role);
     });
 
 

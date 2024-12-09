@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class QualificationMntServiceImpl implements QualificationMntService {
-    private static final Logger LOGGER = LoggerFactory.getLogger(QualificationMntServiceImpl.class);
+    private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     private final QualificationDAO qualificationDAO;
 
     public QualificationMntServiceImpl(QualificationDAO qualificationDAO) {

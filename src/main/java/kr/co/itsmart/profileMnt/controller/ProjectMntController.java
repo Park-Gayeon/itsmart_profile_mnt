@@ -19,7 +19,7 @@ import java.util.Map;
 @Controller
 @RequestMapping("/profile/project")
 public class ProjectMntController {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ProjectMntController.class);
+    private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     private final ProjectMntService projectMntService;
     private final CommonService commonService;
 

@@ -55,7 +55,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         try {
             if (token != null) {
                 user_id = jwtService.extractUsername(token);
-                logger.info("[extractUsername] username :{}", user_id);
 
                 // usename 이 존재하는데 인증정보가 없다면 사용자를 조회한다
                 if (user_id != null && SecurityContextHolder.getContext().getAuthentication() == null) {
@@ -65,11 +64,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     if (jwtService.isTokenValid(token, userDetails)) {
                         logger.info("[isTokenValid - access token] 유효성 검사 통과");
 
-                        // SecurityContext 에 인증 정보 추가
-                        UsernamePasswordAuthenticationToken authToken =
-                                new UsernamePasswordAuthenticationToken(userDetails, null,
-                                        userDetails.getAuthorities());
-                        SecurityContextHolder.getContext().setAuthentication(authToken);
+                        setAuthentication(userDetails);
+
                     } else {
                         // access token expired
                         String refreshToken = commonDAO.getUsrRefreshToken(user_id);
@@ -79,21 +75,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                 logger.info("[isTokenValid - refresh token] 유효성 검사 통과");
 
                                 // get new access token
-                                String newAccessToken = jwtService.generateToken(userDetails);
-                                logger.info("[refresh token] : {}", refreshToken);
+                                String newAccessToken = jwtService.generateAccessToken(userDetails);
+                                logger.info("[refresh token] : {}", newAccessToken);
 
-                                // set Cookie
-                                Cookie accessTokenCookie = new Cookie("accessToken", newAccessToken);
-                                accessTokenCookie.setHttpOnly(true);
-                                accessTokenCookie.setPath("/");
-                                accessTokenCookie.setMaxAge(60 * 10);      // 10 min
+                                Cookie accessTokenCookie = setCookie(newAccessToken);
                                 response.addCookie(accessTokenCookie);
 
-                                // SecurityContext 에 인증 정보 추가
-                                UsernamePasswordAuthenticationToken authToken =
-                                        new UsernamePasswordAuthenticationToken(userDetails, null,
-                                                userDetails.getAuthorities());
-                                SecurityContextHolder.getContext().setAuthentication(authToken);
+                                setAuthentication(userDetails);
                             }
                         }
                     }
@@ -105,5 +93,22 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
         logger.info("[filterChain.doFilter] 동작]");
         filterChain.doFilter(request, response);
+    }
+
+    private void setAuthentication(UserDetails userDetails){
+        // SecurityContext 에 인증 정보 추가
+        UsernamePasswordAuthenticationToken authToken =
+                new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(authToken);
+    }
+
+    private Cookie setCookie(String token){
+        // set Cookie
+        Cookie accessTokenCookie = new Cookie("accessToken", token);
+        accessTokenCookie.setHttpOnly(true);
+        accessTokenCookie.setPath("/");
+        accessTokenCookie.setMaxAge(60 * 10);      // 10 min
+
+        return accessTokenCookie;
     }
 }

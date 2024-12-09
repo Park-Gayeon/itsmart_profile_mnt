@@ -1,14 +1,18 @@
 package kr.co.itsmart.profileMnt.vo;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 public class LoginVO implements UserDetails {
 
     private String user_id; // username
     private String user_pw;
+    private String user_role;
 
     public String getUser_id() {
         return user_id;
@@ -21,6 +25,12 @@ public class LoginVO implements UserDetails {
     }
     public void setUser_pw(String user_pw) {
         this.user_pw = user_pw;
+    }
+    public String getUser_role() {
+        return user_role;
+    }
+    public void setUser_role(String user_role) {
+        this.user_role = user_role;
     }
 
     @Override
@@ -45,7 +55,13 @@ public class LoginVO implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        if ("0".equals(this.user_role)){
+            authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+        } else if ("1".equals(this.user_role)){
+            authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+        }
+        return authorities;
     }
 
     @Override
@@ -57,4 +73,6 @@ public class LoginVO implements UserDetails {
     public String getUsername() {
         return getUser_id();
     }
+
+
 }

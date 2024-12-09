@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 @RequestMapping("/profile/qualification")
 public class QualificationMntController {
-    private static final Logger LOGGER = LoggerFactory.getLogger(QualificationMntController.class);
+    private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     private final QualificationMntService qualificationMntService;
 
     public QualificationMntController(QualificationMntService qualificationMntService) {

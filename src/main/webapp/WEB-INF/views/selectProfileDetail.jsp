@@ -31,7 +31,9 @@
                 <h2 class="header">프로필
                     <div class="description" style="position: relative; top: 0px">
                         <input type="button" class="btn btn-warning" onclick="excel()" value="EXCEL"/>
-                        <input type="button" class="btn btn-warning" onclick="goModify()" value="EDT"/>
+                        <c:if test="${profile.user_id == loginUser}">
+                            <input type="button" class="btn btn-warning" onclick="goModify()" value="EDT"/>
+                        </c:if>
                     </div>
                 </h2>
                 <div class="common-box row-box row mb-5 g-0">
@@ -1076,6 +1078,7 @@
     let chgImg = false;
 
     $(document).ready(function () {
+
         const wk_totalMonth = [[${wk_totalMonth}]];
         const pj_totalMonth = [[${pj_totalMonth}]];
 

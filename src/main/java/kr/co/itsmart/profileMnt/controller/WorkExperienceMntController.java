@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 @RequestMapping("/profile/workExperience")
 public class WorkExperienceMntController {
-    private static final Logger LOGGER = LoggerFactory.getLogger(QualificationMntController.class);
+    private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     private final WorkExperienceMntService workExperienceMntService;
 
     public WorkExperienceMntController(WorkExperienceMntService workExperienceMntService){

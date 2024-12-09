@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class WorkExperienceMntServiceImpl implements WorkExperienceMntService{
-    private static final Logger LOGGER = LoggerFactory.getLogger((WorkExperienceMntServiceImpl.class));
+    private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     private final WorkExperienceDAO workExperienceDAO;
 
     public WorkExperienceMntServiceImpl(WorkExperienceDAO workExperienceDAO) {

@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ProfileMntServiceImpl implements ProfileMntService {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ProjectMntServiceImpl.class);
+    private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     private final ProfileDAO profileDAO;
 
     public ProfileMntServiceImpl(ProfileDAO profileDAO) {
