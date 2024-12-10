@@ -285,8 +285,7 @@
                                     <col style="width: 15%;">
                                     <col style="width: 30%;">
                                     <col style="width: 20%;">
-                                    <col style="width: 15%;">
-                                    <col style="width: 5%;">
+                                    <col style="width: 20%;">
                                     <col style="width: 5%;">
                                     <col style="width: 5%;">
                                 <colgroup>
@@ -299,7 +298,6 @@
                                     <th scope="col">담당업무</th>
                                     <th scope="col">역할</th>
                                     <th scope="col">기술</th>
-                                    <th scope="col"></th>
                                 </tr>
                                 </thead>
                                 <c:choose>
@@ -350,8 +348,7 @@
                                     <col style="width: 15%;">
                                     <col style="width: 30%;">
                                     <col style="width: 20%;">
-                                    <col style="width: 15%;">
-                                    <col style="width: 5%;">
+                                    <col style="width: 20%;">
                                     <col style="width: 5%;">
                                     <col style="width: 5%;">
                                 <colgroup>
@@ -364,7 +361,6 @@
                                     <th scope="col">담당업무</th>
                                     <th scope="col">역할</th>
                                     <th scope="col">기술</th>
-                                    <th scope="col"></th>
                                 </tr>
                                 </thead>
                                 <c:choose>
@@ -1377,8 +1373,33 @@
         window.open(url, "viewSkill", properties)
     }
 
-    function excel() {
-        alert("엑셀다운기능 준비중");
+    function excel(){
+        const userId = $('input[name=user_id]').val();
+        const userNm = $('input[name=user_nm]').val();
+
+        fetch("/excel/" + userId + "/download", {
+            method: 'POST'
+        }).then(response => {
+            if(!response.ok){ // HTTP 상태 코드가 200-299 범위에 없을 경우
+                throw new Error(`서버 오류 발생: ${response.status}`);
+            }
+            return response.blob(); // Blob 데이터 반환
+        }).then(blob => {
+            // Blob 데이터를 URL 객체로 변환
+            const url = window.URL.createObjectURL(blob);
+            // 다운로드 링크 생성 및 클릭 이벤트 실행
+            const a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = url;
+            a.download = "profile_" + userNm +  ".xlsx"; // 다운로드할 파일 이름 설정
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);// URL 객체 해제
+        }).catch(error => {
+            // 오류 발생
+            console.error("다운로드 중 오류 발생: ", error);
+            alert("파일 다운로드 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.");
+        })
     }
 
     function goModify() {

@@ -9,23 +9,6 @@ create user IF NOT EXISTS 'itsmart'@'%' IDENTIFIED WITH caching_sha2_password BY
 GRANT ALL PRIVILEGES ON `demo_db`.* TO 'itsmart'@'%' with grant option;
 flush privileges;
 
--- 임시 테이블 및 임시 데이터 생성 [삭제 예정]
-create table emp
-(
-    EMPNO    varchar(8)  not null
-        primary key,
-    ENAME    varchar(12) null,
-    HIREDATE varchar(8)  null,
-    DEPTNO   varchar(4)  null
-);
-
-INSERT INTO emp(EMPNO, ENAME, HIREDATE, DEPTNO)
-VALUES ('00000000',
-        'gypark',
-        '20201220',
-        '0001');
-
-
 -- 테이블 생성
 CREATE TABLE TB_USER_PROFILE_INFO
 (

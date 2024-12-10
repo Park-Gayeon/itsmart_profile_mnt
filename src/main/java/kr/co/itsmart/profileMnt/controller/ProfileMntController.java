@@ -1,9 +1,6 @@
 package kr.co.itsmart.profileMnt.controller;
 
-import kr.co.itsmart.profileMnt.service.CommonService;
-import kr.co.itsmart.profileMnt.service.ProfileMntService;
-import kr.co.itsmart.profileMnt.service.ProjectMntService;
-import kr.co.itsmart.profileMnt.service.WorkExperienceMntService;
+import kr.co.itsmart.profileMnt.service.*;
 import kr.co.itsmart.profileMnt.vo.CommonVO;
 import kr.co.itsmart.profileMnt.vo.FileVO;
 import kr.co.itsmart.profileMnt.vo.LoginVO;
@@ -26,8 +23,8 @@ import java.util.Map;
 @RequestMapping("/profile")
 public class ProfileMntController {
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
-    private final ProfileMntService profileMntService;
     private final CommonService commonService;
+    private final ProfileMntService profileMntService;
     private final ProjectMntService projectMntService;
     private final WorkExperienceMntService workExperienceMntService;
 
@@ -114,12 +111,6 @@ public class ProfileMntController {
             LOGGER.debug("프로필 정보 처리 실패: user_id={}", user_id, e.getMessage());
             return ResponseEntity.internalServerError().body("프로필 정보 처리에 실패했습니다." + e.getMessage());
         }
-    }
-
-    // TODO : 엑셀다운로드 준비중
-    @GetMapping("/excel/{user_id}/download")
-    public String exceldown(@PathVariable("user_id") String user_id, Model model) {
-        return "";
     }
 }
 

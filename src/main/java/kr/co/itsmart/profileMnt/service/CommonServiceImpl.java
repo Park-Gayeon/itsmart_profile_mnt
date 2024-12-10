@@ -75,6 +75,7 @@ public class CommonServiceImpl implements CommonService {
     public int selectMaxHistSeq(String user_id) {
         return commonDAO.selectMaxHistSeq(user_id);
     }
+
     @Override
     public void insertUsrFileInfo(FileVO file) {
         try {
@@ -90,5 +91,4 @@ public class CommonServiceImpl implements CommonService {
     public Optional<LoginVO> getUsrInfo(String user_id) {
         return commonDAO.getUsrInfo(user_id);
     }
-
 }
