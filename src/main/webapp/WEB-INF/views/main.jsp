@@ -30,8 +30,6 @@
 <script src="/js/common.js"></script>
 <script type="text/javascript">
     $(document).ready(function (){
-        const user_role = `${userRole[0]}`;
-        alert(user_role);
     });
 
 
