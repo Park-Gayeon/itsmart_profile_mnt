@@ -2,10 +2,7 @@ package kr.co.itsmart.profileMnt.service;
 
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletResponse;
-import kr.co.itsmart.profileMnt.vo.ProfileVO;
-import kr.co.itsmart.profileMnt.vo.ProjectVO;
-import kr.co.itsmart.profileMnt.vo.QualificationVO;
-import kr.co.itsmart.profileMnt.vo.WorkExperienceVO;
+import kr.co.itsmart.profileMnt.vo.*;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -14,15 +11,23 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class ExcelDownServiceImpl implements ExcelDownService {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final ProjectMntService projectMntService;
+
+    public ExcelDownServiceImpl(ProjectMntService projectMntService) {
+        this.projectMntService = projectMntService;
+    }
 
     @Override
     public void downloadUsrProfileDetailExcel(ProfileVO profile, HttpServletResponse response) throws IOException {
@@ -30,6 +35,26 @@ public class ExcelDownServiceImpl implements ExcelDownService {
 
         try {
             XSSFWorkbook workbook = new XSSFWorkbook();
+
+            // read image file
+            FileInputStream fis = new FileInputStream(profile.getFileInfo().getFile_sver_path());
+            byte[] bytes = fis.readAllBytes();
+            fis.close();
+
+            String extension = profile.getFileInfo().getFile_extension();
+            int type = 0;
+            if("png".equals(extension)){
+                type = Workbook.PICTURE_TYPE_PNG;
+            }else if("jpg".equals(extension) || "jpeg".equals(extension)){
+                type = Workbook.PICTURE_TYPE_JPEG;
+            }
+
+            if(type == 0){
+                logger.error("잘못된 확장자 입니다. extension : {}", extension);
+                throw new IllegalArgumentException("지원하지 않는 파일 확장자입니다.: " + extension);
+            }
+
+            int pictureIdx = workbook.addPicture(bytes, type);
             Sheet sheet = workbook.createSheet("profile");
 
             /* TITLE */
@@ -75,6 +100,24 @@ public class ExcelDownServiceImpl implements ExcelDownService {
             Row profileInfo = sheet.createRow(rowCount++);
             applyCellStyle(profileInfo, 0, "인적사항", titleStyle);
             sheet.addMergedRegion(new CellRangeAddress(rowCount -1, rowCount -1, 0, 7)); //셀병합
+
+
+            CreationHelper helper = workbook.getCreationHelper();
+            Drawing drawing = sheet.createDrawingPatriarch();
+
+            // add a picture shape
+            ClientAnchor anchor = helper.createClientAnchor();
+            anchor.setCol1(0);
+            anchor.setCol2(1);
+            anchor.setRow1(1);
+            anchor.setRow2(10);
+            Picture pict = drawing.createPicture(anchor, pictureIdx);
+
+            pict.resize(1.0, 1.1);
+
+            for(int i=0; i<anchor.getRow2(); i++){
+                sheet.createRow(rowCount++);
+            }
 
             // 엑셀[인적사항] header
             Row profileInfoHeader = sheet.createRow(rowCount++);
@@ -206,10 +249,12 @@ public class ExcelDownServiceImpl implements ExcelDownService {
 
             // 사업수행 경력 list 가 비어있지 않다면
             if(profile.getProjectList() != null){
+                ProjectVO temp = new ProjectVO();
+
                 // 엑셀[수행경력]
                 Row projectInfo = sheet.createRow(rowCount++);
                 applyCellStyle(projectInfo, 0, "수행경력", titleStyle);
-                sheet.addMergedRegion(new CellRangeAddress(rowCount -1, rowCount -1, 0, 6));
+                sheet.addMergedRegion(new CellRangeAddress(rowCount -1, rowCount -1, 0, 7));
 
                 // 엑셀[수행경력] header
                 Row projectInfoHeader = sheet.createRow(rowCount++);
@@ -220,8 +265,20 @@ public class ExcelDownServiceImpl implements ExcelDownService {
                 applyCellStyle(projectInfoHeader, 4, "담당업무(대)", headerStyle);
                 applyCellStyle(projectInfoHeader, 5, "담당업무(소)", headerStyle);
                 applyCellStyle(projectInfoHeader, 6, "역할", headerStyle);
+                applyCellStyle(projectInfoHeader, 7, "기술", headerStyle);
 
                 for(ProjectVO pj : profile.getProjectList()){
+                    int project_seq = pj.getProject_seq();
+                    temp.setUser_id(profile.getUser_id());
+                    temp.setProject_seq(project_seq);
+
+                    ProjectVO rst = projectMntService.selectUsrSkillList(temp);
+                    List<String> skillNames = new ArrayList<>();
+                    for(UserSkillVO skill : rst.getSkillList()){
+                        skillNames.add(skill.getSkill_nm());
+                    }
+                    String skillList = String.join(", ", skillNames);
+
                     // 엑셀[수행경력] data
                     Row projectData = sheet.createRow(rowCount++);
                     applyCellStyle(projectData, 0, pj.getProject_client(), contentStyle);
@@ -231,6 +288,7 @@ public class ExcelDownServiceImpl implements ExcelDownService {
                     applyCellStyle(projectData, 4, pj.getAssigned_task_lar_nm(), contentStyle);
                     applyCellStyle(projectData, 5, pj.getAssigned_task_mid_nm(), contentStyle);
                     applyCellStyle(projectData, 6, pj.getProject_role_nm(), contentStyle);
+                    applyCellStyle(projectData, 7, skillList, contentStyle);
                 }
             }
 

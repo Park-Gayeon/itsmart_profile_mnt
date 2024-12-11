@@ -61,7 +61,6 @@ public class SecurityConfig {
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web) -> web.ignoring()
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
-                .requestMatchers("/WEB-INF/views/**")
-                .requestMatchers("/opt/profileMnt/uploads/images/**");
+                .requestMatchers("/WEB-INF/views/**");
     }
 }

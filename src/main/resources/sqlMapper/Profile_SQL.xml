@@ -112,7 +112,8 @@
             /* 파일 */
             AT.FILE_ORI_NM                       AS FILE_ORI_NM,
             AT.FILE_SVER_NM                      AS FILE_SVER_NM,
-            AT.FILE_SVER_PATH                    AS FILE_SVER_PATH
+            AT.FILE_SVER_PATH                    AS FILE_SVER_PATH,
+            AT.FILE_EXTENSION                    AS FILE_EXTENSION
 
         FROM TB_USER_PROFILE_INFO PF
                  LEFT JOIN TB_ATTACHMENT_INFO AT
