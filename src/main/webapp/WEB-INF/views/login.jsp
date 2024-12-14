@@ -30,11 +30,11 @@
                 <label for="floatingInput">ID</label>
             </div>
             <div class="form-floating">
-                <input type="password" class="form-control" id="floatingPassword" name="user_pw" placeholder="PW">
+                <input type="password" class="form-control" id="floatingPassword" name="user_pw" placeholder="PW" autoComplete="off">
                 <label for="floatingPassword">PW</label>
             </div>
         </form>
-        <button class="btn btn-dark w-100 py-2" style="margin-top: 30px" onclick="goLogin()">로그인</button>
+        <button class="btn btn-dark w-100 py-2" onclick="goLogin()">Sign in</button>
     </div>
 </main>
 <!-- main-content -->
@@ -65,8 +65,8 @@
             success: function () {
                 window.location.href = "/home";
             },
-            error: function () {
-                alert("아이디 및 비밀번호를 확인하시기 바랍니다.");
+            error: function (response) {
+                alert(response.responseText);
                 $("input[name=user_id]").val('');
                 $("input[name=user_pw]").val('');
                 return;

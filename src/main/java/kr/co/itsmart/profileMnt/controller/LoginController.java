@@ -53,7 +53,6 @@ public class LoginController {
         accessTokenCookie.setMaxAge(60 * 10);      // 10 min
 
         response.addCookie(accessTokenCookie);
-
         return ResponseEntity.ok().build();
     }
 
