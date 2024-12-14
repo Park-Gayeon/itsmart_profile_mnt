@@ -1,3 +1,6 @@
+-- 연결 문자셋 설정
+SET NAMES utf8mb4;
+
 -- db 생성
 CREATE DATABASE IF NOT EXISTS demo_db DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE demo_db;
@@ -49,9 +52,7 @@ CREATE TABLE TB_USER_PROFILE_INFO
     modifier         VARCHAR(10)  NOT NULL COMMENT '수정자',
 
     PRIMARY KEY (user_id)
-) COMMENT ='직원 프로필 정보 테이블';
-
-
+) COMMENT ='직원 프로필 정보 테이블' CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 CREATE TABLE TB_USER_PROFILE_INFO_HIST
 (
@@ -88,8 +89,7 @@ CREATE TABLE TB_USER_PROFILE_INFO_HIST
     creator          VARCHAR(10) NOT NULL COMMENT '생성자',
 
     PRIMARY KEY (user_id, hist_seq)
-) COMMENT ='직원 프로필이력관리 테이블';
-
+) COMMENT ='직원 프로필이력관리 테이블' CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 CREATE TABLE TB_PROJECT_INFO
 (
@@ -109,8 +109,7 @@ CREATE TABLE TB_PROJECT_INFO
     modifier           VARCHAR(10) NOT NULL COMMENT '수정자',
 
     PRIMARY KEY (user_id, project_seq)
-) COMMENT ='참여사업 정보테이블';
-
+) COMMENT ='참여사업 정보테이블' CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 CREATE TABLE TB_PROJECT_INFO_HIST
 (
@@ -128,8 +127,7 @@ CREATE TABLE TB_PROJECT_INFO_HIST
     creator            VARCHAR(10) NOT NULL COMMENT '생성자',
 
     PRIMARY KEY (user_id, project_seq, hist_seq)
-) COMMENT ='참여사업 이력관리 테이블';
-
+) COMMENT ='참여사업 이력관리 테이블' CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 CREATE TABLE TB_USER_SKILL_INFO
 (
@@ -144,9 +142,7 @@ CREATE TABLE TB_USER_SKILL_INFO
     modifier      VARCHAR(10) NOT NULL COMMENT '수정자',
 
     PRIMARY KEY (user_id, project_seq, skill_id)
-) COMMENT ='직원 기술 정보테이블';
-
-
+) COMMENT ='직원 기술 정보테이블' CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 CREATE TABLE TB_USER_SKILL_INFO_HIST
 (
@@ -159,9 +155,7 @@ CREATE TABLE TB_USER_SKILL_INFO_HIST
     creator      VARCHAR(10) NOT NULL COMMENT '생성자',
 
     PRIMARY KEY (user_id, project_seq, skill_id, hist_seq)
-) COMMENT ='직원 기술 이력관리 테이블';
-
-
+) COMMENT ='직원 기술 이력관리 테이블' CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 CREATE TABLE TB_USER_QUALIFICATION_INFO
 (
@@ -179,9 +173,7 @@ CREATE TABLE TB_USER_QUALIFICATION_INFO
     modifier          VARCHAR(10) NOT NULL COMMENT '수정자',
 
     PRIMARY KEY (user_id, qualification_seq)
-) COMMENT ='직원 자격증 정보테이블';
-
-
+) COMMENT ='직원 자격증 정보테이블' CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 CREATE TABLE TB_USER_QUALIFICATION_INFO_HIST
 (
@@ -197,9 +189,7 @@ CREATE TABLE TB_USER_QUALIFICATION_INFO_HIST
     creator           VARCHAR(10) NOT NULL COMMENT '생성자',
 
     PRIMARY KEY (user_id, qualification_seq, hist_seq)
-) COMMENT ='직원 자격증 이력관리 테이블';
-
-
+) COMMENT ='직원 자격증 이력관리 테이블' CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 CREATE TABLE TB_WORK_EXPERIENCE_INFO
 (
@@ -215,9 +205,7 @@ CREATE TABLE TB_WORK_EXPERIENCE_INFO
     modifier        VARCHAR(10) NOT NULL COMMENT '수정자',
 
     PRIMARY KEY (user_id, work_seq)
-) COMMENT ='직원 근무지 정보테이블';
-
-
+) COMMENT ='직원 근무지 정보테이블' CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 CREATE TABLE TB_WORK_EXPERIENCE_INFO_HIST
 (
@@ -231,9 +219,7 @@ CREATE TABLE TB_WORK_EXPERIENCE_INFO_HIST
     creator         VARCHAR(10) NOT NULL COMMENT '생성자',
 
     PRIMARY KEY (user_id, work_seq, hist_seq)
-) COMMENT ='직원 근무지 이력관리 테이블';
-
-
+) COMMENT ='직원 근무지 이력관리 테이블' CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 CREATE TABLE TB_ATTACHMENT_INFO
 (
@@ -248,9 +234,7 @@ CREATE TABLE TB_ATTACHMENT_INFO
     creator        VARCHAR(10)  NOT NULL COMMENT '생성자',
 
     PRIMARY KEY (user_id, file_seq)
-) COMMENT ='첨부파일 정보테이블';
-
-
+) COMMENT ='첨부파일 정보테이블' CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 CREATE TABLE TB_COMMON_CODE
 (
@@ -265,23 +249,17 @@ CREATE TABLE TB_COMMON_CODE
     creator       VARCHAR(10) NOT NULL COMMENT '생성자',
 
     PRIMARY KEY (code_group_id, code_id)
-) COMMENT ='공통코드 테이블';
-
-
+) COMMENT ='공통코드 테이블' CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 CREATE TABLE TB_USER_REFRESH_TOKEN_INFO
 (
     user_id     VARCHAR(10)  NOT NULL COMMENT '직원 아이디',
     token       VARCHAR(256) NOT NULL COMMENT 'REFRESH TOKEN',
     create_date TIMESTAMP    NOT NULL COMMENT '생성일시'
-) COMMENT ='TOKEN 테이블';
-
-
+) COMMENT ='TOKEN 테이블' CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- parent_id 컬럼에 인덱스 추가
 CREATE INDEX idx_tb_common_code_parent_id ON TB_COMMON_CODE (parent_id);
-
-
 
 -- 최초 적재 데이터
 -- 초기 데이터
@@ -301,10 +279,10 @@ insert into TB_USER_PROFILE_INFO ( user_id
                                  , creator
                                  , modifier)
 VALUES ( 'gypark'
-       , '0830'
-       , '박가연'
+       , 'itsmart1!'
+       , '관리자'
        , '004'
-       , '19960904'
+       , '20201212'
        , '012'
        , '20240401'
        , '01011111111'
@@ -314,7 +292,6 @@ VALUES ( 'gypark'
        , now()
        , 'gypark'
        , 'gypark');
-
 
 -- TB_USER_PROFILE_INFO_HIST
 INSERT INTO TB_USER_PROFILE_INFO_HIST(USER_ID, hist_seq, USER_NM, USER_POSITION, USER_BIRTH, user_department, hire_date,
@@ -330,9 +307,8 @@ SELECT USER_ID,
        user_address,
        create_date,
        creator
-FROM tb_user_profile_info
+FROM TB_USER_PROFILE_INFO
 WHERE USER_ID = 'gypark';
-
 
 -- TB_COMMON_CODE
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
