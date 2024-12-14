@@ -2,6 +2,7 @@ package kr.co.itsmart.profileMnt.service;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import kr.co.itsmart.profileMnt.configuration.handler.CustomAuthenticationException;
 import kr.co.itsmart.profileMnt.configuration.security.provider.JwtService;
 import kr.co.itsmart.profileMnt.dao.CommonDAO;
 import kr.co.itsmart.profileMnt.vo.LoginVO;
@@ -48,7 +49,7 @@ public class LoginServiceImpl implements LoginService {
                     // 1-3. DaoAuthenticationProvider 에서 비밀번호를 검증( UserDetails PW랑, 입력된 PW 비교 )
                     // 2.   인증성공 Authentication 반환
                     new UsernamePasswordAuthenticationToken(user.getUser_id(), user.getUser_pw())
-                );
+            );
             // 인증된 사용자 정보 확인
             user = (LoginVO) authenticate.getPrincipal();
             LOGGER.info("[LoginServiceImpl] : {}", user.getAuthorities());
@@ -70,15 +71,16 @@ public class LoginServiceImpl implements LoginService {
                 commonDAO.saveUsrRefreshToken(params);
             } catch (Exception e) {
                 LOGGER.error("REFRESH_TOKEN 삭제 및 저장 중 오류 발생 : {}", e.getMessage());
-                throw e;
+                throw new RuntimeException("서버 오류로 인해 토큰 저장에 실패했습니다");
             }
             return new AuthResponse(accessToken, refreshToken);
-        } catch (BadCredentialsException e) {
-            LOGGER.error("[authenticationManager.authenticate] 비밀번호 불일치");
-            throw e;
+
         } catch (UsernameNotFoundException e) {
             LOGGER.error("[authenticationManager.authenticate] 사용자를 찾을 수 없습니다.");
-            throw e;
+            throw new CustomAuthenticationException("사용자를 찾을 수 없습니다");
+        } catch (BadCredentialsException e) {
+            LOGGER.error("[authenticationManager.authenticate] 비밀번호가 일치하지 않습니다");
+            throw new CustomAuthenticationException("비밀번호가 일치하지 않습니다");
         }
     }
 

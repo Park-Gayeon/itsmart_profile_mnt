@@ -57,9 +57,9 @@ public class LoginVO implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList<>();
         if ("0".equals(this.user_role)){
-            authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-        } else if ("1".equals(this.user_role)){
             authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+        } else if ("1".equals(this.user_role)){
+            authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
         }
         return authorities;
     }

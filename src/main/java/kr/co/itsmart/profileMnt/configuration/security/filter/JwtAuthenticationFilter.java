@@ -76,7 +76,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
                                 // get new access token
                                 String newAccessToken = jwtService.generateAccessToken(userDetails);
-                                logger.info("[refresh token] : {}", newAccessToken);
+                                logger.info("[new access token] : {}", newAccessToken);
 
                                 Cookie accessTokenCookie = setCookie(newAccessToken);
                                 response.addCookie(accessTokenCookie);
