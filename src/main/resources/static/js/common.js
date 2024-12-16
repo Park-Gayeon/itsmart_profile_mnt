@@ -1,3 +1,22 @@
+$(document).ready(function (){
+    const currentUrl = window.location.pathname;
+    const referrer = document.referrer;
+    let flag = false;
+    $('.nav-link').each(function(){
+        if(flag) return;
+        $('.nav-link').removeClass('active');
+        if(currentUrl === ($(this).attr("href"))){
+            $(this).addClass('active');
+            flag = true;
+        } else if(currentUrl.startsWith("/profile/") && referrer.includes("/list")){
+            if($(this).attr("href").startsWith("/profile/")){
+                $(this).addClass('active');
+                flag = true;
+            }
+        }
+    })
+});
+
 function formatDate(date){
     return date
         .replace(/[^0-9]/g, "")

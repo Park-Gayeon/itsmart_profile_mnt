@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<header class="d-flex flex-wrap justify-content-center py-3 mb-4">
+<header class="d-flex flex-wrap justify-content-center py-3 my-3">
     <nav class="navbar navbar-dark bg-dark fixed-top">
         <div class="container-fluid">
             <!-- NAV - 메뉴바 토글 -->
@@ -22,20 +22,10 @@
                 <div class="offcanvas-body">
                     <!-- 사이드바 -->
                     <div class="d-flex flex-column flex-shrink-0 p-3 text-bg-dark" style="width: 280px;">
-                        <!-- 사이드바 헤더 -->
-                        <!-- TODO : 아이티스마트 로고 추가 -->
-                        <a href="/home"
-                           class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
-                            <img src="/images/arrow-through-heart.svg" alt="" width="32" height="32"
-                                 class="bi pe-none me-2">
-                            <strong>ITSMART</strong>
-                        </a>
-                        <!-- 사이드바 헤더 끝 -->
-                        <hr>
                         <!-- 사이드바 BODY -->
-                        <ul class="navbar-nav justify-content-end flex-grow-1 pe-3 mb-auto">
+                        <ul class="navbar-nav justify-content-end flex-grow-1 pe-3 mb-5">
                             <li class="nav-item">
-                                <a class="nav-link active" aria-current="page" href="/home">HOME</a>
+                                <a class="nav-link active" href="/home">HOME</a>
                             </li>
                             <c:if test="${userRole[0] eq 'ROLE_ADMIN'}">
                                 <li class="nav-item">
@@ -60,8 +50,7 @@
                             </a>
                             <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
                                 <!-- TODO : login 페이지 이동 -->
-                                <li><a class="dropdown-item" onclick="logout()">로그아웃
-                                    <img src="/images/box-arrow-right.svg" alt="" class="bi pe-none me-2">
+                                <li><a class="dropdown-item" style="cursor:pointer;" onclick="logout()">Sign out
                                 </a></li>
                             </ul>
                         </div>
@@ -73,7 +62,10 @@
             </div>
             <!-- 메뉴바 활성화 끝 -->
             <!-- NAV - LOGO -->
-            <a class="navbar-brand" href="/home">ITSMART LOGO</a>
+            <a href="/home"
+               class="navbar-brand">
+                <img src="/images/itsmart_logo.png" style="width: auto; height: 40px;" class="bi pe-none me-2">
+            </a>
             <!-- NAV - LOGO END -->
         </div>
     </nav>
