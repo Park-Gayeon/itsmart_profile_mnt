@@ -13,6 +13,7 @@ public class CommonVO {
     // etc
     private String hierarchy_value;
     private String full_path;
+    private String childCnt;
 
     // meta_data
     private String created_date;
@@ -91,6 +92,14 @@ public class CommonVO {
 
     public void setFull_path(String full_path) {
         this.full_path = full_path;
+    }
+
+    public String getChildCnt() {
+        return childCnt;
+    }
+
+    public void setChildCnt(String childCnt) {
+        this.childCnt = childCnt;
     }
 
     public String getCreated_date() {

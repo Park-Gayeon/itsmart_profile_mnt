@@ -261,6 +261,7 @@
                TB.*
         from (select pf.user_id,
                      pf.user_nm,
+                     pf.create_date,
                      cd.code_value                                                                   as user_department_nm,
                      pj.project_nm,
                      pj.project_start_date,
@@ -297,6 +298,7 @@
               </if>
              ) TB
         where TB.no = 1
+        order by create_date
     </select>
 
     <!-- getUsrProfileInfoCnt : 직원 프로필 정보 목록 건수 SELECT-->
