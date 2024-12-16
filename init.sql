@@ -278,8 +278,8 @@ insert into TB_USER_PROFILE_INFO ( user_id
                                  , modified_date
                                  , creator
                                  , modifier)
-VALUES ( 'gypark'
-       , 'itsmart1!'
+VALUES ( 'admin'
+       , '$2a$10$XMQKsECASRc6gBJbLEw3ZOnBWF92BJSNUMLNcBQdYtzD2Q9gLeq/C'
        , '관리자'
        , '004'
        , '20201212'
@@ -290,8 +290,8 @@ VALUES ( 'gypark'
        , '0'
        , now()
        , now()
-       , 'gypark'
-       , 'gypark');
+       , 'admin'
+       , 'admin');
 
 -- TB_USER_PROFILE_INFO_HIST
 INSERT INTO TB_USER_PROFILE_INFO_HIST(USER_ID, hist_seq, USER_NM, USER_POSITION, USER_BIRTH, user_department, hire_date,
@@ -308,189 +308,189 @@ SELECT USER_ID,
        create_date,
        creator
 FROM TB_USER_PROFILE_INFO
-WHERE USER_ID = 'gypark';
+WHERE USER_ID = 'admin';
 
 -- TB_COMMON_CODE
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('PSIT', '001', '직위/직급', '수습', NULL, 0, SYSDATE(), 'gypark');
+VALUES ('PSIT', '001', '직위/직급', '수습', NULL, 0, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('PSIT', '002', '직위/직급', '인턴', NULL, 0, SYSDATE(), 'gypark');
+VALUES ('PSIT', '002', '직위/직급', '인턴', NULL, 0, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('PSIT', '003', '직위/직급', '사원', NULL, 0, SYSDATE(), 'gypark');
+VALUES ('PSIT', '003', '직위/직급', '사원', NULL, 0, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('PSIT', '004', '직위/직급', '주임', NULL, 0, SYSDATE(), 'gypark');
+VALUES ('PSIT', '004', '직위/직급', '주임', NULL, 0, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('PSIT', '005', '직위/직급', '대리', NULL, 0, SYSDATE(), 'gypark');
+VALUES ('PSIT', '005', '직위/직급', '대리', NULL, 0, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('PSIT', '006', '직위/직급', '과장', NULL, 0, SYSDATE(), 'gypark');
+VALUES ('PSIT', '006', '직위/직급', '과장', NULL, 0, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('PSIT', '007', '직위/직급', '차장', NULL, 0, SYSDATE(), 'gypark');
+VALUES ('PSIT', '007', '직위/직급', '차장', NULL, 0, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('PSIT', '008', '직위/직급', '부장', NULL, 0, SYSDATE(), 'gypark');
+VALUES ('PSIT', '008', '직위/직급', '부장', NULL, 0, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('PSIT', '009', '직위/직급', '이사', NULL, 0, SYSDATE(), 'gypark');
+VALUES ('PSIT', '009', '직위/직급', '이사', NULL, 0, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('PSIT', '010', '직위/직급', '상무이사', NULL, 0, SYSDATE(), 'gypark');
+VALUES ('PSIT', '010', '직위/직급', '상무이사', NULL, 0, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('PSIT', '011', '직위/직급', '전무이사', NULL, 0, SYSDATE(), 'gypark');
+VALUES ('PSIT', '011', '직위/직급', '전무이사', NULL, 0, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('PSIT', '012', '직위/직급', '부사장', NULL, 0, SYSDATE(), 'gypark');
+VALUES ('PSIT', '012', '직위/직급', '부사장', NULL, 0, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('PSIT', '013', '직위/직급', '대표이사', NULL, 0, SYSDATE(), 'gypark');
+VALUES ('PSIT', '013', '직위/직급', '대표이사', NULL, 0, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('TASK', '001', '담당업무', 'IT컨설팅', NULL, 1, SYSDATE(), 'gypark');
+VALUES ('TASK', '001', '담당업무', 'IT컨설팅', NULL, 1, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('TASK', '002', '담당업무', 'IT프로젝트관리', NULL, 1, SYSDATE(), 'gypark');
+VALUES ('TASK', '002', '담당업무', 'IT프로젝트관리', NULL, 1, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('TASK', '003', '담당업무', 'IT아키텍처', NULL, 1, SYSDATE(), 'gypark');
+VALUES ('TASK', '003', '담당업무', 'IT아키텍처', NULL, 1, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('TASK', '004', '담당업무', 'SW개발', NULL, 1, SYSDATE(), 'gypark');
+VALUES ('TASK', '004', '담당업무', 'SW개발', NULL, 1, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('TASK', '005', '담당업무', '시스템 구축 및 운영', NULL, 1, SYSDATE(), 'gypark');
+VALUES ('TASK', '005', '담당업무', '시스템 구축 및 운영', NULL, 1, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('TASK', '006', '담당업무', 'IT마케팅', NULL, 1, SYSDATE(), 'gypark');
+VALUES ('TASK', '006', '담당업무', 'IT마케팅', NULL, 1, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('TASK', '007', '담당업무', 'IT품질관리', NULL, 1, SYSDATE(), 'gypark');
+VALUES ('TASK', '007', '담당업무', 'IT품질관리', NULL, 1, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('TASK', '008', '담당업무', '정보보호', NULL, 1, SYSDATE(), 'gypark');
+VALUES ('TASK', '008', '담당업무', '정보보호', NULL, 1, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('TASK', '009', '담당업무', 'IT기술교육', NULL, 1, SYSDATE(), 'gypark');
+VALUES ('TASK', '009', '담당업무', 'IT기술교육', NULL, 1, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('TASK', '010', '담당업무', '정보기술기획', '001', 2, SYSDATE(), 'gypark');
+VALUES ('TASK', '010', '담당업무', '정보기술기획', '001', 2, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('TASK', '011', '담당업무', '정보기술컨설팅', '001', 2, SYSDATE(), 'gypark');
+VALUES ('TASK', '011', '담당업무', '정보기술컨설팅', '001', 2, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('TASK', '012', '담당업무', '정보보호컨설팅', '001', 2, SYSDATE(), 'gypark');
+VALUES ('TASK', '012', '담당업무', '정보보호컨설팅', '001', 2, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('TASK', '013', '담당업무', '데이터분석', '001', 2, SYSDATE(), 'gypark');
+VALUES ('TASK', '013', '담당업무', '데이터분석', '001', 2, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('TASK', '014', '담당업무', '업무분석', '001', 2, SYSDATE(), 'gypark');
+VALUES ('TASK', '014', '담당업무', '업무분석', '001', 2, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('TASK', '015', '담당업무', '빅데이터기획', '001', 2, SYSDATE(), 'gypark');
+VALUES ('TASK', '015', '담당업무', '빅데이터기획', '001', 2, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('TASK', '016', '담당업무', 'UI/UX기획', '001', 2, SYSDATE(), 'gypark');
+VALUES ('TASK', '016', '담당업무', 'UI/UX기획', '001', 2, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('TASK', '017', '담당업무', '인공지능서비스기획', '001', 2, SYSDATE(), 'gypark');
+VALUES ('TASK', '017', '담당업무', '인공지능서비스기획', '001', 2, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('TASK', '018', '담당업무', 'IT프로젝트관리', '002', 2, SYSDATE(), 'gypark');
+VALUES ('TASK', '018', '담당업무', 'IT프로젝트관리', '002', 2, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('TASK', '019', '담당업무', 'IT프로젝트사업관리', '002', 2, SYSDATE(), 'gypark');
+VALUES ('TASK', '019', '담당업무', 'IT프로젝트사업관리', '002', 2, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('TASK', '020', '담당업무', 'SW아키텍처', '003', 2, SYSDATE(), 'gypark');
+VALUES ('TASK', '020', '담당업무', 'SW아키텍처', '003', 2, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('TASK', '021', '담당업무', 'infrastructure아키텍처', '003', 2, SYSDATE(), 'gypark');
+VALUES ('TASK', '021', '담당업무', 'infrastructure아키텍처', '003', 2, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('TASK', '022', '담당업무', '데이터아키텍처', '003', 2, SYSDATE(), 'gypark');
+VALUES ('TASK', '022', '담당업무', '데이터아키텍처', '003', 2, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('TASK', '023', '담당업무', '빅데이터아키텍처', '003', 2, SYSDATE(), 'gypark');
+VALUES ('TASK', '023', '담당업무', '빅데이터아키텍처', '003', 2, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('TASK', '024', '담당업무', '인공지능아키텍처', '003', 2, SYSDATE(), 'gypark');
+VALUES ('TASK', '024', '담당업무', '인공지능아키텍처', '003', 2, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('TASK', '025', '담당업무', 'UI/UX개발', '004', 2, SYSDATE(), 'gypark');
+VALUES ('TASK', '025', '담당업무', 'UI/UX개발', '004', 2, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('TASK', '026', '담당업무', 'UI/UX디자인', '004', 2, SYSDATE(), 'gypark');
+VALUES ('TASK', '026', '담당업무', 'UI/UX디자인', '004', 2, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('TASK', '027', '담당업무', '응용SW개발', '004', 2, SYSDATE(), 'gypark');
+VALUES ('TASK', '027', '담당업무', '응용SW개발', '004', 2, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('TASK', '028', '담당업무', '빅데이터개발', '004', 2, SYSDATE(), 'gypark');
+VALUES ('TASK', '028', '담당업무', '빅데이터개발', '004', 2, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('TASK', '029', '담당업무', '시스템SW개발', '004', 2, SYSDATE(), 'gypark');
+VALUES ('TASK', '029', '담당업무', '시스템SW개발', '004', 2, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('TASK', '030', '담당업무', '임베디드SW개발', '004', 2, SYSDATE(), 'gypark');
+VALUES ('TASK', '030', '담당업무', '임베디드SW개발', '004', 2, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('TASK', '031', '담당업무', '인공지능SW개발', '004', 2, SYSDATE(), 'gypark');
+VALUES ('TASK', '031', '담당업무', '인공지능SW개발', '004', 2, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('TASK', '032', '담당업무', '데이터베이스관리', '005', 2, SYSDATE(), 'gypark');
+VALUES ('TASK', '032', '담당업무', '데이터베이스관리', '005', 2, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('TASK', '033', '담당업무', 'NW엔지니어링', '005', 2, SYSDATE(), 'gypark');
+VALUES ('TASK', '033', '담당업무', 'NW엔지니어링', '005', 2, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('TASK', '034', '담당업무', 'IT시스템관리', '005', 2, SYSDATE(), 'gypark');
+VALUES ('TASK', '034', '담당업무', 'IT시스템관리', '005', 2, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('TASK', '035', '담당업무', 'IT시스템기술지원', '005', 2, SYSDATE(), 'gypark');
+VALUES ('TASK', '035', '담당업무', 'IT시스템기술지원', '005', 2, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('TASK', '036', '담당업무', '빅데이터엔지니어링', '005', 2, SYSDATE(), 'gypark');
+VALUES ('TASK', '036', '담당업무', '빅데이터엔지니어링', '005', 2, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('TASK', '037', '담당업무', '인공지능서비스관리', '005', 2, SYSDATE(), 'gypark');
+VALUES ('TASK', '037', '담당업무', '인공지능서비스관리', '005', 2, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('TASK', '038', '담당업무', 'SW제품기획', '006', 2, SYSDATE(), 'gypark');
+VALUES ('TASK', '038', '담당업무', 'SW제품기획', '006', 2, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('TASK', '039', '담당업무', 'IT기술영업', '006', 2, SYSDATE(), 'gypark');
+VALUES ('TASK', '039', '담당업무', 'IT기술영업', '006', 2, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('TASK', '040', '담당업무', 'IT서비스기획', '006', 2, SYSDATE(), 'gypark');
+VALUES ('TASK', '040', '담당업무', 'IT서비스기획', '006', 2, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('TASK', '041', '담당업무', 'IT품질관리', '007', 2, SYSDATE(), 'gypark');
+VALUES ('TASK', '041', '담당업무', 'IT품질관리', '007', 2, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('TASK', '042', '담당업무', 'IT테스트', '007', 2, SYSDATE(), 'gypark');
+VALUES ('TASK', '042', '담당업무', 'IT테스트', '007', 2, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('TASK', '043', '담당업무', 'IT감리', '007', 2, SYSDATE(), 'gypark');
+VALUES ('TASK', '043', '담당업무', 'IT감리', '007', 2, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('TASK', '044', '담당업무', 'IT감사', '007', 2, SYSDATE(), 'gypark');
+VALUES ('TASK', '044', '담당업무', 'IT감사', '007', 2, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('TASK', '045', '담당업무', '정보보호관리', '008', 2, SYSDATE(), 'gypark');
+VALUES ('TASK', '045', '담당업무', '정보보호관리', '008', 2, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('TASK', '046', '담당업무', '보안사고대응', '008', 2, SYSDATE(), 'gypark');
+VALUES ('TASK', '046', '담당업무', '보안사고대응', '008', 2, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('TASK', '047', '담당업무', 'IT기술교육', '009', 2, SYSDATE(), 'gypark');
+VALUES ('TASK', '047', '담당업무', 'IT기술교육', '009', 2, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('ORG', '001', '소속', 'CEO', NULL, 1, SYSDATE(), 'gypark');
+VALUES ('ORG', '001', '소속', 'CEO', NULL, 1, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('ORG', '002', '소속', '경영지원팀', '001', 2, SYSDATE(), 'gypark');
+VALUES ('ORG', '002', '소속', '경영지원팀', '001', 2, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('ORG', '003', '소속', '기업부설연구소', '001', 2, SYSDATE(), 'gypark');
+VALUES ('ORG', '003', '소속', '기업부설연구소', '001', 2, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('ORG', '004', '소속', 'SI사업본부', '003', 3, SYSDATE(), 'gypark');
+VALUES ('ORG', '004', '소속', 'SI사업본부', '003', 3, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('ORG', '005', '소속', 'TS사업부', '003', 3, SYSDATE(), 'gypark');
+VALUES ('ORG', '005', '소속', 'TS사업본부', '003', 3, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('ORG', '006', '소속', 'ITO사업부', '004', 4, SYSDATE(), 'gypark');
+VALUES ('ORG', '006', '소속', 'ITO사업부', '004', 4, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('ORG', '007', '소속', 'ITS사업부', '004', 4, SYSDATE(), 'gypark');
+VALUES ('ORG', '007', '소속', 'ITS사업부', '004', 4, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('ORG', '008', '소속', '영업2팀', '003', 3, SYSDATE(), 'gypark');
+VALUES ('ORG', '008', '소속', '영업2팀', '003', 3, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('ORG', '009', '소속', '클라우드사업', '005', 4, SYSDATE(), 'gypark');
+VALUES ('ORG', '009', '소속', '클라우드사업', '005', 4, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('ORG', '010', '소속', 'TS사업', '005', 4, SYSDATE(), 'gypark');
+VALUES ('ORG', '010', '소속', 'TS사업', '005', 4, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('ORG', '011', '소속', '영업1팀', '006', 5, SYSDATE(), 'gypark');
+VALUES ('ORG', '011', '소속', '영업1팀', '006', 5, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('ORG', '012', '소속', '금융사업3팀', '006', 5, SYSDATE(), 'gypark');
+VALUES ('ORG', '012', '소속', '금융사업3팀', '006', 5, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('ORG', '013', '소속', '영남지사', '006', 5, SYSDATE(), 'gypark');
+VALUES ('ORG', '013', '소속', '영남지사', '006', 5, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('ORG', '014', '소속', '금융사업2팀', '007', 5, SYSDATE(), 'gypark');
+VALUES ('ORG', '014', '소속', '금융사업2팀', '007', 5, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('ORG', '015', '소속', '금융사업1팀', '007', 5, SYSDATE(), 'gypark');
+VALUES ('ORG', '015', '소속', '금융사업1팀', '007', 5, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('ORG', '016', '소속', '솔루션사업', '007', 5, SYSDATE(), 'gypark');
+VALUES ('ORG', '016', '소속', '솔루션사업', '007', 5, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('ORG', '017', '소속', 'DW사업', '007', 5, SYSDATE(), 'gypark');
+VALUES ('ORG', '017', '소속', 'DW사업', '007', 5, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('ORG', '018', '소속', '컨설팅사업', '007', 5, SYSDATE(), 'gypark');
+VALUES ('ORG', '018', '소속', '컨설팅사업', '007', 5, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('STUT', '001', '구분', '졸업', NULL, 0, SYSDATE(), 'gypark');
+VALUES ('STUT', '001', '구분', '졸업', NULL, 0, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('STUT', '002', '구분', '졸업예정', NULL, 0, SYSDATE(), 'gypark');
+VALUES ('STUT', '002', '구분', '졸업예정', NULL, 0, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('STUT', '003', '구분', '재학중', NULL, 0, SYSDATE(), 'gypark');
+VALUES ('STUT', '003', '구분', '재학중', NULL, 0, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('STUT', '010', '구분', '고등학교', NULL, 0, SYSDATE(), 'gypark');
+VALUES ('STUT', '010', '구분', '고등학교', NULL, 0, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('STUT', '011', '구분', '대학교(2,3년)', NULL, 0, SYSDATE(), 'gypark');
+VALUES ('STUT', '011', '구분', '대학교(2,3년)', NULL, 0, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('STUT', '012', '구분', '대학교(4년)', NULL, 0, SYSDATE(), 'gypark');
+VALUES ('STUT', '012', '구분', '대학교(4년)', NULL, 0, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('STUT', '013', '구분', '대학원', NULL, 0, SYSDATE(), 'gypark');
+VALUES ('STUT', '013', '구분', '대학원', NULL, 0, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('ROLE', '001', '사업역할', 'PM', NULL, 0, SYSDATE(), 'gypark');
+VALUES ('ROLE', '001', '사업역할', 'PM', NULL, 0, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('ROLE', '002', '사업역할', 'PMO', NULL, 0, SYSDATE(), 'gypark');
+VALUES ('ROLE', '002', '사업역할', 'PMO', NULL, 0, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('ROLE', '003', '사업역할', 'PL', NULL, 0, SYSDATE(), 'gypark');
+VALUES ('ROLE', '003', '사업역할', 'PL', NULL, 0, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('ROLE', '004', '사업역할', 'PE', NULL, 0, SYSDATE(), 'gypark');
+VALUES ('ROLE', '004', '사업역할', 'PE', NULL, 0, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('ROLE', '005', '사업역할', 'PA', NULL, 0, SYSDATE(), 'gypark');
+VALUES ('ROLE', '005', '사업역할', 'PA', NULL, 0, SYSDATE(), 'admin');
 INSERT INTO TB_COMMON_CODE (code_group_id, code_id, code_group_nm, code_value, parent_id, level, created_date, creator)
-VALUES ('ROLE', '006', '사업역할', 'QA', NULL, 0, SYSDATE(), 'gypark');
+VALUES ('ROLE', '006', '사업역할', 'QA', NULL, 0, SYSDATE(), 'admin');
 
