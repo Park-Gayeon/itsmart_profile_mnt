@@ -6,7 +6,8 @@
     <%-- 웹 앱 반응형 --%>
     <meta name="viewport" content="width=device-width", initial-scale="1">
     <link rel="stylesheet" href="/css/bootstrap.css">
-    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/basic.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <title>직원 프로필관리 시스템</title>
 </head>
 
@@ -16,8 +17,8 @@
 <!-- header.jsp -->
 
 <!-- main-content -->
-<div class="">
-    <img src="/images/sample.jpg" width="100%" height="500">
+<div class="content p-0">
+    <img src="/images/city_view.webp" alt="city-view" onload="this.classList.add('loaded')">
 </div>
 <!-- main-content -->
 
@@ -30,6 +31,15 @@
 <script src="/js/common.js"></script>
 <script type="text/javascript">
     $(document).ready(function (){
+        const currentUrl = window.location.pathname;
+        $('.nav-link').each(function(){
+            if(currentUrl.startsWith($(this).attr("href"))){
+                $(this).addClass('active');
+            }
+        })
+        $('.nav-link').on('click', function (){
+            $('.nav-link').removeClass('active');
+        })
     });
 
 

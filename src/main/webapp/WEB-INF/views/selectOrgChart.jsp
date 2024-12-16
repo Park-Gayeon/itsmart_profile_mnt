@@ -12,37 +12,6 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <title>직원 프로필관리 시스템</title>
 </head>
-<style>
-
-    .container_org {
-        max-width: 800px;
-        margin: 0 auto;
-        background: #fff;
-        border-radius: 8px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        padding: 20px;
-    }
-
-    .org-node {
-        padding: 10px 15px;
-        display: flex;
-    }
-
-    .org-title {
-        font-weight: bold;
-        font-size: 18px;
-        white-space: pre; /* 공백 유지 */
-    }
-
-    .user-list {
-        margin-left: 20px;
-        margin-top: 20px;
-    }
-
-    .user-item {
-        padding: 2px 0;
-    }
-</style>
 <body>
 <!-- header.jsp -->
 <%@ include file="layout/header.jsp" %>
@@ -50,18 +19,26 @@
 
 <!-- main-content -->
 <div class="content">
+    <div class="container">
     <div class="container_org">
-        <h1 style="text-align: center;">조직도</h1>
-        <div style="padding-left: 20px;">
+        <h2 class="text-center mb-5">조직도</h2>
+        <div class="mb-sm-5 ps-sm-3">
             <c:forEach var="orgChart" items="${orgChart}">
-                <div class="org-node">
-                    <div class="org-title">${orgChart.hierarchy_value}</div>
+                <div class="org-node" style="padding-left: ${orgChart.level * 50}px;">
+                    <div class="org-title basic-bold" title="${orgChart.full_path}">
+                        <c:set var="imgSrc"
+                               value="${orgChart.childCnt > 0 ? (orgChart.code_id =='003' || orgChart.code_id =='004' ? '/images/caret-down.svg' : '/images/caret-down-fill.svg') : '/images/caret-right-fill.svg'}"/>
+                        <c:if test="${orgChart.code_id ne '001'}">
+                            <img src="${imgSrc}" alt="icon">
+                        </c:if>
+                            ${orgChart.hierarchy_value}
+                    </div>
                     <div class="user-list">
                         <c:forEach var="users" items="${users}">
                             <c:if test="${orgChart.code_id == users.user_department}">
                                 <div class="user-item">
-                                    <span style="font-weight: bold; font-size: 15px;">${users.user_nm}</span><span
-                                        style="font-size: 10px;"> ${users.user_position_nm}</span>
+                                    <span class="basic-medium">${users.user_nm}</span>
+                                    <span class="basic-thin" style="font-size: 12px;"> ${users.user_position_nm}</span>
                                 </div>
                             </c:if>
                         </c:forEach>
@@ -69,6 +46,7 @@
                 </div>
             </c:forEach>
         </div>
+    </div>
     </div>
 </div>
 <!-- main-content -->

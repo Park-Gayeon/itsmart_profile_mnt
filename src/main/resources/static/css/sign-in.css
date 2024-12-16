@@ -33,15 +33,17 @@ body {
 /* logo */
 .logo {
     width: 100%;
-    font-size: 28px;
+    font-size: 20px;
     font-weight: 500;
-    padding-bottom: 70px;
     text-align: center;
 }
 
 .logo p {
     padding-top: 70px;
     color: #757575;
+    margin-top: auto !important;
+    margin-bottom: auto !important;
+    font-size: 20px;
 }
 
 .logo .logo-image,

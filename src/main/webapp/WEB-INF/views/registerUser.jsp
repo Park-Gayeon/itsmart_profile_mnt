@@ -13,17 +13,23 @@
 <body>
 <div class="content" tabindex="-1">
     <div class="container pb-0">
-        <div class="common-box row-box row mb-0 g-0">
-            <div class="modal-header">
-                <h5 class="modal-title">정보 입력</h5>
-            </div>
+        <div class="container-info row-box row mb-0 g-0">
+            <h2 class="header">직원 등록
+                <div class="description" >
+                    <button type="button" class="btn btn-success" onclick="save()">SAVE</button>
+                </div>
+            </h2>
+
             <div class="modal-body py-3">
                 <div class="container text-center">
                     <form id="frm">
                         <!-- 사진 -->
-                        <div class="col-md text-center">
+                        <div class="d-sm-flex justify-content-sm-center">
                             <img id="profileImg" src="/images/image.png" class="img-profile">
-                            <input type="file" class="form-control form-control-sm" id="imgFile" name="imgFile" accept=".jpg, .png, .jpeg"/>
+                                <label for="imgFile" class="align-self-end">
+                                    <div class="img-profile-btn do-hyeon-regular">+</div>
+                                </label>
+                                <input type="file" id="imgFile" name="imgFile" class="d-md-none" accept=".jpg, .png, .jpeg"/>
                         </div>
                         <!-- 개인정보 -->
                         <div class="col-md-auto g-0">
@@ -54,9 +60,8 @@
                             <div class="row mb-2 g-0">
                                 <div class="col-sm-2 common-box common-box input-box pt-4 me-2">
                                     <span>소속</span>
-                                    <select class="form-select" name="user_department"
-                                            style="font-size: xx-small;">
-                                        <option value="">-- 선택해주세요 --</option>
+                                    <select class="form-select noneBorder" name="user_department">
+                                        <option value="">-</option>
                                         <c:forEach var="orgList" items="${orgList}">
                                             <option value="${orgList.code_id}">${orgList.code_value}</option>
                                         </c:forEach>
@@ -64,9 +69,8 @@
                                 </div>
                                 <div class="col-sm-2 common-box common-box input-box pt-4 me-2">
                                     <span>직위/직급</span>
-                                    <select class="form-select" name="user_position"
-                                            style="font-size: xx-small;">
-                                        <option value="">-- 선택해주세요 --</option>
+                                    <select class="form-select noneBorder" name="user_position">
+                                        <option value="">-</option>
                                         <c:forEach var="psitList" items="${psitList}">
                                             <option value="${psitList.code_id}">${psitList.code_value}</option>
                                         </c:forEach>
@@ -83,7 +87,6 @@
                             </div>
                         </div>
                     </form>
-                    <input type="button" class="btn btn-warning" onclick="save()" value="SAVE"/>
                 </div>
             </div>
         </div>

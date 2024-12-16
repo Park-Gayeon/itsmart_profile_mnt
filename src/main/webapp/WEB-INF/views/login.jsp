@@ -5,24 +5,23 @@
     <%-- 웹 앱 반응형 --%>
     <meta name="viewport" content="width=device-width" , initial-scale="1">
     <link rel="stylesheet" href="/css/sign-in.css">
+    <link rel="stylesheet" href="/css/basic.css">
     <link rel="stylesheet" href="/css/bootstrap.css">
     <title>직원 프로필관리 시스템</title>
 </head>
-
 <body>
 <!-- header.jsp -->
 <%@ include file="layout/header.jsp" %>
-<!-- TODO : 로그인 화면에서는 nav 비 활성화 필요 -->
 <!-- header.jsp -->
 
 <!-- main-content -->
 <main class="content">
-    <div class="form-signin w-100 m-auto">
-        <div class="logo">
+    <div class="form-signin w-100 m-auto my-5">
+        <div class="logo pb-3">
             <div class="logo-image">
-                <img src="/images/arrow-through-heart.svg" alt="logo" class="bi pe-none me-2">
+                <img src="/images/person-circle.svg" alt="logo" class="bi pe-none me-2">
             </div>
-            <p>LOGIN</p>
+            <p>반갑습니다 :-)</p>
         </div>
         <form id="frm">
             <div class="form-floating">
@@ -34,7 +33,7 @@
                 <label for="floatingPassword">PW</label>
             </div>
         </form>
-        <button class="btn btn-dark w-100 py-2" onclick="goLogin()">Sign in</button>
+        <button class="btn btn-dark w-100 py-2" onclick="goLogin()"><span class="basic-medium">Sign in</span></button>
     </div>
 </main>
 <!-- main-content -->

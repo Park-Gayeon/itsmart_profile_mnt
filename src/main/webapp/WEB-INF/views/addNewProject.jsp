@@ -13,56 +13,71 @@
 <body>
 <div class="content" tabindex="-1">
     <div class="container pb-0">
-        <div class="common-box row-box row mb-0 g-0">
-            <div class="modal-header">
-                <h5 class="modal-title">정보 입력</h5>
-            </div>
-            <div class="modal-body py-3">
-                <div class="container text-center">
-                    <form>
-                        <input type="hidden" id="project_seq" name="project_seq" value="${maxSeq}"/>
-                        <label for="project_nm">사업명:</label>
-                        <input type="text" id="project_nm" name="project_nm" maxlength="18"><br><br>
-
-                        <label for="project_start_date">투입시작일:</label>
-                        <input type="date" id="project_start_date" name="project_start_date"><br><br>
-
-                        <label for="project_end_date">투입종료일:</label>
-                        <input type="date" id="project_end_date" name="project_end_date"><br><br>
-
-                        <label for="project_role">역할:</label>
-                        <select class="form-select" style="width: auto; justify-self: center;" id="project_role" name="project_role">
-                            <option value="">선택해주세요</option>
-                            <option value="001">PM</option>
-                            <option value="002">PMO</option>
-                            <option value="003">PL</option>
-                            <option value="004">PE</option>
-                            <option value="005">PA</option>
-                            <option value="006">QA</option>
-                        </select><br><br>
-
-                        <label for="project_client">발주처:</label>
-                        <input type="text" id="project_client" name="project_client" maxlength="18"><br><br>
-
-                        <label for="assigned_task_lar">담당업무(대분류):</label>
-                        <select class="form-select" style="width: auto; justify-self: center;" id="assigned_task_lar" name="assigned_task_lar"
-                                onchange="selectTaskLar(this)">
-                            <option value="" selected>선택해주세요</option>
-                            <c:forEach var="taskLarList" items="${taskLarList}">
-                                <option value="${taskLarList.code_id}">${taskLarList.code_value}</option>
-                            </c:forEach>
-                        </select><br><br>
-
-                        <label for="assigned_task_mid">담당업무(소분류):</label>
-                        <select class="form-select" style="width: auto; justify-self: center;" id="assigned_task_mid" name="assigned_task_mid">
-                            <option value="" selected>선택해주세요</option>
-                            <c:forEach var="taskMidList" items="${taskMidList}">
-                                <option value="${taskMidList.code_id}">${taskMidList.code_value}</option>
-                            </c:forEach>
-                        </select><br><br>
-                        <button type="button" onclick="sendDataToParent()">입력</button>
-                    </form>
+        <div class="container-info row-box row mb-0 g-0">
+            <h2 class="header">수행이력 작성
+                <div class="description" >
+                    <button class="btn btn-success" onclick="sendDataToParent()"><span>SAVE</span></button>
                 </div>
+            </h2>
+            <div class="py-3">
+                <form>
+                    <div class="col-md-auto g-0">
+                        <div class="row mb-2 g-0">
+                            <input type="hidden" id="project_seq" name="project_seq" value="${maxSeq}"/>
+                            <div class="col-sm-4 common-box common-box input-box pt-4 me-2">
+                                <span>사업명</span>
+                                <input type="text" id="project_nm" name="project_nm" maxlength="18">
+                            </div>
+                            <div class="col-sm-3 common-box common-box input-box pt-4 me-2">
+                                <span>발주처</span>
+                                <input type="text" id="project_client" name="project_client" maxlength="18">
+                            </div>
+                            <div class="col-sm-2 common-box common-box input-box pt-4 me-2">
+                                <span>투입시작일</span>
+                                <input type="text" class="dateFmt" id="project_start_date" name="project_start_date" maxlength="10">
+                            </div>
+                            <div class="col-sm-2 common-box common-box input-box pt-4">
+                                <span>투입종료일</span>
+                                <input type="text" class="dateFmt" id="project_end_date" name="project_end_date" maxlength="10">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-2 g-0">
+                        <div class="row mb-2 g-0">
+                            <div class="col-sm-4 common-box common-box input-box pt-4 me-2">
+                                <span>담당업무(대분류)</span>
+                                <select class="form-select noneBorder" id="assigned_task_lar" name="assigned_task_lar"
+                                        onchange="selectTaskLar(this)">
+                                    <option value="" selected>-</option>
+                                    <c:forEach var="taskLarList" items="${taskLarList}">
+                                        <option value="${taskLarList.code_id}">${taskLarList.code_value}</option>
+                                    </c:forEach>
+                                </select>
+                            </div>
+                            <div class="col-sm-3 common-box common-box input-box pt-4 me-2">
+                                <span>담당업무(중분류)</span>
+                                <select class="form-select noneBorder"  id="assigned_task_mid" name="assigned_task_mid">
+                                    <option value="" selected>-</option>
+                                    <c:forEach var="taskMidList" items="${taskMidList}">
+                                        <option value="${taskMidList.code_id}">${taskMidList.code_value}</option>
+                                    </c:forEach>
+                                </select>
+                            </div>
+                            <div class="col-sm-2 common-box common-box input-box pt-4">
+                                <span>역할</span>
+                                <select class="form-select noneBorder" id="project_role" name="project_role">
+                                    <option value="">-</option>
+                                    <option value="001">PM</option>
+                                    <option value="002">PMO</option>
+                                    <option value="003">PL</option>
+                                    <option value="004">PE</option>
+                                    <option value="005">PA</option>
+                                    <option value="006">QA</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -71,6 +86,11 @@
 <script src="//code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="/js/common.js"></script>
 <script type="text/javascript">
+    $(document).ready(function (){
+        $(".container").on("keyup", ".dateFmt", function () {
+            formatInput($(this));
+        });
+    })
     // 부모 창으로 데이터를 전달 하고 팝업창을 닫는다
     function sendDataToParent() {
         const project_seq = document.getElementById("project_seq").value;
@@ -89,6 +109,9 @@
         const assigned_task_mid_nm = mid.options[mid.selectedIndex].innerText;
 
         if(!chkData()){
+            return;
+        }
+        if(!validateDates()){
             return;
         }
 
@@ -130,6 +153,30 @@
             }
         }
         return chk;
+    }
+
+    function validateDates() {
+        let isValidDates = true;
+        $("form").find(".dateFmt").each(function () {
+            const date = $(this).val();
+            if (!chkDate(date)) {
+                alert("입력일자를 확인해주세요");
+                $(this).focus();
+                isValidDates = false;
+                return false;
+            }
+        });
+
+        if (!isValidDates) return false;
+
+        // 날짜 start_date < end_date && 날짜 빈값 검증
+        const fmtStartDt = new Date($("#project_start_date").val());
+        const fmtEndDt = new Date($("#project_end_date").val());
+        if (fmtStartDt > fmtEndDt){
+            alert("종료일자가 시작일자보다 빠릅니다.");
+            isValidDates = false;
+        }
+        return isValidDates;
     }
 
     // 업무분류 BOX 서버 데이터 조회
