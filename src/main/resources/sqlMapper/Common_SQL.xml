@@ -53,4 +53,13 @@
                 now()
                )
     </insert>
+
+    <!-- changeUsrPassword : Password 변경 저장 -->
+    <update id="changeUsrPassword" parameterType="map">
+        UPDATE TB_USER_PROFILE_INFO
+        SET user_pw       = #{user_pw},
+            modified_date = now(),
+            modifier      = #{modifier}
+        where user_id = #{user_id}
+    </update>
 </mapper>

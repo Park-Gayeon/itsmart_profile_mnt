@@ -131,6 +131,17 @@ function chkDate2(date){
     }
     return rtn;
 }
+// 비밀번호 검증(정규식 체크)
+function chkPassword(password){
+    let rtn = false;
+    // 8자 - 20자, 문자 + 숫자 + 특수문자 정규식
+    const regex_pwd = /^(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&#.~_-])[A-Za-z\d@$!%*?&#.~_-]{8,20}$/
+
+    if(!regex_pwd.test(password)){
+        return rtn;
+    }
+    return true;
+}
 
 // 휴대폰번호 검증(정규식 체크)
 function chkTel(phoneNum){

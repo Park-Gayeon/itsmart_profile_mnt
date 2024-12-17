@@ -8,18 +8,24 @@ import kr.co.itsmart.profileMnt.vo.auth.AuthRequest;
 import kr.co.itsmart.profileMnt.vo.auth.AuthResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/auth")
 public class LoginController {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final LoginService loginService;
+
+    @Value("${user.default-password}")
+    private String defaultPassword;
 
     public LoginController(LoginService loginService) {
         this.loginService = loginService;
@@ -58,6 +64,34 @@ public class LoginController {
 
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(){
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/change/password/{user_id}")
+    public String changePassword(@PathVariable("user_id") String user_id,
+                                 Model model){
+        logger.info("== open changePassword[사용자 비밀번호 변경 팝업] ==");
+        model.addAttribute("user_id", user_id);
+
+        return "changePassword";
+    }
+
+    @PostMapping("/save/password")
+    public ResponseEntity<Object> savePassword(@AuthenticationPrincipal LoginVO login,
+                                               @RequestBody AuthRequest usrInfo,
+                                               @RequestParam(required = false) String flag){
+        logger.info("== Ajax[사용자 비밀번호 변경 처리] ==");
+
+        Map<String, String> params = new HashMap<>();
+        params.put("user_id", usrInfo.user_id());
+        String key = "1".equals(flag) ? defaultPassword : usrInfo.user_pw();
+        params.put("user_pw", key);
+        params.put("modifier", login.getUser_id());
+
+        logger.info("데이터는 ? :{}", key);
+
+        loginService.changeUsrPassword(params);
+
         return ResponseEntity.ok().build();
     }
 }

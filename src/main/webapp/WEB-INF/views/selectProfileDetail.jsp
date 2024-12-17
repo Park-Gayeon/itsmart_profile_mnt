@@ -42,7 +42,18 @@
                 <div class="container-info row-box row mb-5 g-0">
                     <!-- 인적사항 -->
                     <div class="row-box row mb-5 g-0">
-                        <header class="description mb-sm-3">인적사항</header>
+                        <header class="description mb-sm-3">인적사항
+                            <c:choose>
+                                <c:when test="${profile.user_id == loginUser}">
+                                    <div class="right-group"><a class="nav-link" href="#"
+                                                                onclick="changePw()">비밀번호변경</a></div>
+                                </c:when>
+                                <c:otherwise>
+                                    <div class="right-group"><a class="nav-link" href="#" onclick="initPw()">비밀번호초기화</a>
+                                    </div>
+                                </c:otherwise>
+                            </c:choose>
+                        </header>
                         <!-- 사진 -->
                         <div class="col-md text-center">
                             <c:choose>
@@ -107,88 +118,90 @@
                     <!-- 학력 -->
                     <div class="row-box mb-5 g-0">
                         <header class="description mb-sm-3">학력</header>
-                            <div class="col-md px-5 g-0">
-                                <c:forEach var="i" begin="1" end="3">
-                                    <c:set var="eduKey" value="edu${i}_school_name"/>
-                                    <c:if test="${profile[eduKey] ne ''}">
-                                        <!-- 첫번째 row -->
-                                        <div class="row mb-2 g-0">
-                                            <div class="col-sm-2 common-box input-box pt-4">
-                                                <c:set var="gubunKey" value="edu${i}_gubun"/>
-                                                <span>학교구분</span>
-                                                <c:choose>
-                                                    <c:when test="${profile[gubunKey]  == '010'}">
-                                                        <input type="text" value="고등학교" readonly/>
-                                                    </c:when>
-                                                    <c:when test="${profile[gubunKey]  == '011'}">
-                                                        <input type="text" value="대학교(2,3년)" readonly/>
-                                                    </c:when>
-                                                    <c:when test="${profile[gubunKey]  == '012'}">
-                                                        <input type="text" value="대학교(4년)" readonly/>
-                                                    </c:when>
-                                                    <c:otherwise>
-                                                        <input type="text" value="대학원" readonly/>
-                                                    </c:otherwise>
-                                                </c:choose>
-                                            </div>
-                                            <div class="col-sm-4 common-box input-box pt-4 me-3" style="margin-left:-1px;">
-                                                <span>학교명</span>
-                                                <input type="text" value="${profile[eduKey]}" readonly/>
-                                            </div>
-                                            <div class="col-sm-2 common-box input-box pt-4">
-                                                <c:set var="startDateKey" value="edu${i}_start_date"/>
-                                                <span>입학년월</span>
-                                                <input type="text" class="dateFmt" value="${profile[startDateKey]}" readonly/>
-                                            </div>
-                                            <div class="col-sm-2 common-box input-box pt-4 me-3" style="margin-left:-1px;">
-                                                <c:set var="endDateKey" value="edu${i}_end_date"/>
-                                                <span>졸업년월</span>
-                                                <input type="text" class="dateFmt" value="${profile[endDateKey]}" readonly/>
-                                            </div>
-                                            <div class="col-sm-1 common-box input-box pt-4 me-3">
-                                                <c:set var="statusKey" value="edu${i}_grad_status"/>
-                                                <span>졸업상태</span>
-                                                <c:choose>
-                                                    <c:when test="${profile[statusKey] == '001'}">
-                                                        <input type="text" value="졸업" readonly/>
-                                                    </c:when>
-                                                    <c:when test="${profile[statusKey] == '002'}">
-                                                        <input type="text" value="졸업예정" readonly/>
-                                                    </c:when>
-                                                    <c:otherwise>
-                                                        <input type="text" value="재학중" readonly/>
-                                                    </c:otherwise>
-                                                </c:choose>
-                                            </div>
+                        <div class="col-md px-5 g-0">
+                            <c:forEach var="i" begin="1" end="3">
+                                <c:set var="eduKey" value="edu${i}_school_name"/>
+                                <c:if test="${profile[eduKey] ne ''}">
+                                    <!-- 첫번째 row -->
+                                    <div class="row mb-2 g-0">
+                                        <div class="col-sm-2 common-box input-box pt-4">
+                                            <c:set var="gubunKey" value="edu${i}_gubun"/>
+                                            <span>학교구분</span>
+                                            <c:choose>
+                                                <c:when test="${profile[gubunKey]  == '010'}">
+                                                    <input type="text" value="고등학교" readonly/>
+                                                </c:when>
+                                                <c:when test="${profile[gubunKey]  == '011'}">
+                                                    <input type="text" value="대학교(2,3년)" readonly/>
+                                                </c:when>
+                                                <c:when test="${profile[gubunKey]  == '012'}">
+                                                    <input type="text" value="대학교(4년)" readonly/>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <input type="text" value="대학원" readonly/>
+                                                </c:otherwise>
+                                            </c:choose>
                                         </div>
-                                    </c:if>
-                                </c:forEach>
-                                <c:if test="${profile.edu1_school_name eq ''}">
-                                    <div class="text-center">
-                                        <p>작성된 내용이 없습니다</p>
+                                        <div class="col-sm-4 common-box input-box pt-4 me-3" style="margin-left:-1px;">
+                                            <span>학교명</span>
+                                            <input type="text" value="${profile[eduKey]}" readonly/>
+                                        </div>
+                                        <div class="col-sm-2 common-box input-box pt-4">
+                                            <c:set var="startDateKey" value="edu${i}_start_date"/>
+                                            <span>입학년월</span>
+                                            <input type="text" class="dateFmt" value="${profile[startDateKey]}"
+                                                   readonly/>
+                                        </div>
+                                        <div class="col-sm-2 common-box input-box pt-4 me-3" style="margin-left:-1px;">
+                                            <c:set var="endDateKey" value="edu${i}_end_date"/>
+                                            <span>졸업년월</span>
+                                            <input type="text" class="dateFmt" value="${profile[endDateKey]}" readonly/>
+                                        </div>
+                                        <div class="col-sm-1 common-box input-box pt-4 me-3">
+                                            <c:set var="statusKey" value="edu${i}_grad_status"/>
+                                            <span>졸업상태</span>
+                                            <c:choose>
+                                                <c:when test="${profile[statusKey] == '001'}">
+                                                    <input type="text" value="졸업" readonly/>
+                                                </c:when>
+                                                <c:when test="${profile[statusKey] == '002'}">
+                                                    <input type="text" value="졸업예정" readonly/>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <input type="text" value="재학중" readonly/>
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </div>
                                     </div>
                                 </c:if>
-                                <!-- 두번째 row -->
-                                <div class="row mb-2 g-0"
-                                     style="<c:if test="${profile.major eq '' || profile.major eq null}">display: none;</c:if>">
-                                    <div class="col-sm-3 common-box input-box pt-4">
-                                        <span>전공명</span>
-                                        <input type="text" value="${profile.major}" readonly/>
-                                    </div>
-                                    <div class="col-sm-3 common-box input-box pt-4 me-3" style="margin-left: -1px;">
-                                        <span>복수전공명</span>
-                                        <input type="text" value="${profile.double_major}" readonly/>
-                                    </div>
-                                    <div class="col-sm-1 common-box input-box pt-4">
-                                        <span>학점</span>
-                                        <input type="text" value="${profile.total_grade}" readonly/>
-                                    </div>
-                                    <div class="col-sm-1 common-box input-box pt-4" style="margin-left: -1px;">
-                                        <span>총점</span>
-                                        <input type="text" value="${profile.standard_grade}" readonly/>
-                                    </div>
+                            </c:forEach>
+                            <c:if test="${profile.edu1_school_name eq ''}">
+                                <div class="text-center">
+                                    <p>작성된 내용이 없습니다</p>
+                                </div>
+                            </c:if>
+                            <!-- 두번째 row -->
+                            <div class="row mb-2 g-0"
+                                 style="<c:if
+                                         test="${profile.major eq '' || profile.major eq null}">display: none;</c:if>">
+                                <div class="col-sm-3 common-box input-box pt-4">
+                                    <span>전공명</span>
+                                    <input type="text" value="${profile.major}" readonly/>
+                                </div>
+                                <div class="col-sm-3 common-box input-box pt-4 me-3" style="margin-left: -1px;">
+                                    <span>복수전공명</span>
+                                    <input type="text" value="${profile.double_major}" readonly/>
+                                </div>
+                                <div class="col-sm-1 common-box input-box pt-4">
+                                    <span>학점</span>
+                                    <input type="text" value="${profile.total_grade}" readonly/>
+                                </div>
+                                <div class="col-sm-1 common-box input-box pt-4" style="margin-left: -1px;">
+                                    <span>총점</span>
+                                    <input type="text" value="${profile.standard_grade}" readonly/>
                                 </div>
                             </div>
+                        </div>
                     </div>
                     <!-- 학력 끝 -->
                 </div>
@@ -260,7 +273,8 @@
                                                 <input type="text" class="dateFmt" value="${work.work_start_date}"
                                                        readonly/>
                                             </div>
-                                            <div class="col-sm-2 common-box input-box pt-4 me-3" style="margin-left: -1px;">
+                                            <div class="col-sm-2 common-box input-box pt-4 me-3"
+                                                 style="margin-left: -1px;">
                                                 <span>퇴사일자</span>
                                                 <input type="text" class="dateFmt" value="${work.work_end_date}"
                                                        readonly/>
@@ -322,8 +336,11 @@
                                         <c:set var="count_ing" value="1"/>
                                         <c:forEach var="project_ing" items="${profile.projectList}"
                                                    varStatus="pjStatus">
-                                            <fmt:parseDate var="project_start_date" value="${project_ing.project_start_date}" pattern="yyyyMMdd"/>
-                                            <fmt:formatDate value="${project_start_date}" pattern="yyyy-MM-dd" var="project_start_date"/>
+                                            <fmt:parseDate var="project_start_date"
+                                                           value="${project_ing.project_start_date}"
+                                                           pattern="yyyyMMdd"/>
+                                            <fmt:formatDate value="${project_start_date}" pattern="yyyy-MM-dd"
+                                                            var="project_start_date"/>
                                             <fmt:parseDate var="project_end_date"
                                                            value="${project_ing.project_end_date}"
                                                            pattern="yyyyMMdd"/>
@@ -386,10 +403,15 @@
                                     <c:otherwise>
                                         <tbody class="table-group-divider">
                                         <c:set var="count_hist" value="1"/>
-                                        <c:forEach var="project_hist" items="${profile.projectList}" varStatus="pjStatus">
-                                            <fmt:parseDate var="project_start_date" value="${project_hist.project_start_date}" pattern="yyyyMMdd"/>
-                                            <fmt:formatDate value="${project_start_date}" pattern="yyyy-MM-dd" var="project_start_date"/>
-                                            <fmt:parseDate var="project_end_date" value="${project_hist.project_end_date}"
+                                        <c:forEach var="project_hist" items="${profile.projectList}"
+                                                   varStatus="pjStatus">
+                                            <fmt:parseDate var="project_start_date"
+                                                           value="${project_hist.project_start_date}"
+                                                           pattern="yyyyMMdd"/>
+                                            <fmt:formatDate value="${project_start_date}" pattern="yyyy-MM-dd"
+                                                            var="project_start_date"/>
+                                            <fmt:parseDate var="project_end_date"
+                                                           value="${project_hist.project_end_date}"
                                                            pattern="yyyyMMdd"/>
                                             <fmt:formatDate value="${project_end_date}" pattern="yyyy-MM-dd"
                                                             var="project_end_date"/>
@@ -404,7 +426,8 @@
                                                         > ${project_hist.assigned_task_mid_nm}</td>
                                                     <td>${project_hist.project_role_nm}</td>
                                                     <td>
-                                                        <button type="button" class="btn btn-warning" onclick="viewSkill(${project_hist.project_seq}, '0')">
+                                                        <button type="button" class="btn btn-warning"
+                                                                onclick="viewSkill(${project_hist.project_seq}, '0')">
                                                             <span>VIEW</span>
                                                         </button>
                                                     </td>
@@ -430,7 +453,7 @@
             <form id="profile">
                 <div class="form-floating">
                     <h2 class="header">프로필
-                        <div class="description" >
+                        <div class="description">
                             <span class="basic-medium"><span class="star">*</span> 필수 입력 정보입니다.</span>
                             <button type="button" class="btn btn-secondary" onclick="back();">
                                 <span>BACK</span>
@@ -457,7 +480,8 @@
                                 <label for="imgFile" class="align-self-end">
                                     <div class="img-profile-btn do-hyeon-regular">+</div>
                                 </label>
-                                <input type="file" id="imgFile" name="imgFile" class="d-md-none" accept=".jpg, .png, .jpeg"/>
+                                <input type="file" id="imgFile" name="imgFile" class="d-md-none"
+                                       accept=".jpg, .png, .jpeg"/>
                             </div>
                             <!-- 사진 끝 -->
                             <!-- 개인정보 -->
@@ -470,11 +494,13 @@
                                     </div>
                                     <div class="col-sm-2 common-box common-box input-box pt-4 me-2">
                                         <span>생년월일 <span class="star">*</span></span>
-                                        <input type="text" name="user_birth" class="dateFmt" maxlength="10" value="${profile.user_birth}"/>
+                                        <input type="text" name="user_birth" class="dateFmt" maxlength="10"
+                                               value="${profile.user_birth}"/>
                                     </div>
                                     <div class="col-sm-2 common-box common-box input-box pt-4 me-2">
                                         <span>휴대전화 <span class="star">*</span></span>
-                                        <input type="text" name="user_phone" class="telFmt" maxlength="13" value="${profile.user_phone}"/>
+                                        <input type="text" name="user_phone" class="telFmt" maxlength="13"
+                                               value="${profile.user_phone}"/>
                                     </div>
                                     <div class="col-sm-2 common-box common-box input-box pt-4 me-2">
                                         <span>직원ID</span>
@@ -507,11 +533,13 @@
                                     </div>
                                     <div class="col-sm-2 common-box common-box input-box pt-4 me-2">
                                         <span>입사일자</span>
-                                        <input type="text" name="hire_date" class="dateFmt" maxlength="10" value="${profile.hire_date}" readonly/>
+                                        <input type="text" name="hire_date" class="dateFmt" maxlength="10"
+                                               value="${profile.hire_date}" readonly/>
                                     </div>
                                     <div class="col-sm common-box common-box input-box pt-4 me-2">
                                         <span>주소 <span class="star">*</span></span>
-                                        <input type="text" name="user_address" maxlength="40" value="${profile.user_address}"/>
+                                        <input type="text" name="user_address" maxlength="40"
+                                               value="${profile.user_address}"/>
                                     </div>
                                 </div>
                             </div>
@@ -523,7 +551,8 @@
                         <div id="schFrm" class="row-box mb-5 g-0">
                             <header class="description mb-sm-3">학력
                                 <div class="primary-btn">
-                                    <button type="button" class="btn btn-outline-primary add_field" data-target="schFrm">
+                                    <button type="button" class="btn btn-outline-primary add_field"
+                                            data-target="schFrm">
                                         <span>+</span>
                                     </button>
                                 </div>
@@ -553,7 +582,8 @@
                                                     </option>
                                                 </select>
                                             </div>
-                                            <div class="col-sm-4 common-box input-box pt-4 me-3" style="margin-left:-1px;">
+                                            <div class="col-sm-4 common-box input-box pt-4 me-3"
+                                                 style="margin-left:-1px;">
                                                 <span>학교명</span>
                                                 <input type="text" name="edu${i}_school_name" maxlength="15"
                                                        value="${profile[eduKey]}"/>
@@ -561,13 +591,16 @@
                                             <div class="col-sm-2 common-box input-box pt-4">
                                                 <c:set var="startDateKey" value="edu${i}_start_date"/>
                                                 <span>입학년월</span>
-                                                <input type="text" name="edu${i}_start_date" class="dateFmt" maxlength="10"
+                                                <input type="text" name="edu${i}_start_date" class="dateFmt"
+                                                       maxlength="10"
                                                        value="${profile[startDateKey]}"/>
                                             </div>
-                                            <div class="col-sm-2 common-box input-box pt-4 me-3" style="margin-left:-1px;">
+                                            <div class="col-sm-2 common-box input-box pt-4 me-3"
+                                                 style="margin-left:-1px;">
                                                 <c:set var="endDateKey" value="edu${i}_end_date"/>
                                                 <span>졸업년월</span>
-                                                <input type="text" name="edu${i}_end_date" class="dateFmt" maxlength="10"
+                                                <input type="text" name="edu${i}_end_date" class="dateFmt"
+                                                       maxlength="10"
                                                        value="${profile[endDateKey]}"/>
                                             </div>
                                             <div class="col-sm-1 common-box input-box pt-4 me-3">
@@ -638,7 +671,8 @@
                                             </select>
                                         </div>
                                         <div class="col-sm-auto align-content-center">
-                                            <button type="button" class="btn btn-danger clear_field" onclick="clearField()">
+                                            <button type="button" class="btn btn-danger clear_field"
+                                                    onclick="clearField()">
                                                 <span>C</span>
                                             </button>
                                         </div>
@@ -647,14 +681,16 @@
                             </div>
                             <!-- 두번째 row -->
                             <div id="schSub" class="row mb-2 px-5 g-0"
-                                 style="<c:if test="${profile.major eq '' || profile.major eq null}">display: none;</c:if>">
+                                 style="<c:if
+                                         test="${profile.major eq '' || profile.major eq null}">display: none;</c:if>">
                                 <div class="col-sm-3 common-box input-box pt-4">
                                     <span>전공명</span>
                                     <input type="text" name="major" maxlength="18" value="${profile.major}"/>
                                 </div>
                                 <div class="col-sm-3 common-box input-box pt-4 me-3" style="margin-left: -1px;">
                                     <span>복수전공명</span>
-                                    <input type="text" name="double_major" maxlength="18" value="${profile.double_major}"/>
+                                    <input type="text" name="double_major" maxlength="18"
+                                           value="${profile.double_major}"/>
                                 </div>
                                 <div class="col-sm-1 common-box input-box pt-4">
                                     <span>학점</span>
@@ -678,7 +714,8 @@
                 <div class="form-floating" id="qlFrm">
                     <h2 class="header">자격증
                         <span>
-                            <button type="button" class="btn btn-outline-primary add_field" data-target="qlFrm"><span>+</span></button>
+                            <button type="button" class="btn btn-outline-primary add_field"
+                                    data-target="qlFrm"><span>+</span></button>
                         <button type="button" class="btn btn-success" data-name="qualification"
                                 onclick="goSave(this)"><span>SAVE</span></button>
                     </span>
@@ -690,11 +727,13 @@
                                     <c:forEach var="qualification" items="${profile.qualificationList}"
                                                varStatus="qlStatus">
                                         <div class="row mb-2 g-0 add" id="qualificationList_${qlStatus.index}">
-                                            <input type="hidden" name="qualificationList[${qlStatus.index}].qualification_seq"
+                                            <input type="hidden"
+                                                   name="qualificationList[${qlStatus.index}].qualification_seq"
                                                    class="seq" value="${qualification.qualification_seq}">
                                             <div class="col-sm-3 common-box input-box pt-4 me-3">
                                                 <span>자격증명</span>
-                                                <input type="text" name="qualificationList[${qlStatus.index}].qualification_nm"
+                                                <input type="text"
+                                                       name="qualificationList[${qlStatus.index}].qualification_nm"
                                                        maxlength="18" value="${qualification.qualification_nm}">
                                             </div>
                                             <div class="col-sm-3 common-box input-box pt-4 me-3">
@@ -704,13 +743,18 @@
                                             </div>
                                             <div class="col-sm-2 common-box input-box pt-4">
                                                 <span>취득일자</span>
-                                                <input type="text" name="qualificationList[${qlStatus.index}].acquisition_date"
-                                                       class="dateFmt" maxlength="10" value="${qualification.acquisition_date}"/>
+                                                <input type="text"
+                                                       name="qualificationList[${qlStatus.index}].acquisition_date"
+                                                       class="dateFmt" maxlength="10"
+                                                       value="${qualification.acquisition_date}"/>
                                             </div>
-                                            <div class="col-sm-2 common-box input-box pt-4 me-3" style="margin-left:-1px;">
+                                            <div class="col-sm-2 common-box input-box pt-4 me-3"
+                                                 style="margin-left:-1px;">
                                                 <span>만기일자</span>
-                                                <input type="text" name="qualificationList[${qlStatus.index}].expiry_date"
-                                                       class="dateFmt" maxlength="10" value="${qualification.expiry_date}"/>
+                                                <input type="text"
+                                                       name="qualificationList[${qlStatus.index}].expiry_date"
+                                                       class="dateFmt" maxlength="10"
+                                                       value="${qualification.expiry_date}"/>
                                             </div>
                                             <div class="col-sm-auto align-content-center">
                                                 <c:choose>
@@ -720,7 +764,8 @@
                                                         </button>
                                                     </c:when>
                                                     <c:otherwise>
-                                                        <button type="button" class="btn btn-outline-danger remove-field"
+                                                        <button type="button"
+                                                                class="btn btn-outline-danger remove-field"
                                                                 data-target="qlFrm"><span>-</span>
                                                         </button>
                                                     </c:otherwise>
@@ -735,7 +780,8 @@
                                                class="seq" value="1">
                                         <div class="col-sm-3 common-box input-box pt-4 me-3">
                                             <span>자격증명</span>
-                                            <input type="text" name="qualificationList[0].qualification_nm" maxlength="18"/>
+                                            <input type="text" name="qualificationList[0].qualification_nm"
+                                                   maxlength="18"/>
                                         </div>
                                         <div class="col-sm-3 common-box input-box pt-4 me-3">
                                             <span>발행기관</span>
@@ -790,24 +836,32 @@
                             <div class="col-md px-5 g-0 add-main">
                                 <c:choose>
                                     <c:when test="${not empty profile.workExperienceList}">
-                                        <c:forEach var="work" items="${profile.workExperienceList}" varStatus="wkStatus">
+                                        <c:forEach var="work" items="${profile.workExperienceList}"
+                                                   varStatus="wkStatus">
                                             <div id="workExperienceList_${wkStatus.index}" class="row mb-2 g-0 add">
-                                                <input type="hidden" name="workExperienceList[${wkStatus.index}].work_seq"
+                                                <input type="hidden"
+                                                       name="workExperienceList[${wkStatus.index}].work_seq"
                                                        class="seq" value="${work.work_seq}"/>
                                                 <div class="col-sm-4 common-box input-box pt-4 me-3">
                                                     <span>회사명</span>
-                                                    <input type="text" name="workExperienceList[${wkStatus.index}].work_place"
+                                                    <input type="text"
+                                                           name="workExperienceList[${wkStatus.index}].work_place"
                                                            maxlength="18" value="${work.work_place}"/>
                                                 </div>
                                                 <div class="col-sm-2 common-box input-box pt-4">
                                                     <span>입사일자</span>
-                                                    <input type="text" name="workExperienceList[${wkStatus.index}].work_start_date"
-                                                           class="dateFmt" maxlength="10" value="${work.work_start_date}"/>
+                                                    <input type="text"
+                                                           name="workExperienceList[${wkStatus.index}].work_start_date"
+                                                           class="dateFmt" maxlength="10"
+                                                           value="${work.work_start_date}"/>
                                                 </div>
-                                                <div class="col-sm-2 common-box input-box pt-4 me-3" style="margin-left: -1px;">
+                                                <div class="col-sm-2 common-box input-box pt-4 me-3"
+                                                     style="margin-left: -1px;">
                                                     <span>퇴사일자</span>
-                                                    <input type="text" name="workExperienceList[${wkStatus.index}].work_end_date"
-                                                           class="dateFmt" maxlength="10" value="${work.work_end_date}"/>
+                                                    <input type="text"
+                                                           name="workExperienceList[${wkStatus.index}].work_end_date"
+                                                           class="dateFmt" maxlength="10"
+                                                           value="${work.work_end_date}"/>
                                                 </div>
                                                 <div class="col-sm-auto align-content-center">
                                                     <c:choose>
@@ -817,7 +871,8 @@
                                                             </button>
                                                         </c:when>
                                                         <c:otherwise>
-                                                            <button type="button" class="btn btn-outline-danger remove-field"
+                                                            <button type="button"
+                                                                    class="btn btn-outline-danger remove-field"
                                                                     data-target="workFrm"><span>-</span>
                                                             </button>
                                                         </c:otherwise>
@@ -831,14 +886,16 @@
                                             <input type="hidden" name="workExperienceList[0].work_seq" class="seq"/>
                                             <div class="col-sm-4 common-box input-box pt-4 me-3">
                                                 <span>회사명</span>
-                                                <input type="text" name="workExperienceList[0].work_place" maxlength="18"/>
+                                                <input type="text" name="workExperienceList[0].work_place"
+                                                       maxlength="18"/>
                                             </div>
                                             <div class="col-sm-2 common-box input-box pt-4">
                                                 <span>입사일자</span>
                                                 <input type="text" name="workExperienceList[0].work_start_date"
                                                        class="dateFmt" maxlength="10"/>
                                             </div>
-                                            <div class="col-sm-2 common-box input-box pt-4 me-3" style="margin-left: -1px;">
+                                            <div class="col-sm-2 common-box input-box pt-4 me-3"
+                                                 style="margin-left: -1px;">
                                                 <span>퇴사일자</span>
                                                 <input type="text" name="workExperienceList[0].work_end_date"
                                                        class="dateFmt" maxlength="10"/>
@@ -911,22 +968,30 @@
                                         <c:otherwise>
                                             <tbody id="project_ing" class="table-group-divider">
                                             <c:set var="count_ing" value="1"/>
-                                            <c:forEach var="project_ing" items="${profile.projectList}" varStatus="pjStatus">
-                                                <fmt:parseDate var="project_end_date" value="${project_ing.project_end_date}"
+                                            <c:forEach var="project_ing" items="${profile.projectList}"
+                                                       varStatus="pjStatus">
+                                                <fmt:parseDate var="project_end_date"
+                                                               value="${project_ing.project_end_date}"
                                                                pattern="yyyyMMdd"/>
                                                 <fmt:formatDate value="${project_end_date}" pattern="yyyy-MM-dd"
                                                                 var="project_end_date"/>
                                                 <c:if test="${today <= project_end_date}">
                                                     <tr id="projectList_${pjStatus.index}" class="add">
                                                         <td>${count_ing}</td>
-                                                        <input type="hidden" name="projectList[${pjStatus.index}].project_seq"
+                                                        <input type="hidden"
+                                                               name="projectList[${pjStatus.index}].project_seq"
                                                                value="${project_ing.project_seq}"/>
-                                                        <input type="hidden" name="projectList[${pjStatus.index}].use_yn"
+                                                        <input type="hidden"
+                                                               name="projectList[${pjStatus.index}].use_yn"
                                                                class="useYn" value="${project_ing.use_yn}"/>
-                                                        <td><input type="text" name="projectList[${pjStatus.index}].project_client"
-                                                                   maxlength="18" value="${project_ing.project_client}"/></td>
-                                                        <td><input type="text" name="projectList[${pjStatus.index}].project_nm"
-                                                                   maxlength="18" value="${project_ing.project_nm}"/></td>
+                                                        <td><input type="text"
+                                                                   name="projectList[${pjStatus.index}].project_client"
+                                                                   maxlength="18"
+                                                                   value="${project_ing.project_client}"/></td>
+                                                        <td><input type="text"
+                                                                   name="projectList[${pjStatus.index}].project_nm"
+                                                                   maxlength="18" value="${project_ing.project_nm}"/>
+                                                        </td>
                                                         <td><input type="text"
                                                                    name="projectList[${pjStatus.index}].project_start_date"
                                                                    class="dateFmt" maxlength="10" style="width: 80px;"
@@ -937,7 +1002,8 @@
                                                                      value="${project_ing.project_end_date}"/></td>
                                                         <td>
                                                             <select name="projectList[${pjStatus.index}].assigned_task_lar"
-                                                                    class="form-select noneBorder float-start" style="width: 50%;"
+                                                                    class="form-select noneBorder float-start"
+                                                                    style="width: 50%;"
                                                                     onchange="selectTaskLar(this)">
                                                                 <c:forEach var="taskLarList" items="${taskLarList}">
                                                                     <option value="${taskLarList.code_id}"
@@ -962,12 +1028,14 @@
                                                             </select>
                                                         </td>
                                                         <td>
-                                                            <button type="button" class="btn btn-warning" onclick="viewSkill(${project_ing.project_seq}, '1')">
+                                                            <button type="button" class="btn btn-warning"
+                                                                    onclick="viewSkill(${project_ing.project_seq}, '1')">
                                                                 <span>M</span>
                                                             </button>
                                                         </td>
                                                         <td>
-                                                            <button class="btn btn-outline-danger" onclick="remove(this, 'old')">
+                                                            <button class="btn btn-outline-danger"
+                                                                    onclick="remove(this, 'old')">
                                                                 <span>-</span>
                                                             </button>
                                                         </td>
@@ -1014,22 +1082,30 @@
                                         <c:otherwise>
                                             <tbody id="project_hist" class="table-group-divider">
                                             <c:set var="count_hist" value="1"/>
-                                            <c:forEach var="project_hist" items="${profile.projectList}" varStatus="pjStatus">
-                                                <fmt:parseDate var="project_end_date" value="${project_hist.project_end_date}"
+                                            <c:forEach var="project_hist" items="${profile.projectList}"
+                                                       varStatus="pjStatus">
+                                                <fmt:parseDate var="project_end_date"
+                                                               value="${project_hist.project_end_date}"
                                                                pattern="yyyyMMdd"/>
                                                 <fmt:formatDate value="${project_end_date}" pattern="yyyy-MM-dd"
                                                                 var="project_end_date"/>
                                                 <c:if test="${today > project_end_date}">
                                                     <tr id="projectList_${pjStatus.index}" class="add">
                                                         <td>${count_hist}</td>
-                                                        <input type="hidden" name="projectList[${pjStatus.index}].project_seq"
+                                                        <input type="hidden"
+                                                               name="projectList[${pjStatus.index}].project_seq"
                                                                value="${project_hist.project_seq}"/>
-                                                        <input type="hidden" name="projectList[${pjStatus.index}].use_yn"
+                                                        <input type="hidden"
+                                                               name="projectList[${pjStatus.index}].use_yn"
                                                                class="useYn" value="${project_hist.use_yn}"/>
-                                                        <td><input type="text" name="projectList[${pjStatus.index}].project_client"
-                                                                   maxlength="18" value="${project_hist.project_client}"/></td>
-                                                        <td><input type="text" name="projectList[${pjStatus.index}].project_nm"
-                                                                   maxlength="18" value="${project_hist.project_nm}"/></td>
+                                                        <td><input type="text"
+                                                                   name="projectList[${pjStatus.index}].project_client"
+                                                                   maxlength="18"
+                                                                   value="${project_hist.project_client}"/></td>
+                                                        <td><input type="text"
+                                                                   name="projectList[${pjStatus.index}].project_nm"
+                                                                   maxlength="18" value="${project_hist.project_nm}"/>
+                                                        </td>
                                                         <td><input type="text"
                                                                    name="projectList[${pjStatus.index}].project_start_date"
                                                                    class="dateFmt" maxlength="10" style="width: 80px;"
@@ -1041,7 +1117,8 @@
                                                         </td>
                                                         <td>
                                                             <select name="projectList[${pjStatus.index}].assigned_task_lar"
-                                                                    class="form-select noneBorder float-start" style="width: 50%;"
+                                                                    class="form-select noneBorder float-start"
+                                                                    style="width: 50%;"
                                                                     onchange="selectTaskLar(this)">
                                                                 <c:forEach var="taskLarList" items="${taskLarList}">
                                                                     <option value="${taskLarList.code_id}"
@@ -1065,12 +1142,14 @@
                                                                 </c:forEach>
                                                             </select>
                                                         <td>
-                                                        <button type="button" class="btn btn-warning" onclick="viewSkill(${project_hist.project_seq}, '1')">
-                                                            <span>M</span>
-                                                        </button>
+                                                            <button type="button" class="btn btn-warning"
+                                                                    onclick="viewSkill(${project_hist.project_seq}, '1')">
+                                                                <span>M</span>
+                                                            </button>
                                                         </td>
                                                         <td>
-                                                            <button class="btn btn-outline-danger" onclick="remove(this, 'old')">
+                                                            <button class="btn btn-outline-danger"
+                                                                    onclick="remove(this, 'old')">
                                                                 <span>-</span>
                                                             </button>
                                                         </td>
@@ -1166,33 +1245,33 @@
         });
 
         // 프로필이미지 등록
-        $("#imgFile").on("change", function(e){
+        $("#imgFile").on("change", function (e) {
             /*최대 파일크기 2MB(2097152) */
             const fileInfo = e.target.files[0];
-            const maxSize = 1024*1024*2; // 최대 크기 2MB
+            const maxSize = 1024 * 1024 * 2; // 최대 크기 2MB
             const basicImg = "/images/image.png"; // 기본 이미지 경로
             chgImg = true;
 
             // 파일 선택 취소
-            if(!fileInfo){
+            if (!fileInfo) {
                 $(".edit").attr("src", basicImg);
                 chgImg = false;
                 return;
             }
             // 파일 크기 검증
-            if(fileInfo.size > maxSize){
+            if (fileInfo.size > maxSize) {
                 alert("이미지 사진의 용량이 2MB를 초과합니다.");
                 return;
             }
             // 파일 형식 검증
             const allowedExtensions = ['image/jpeg', 'image/png', 'image/jpg'];
-            if(!allowedExtensions.includes(fileInfo.type)){
+            if (!allowedExtensions.includes(fileInfo.type)) {
                 alert("이미지 파일만 업로드 가능합니다.");
                 return;
             }
             // 파일 미리보기
             const reader = new FileReader();
-            reader.onload = function(e){
+            reader.onload = function (e) {
                 const url = e.target.result;
                 $(".edit").attr("src", url);
             };
@@ -1401,14 +1480,14 @@
         window.open(url, "viewSkill", properties)
     }
 
-    function excel(){
+    function excel() {
         const userId = $('input[name=user_id]').val();
         const userNm = $('input[name=user_nm]').val();
 
         fetch("/excel/" + userId + "/download", {
             method: 'POST'
         }).then(response => {
-            if(!response.ok){ // HTTP 상태 코드가 200-299 범위에 없을 경우
+            if (!response.ok) { // HTTP 상태 코드가 200-299 범위에 없을 경우
                 throw new Error(`서버 오류 발생: ${response.status}`);
             }
             return response.blob(); // Blob 데이터 반환
@@ -1419,7 +1498,7 @@
             const a = document.createElement('a');
             a.style.display = 'none';
             a.href = url;
-            a.download = "profile_" + userNm +  ".xlsx"; // 다운로드할 파일 이름 설정
+            a.download = "profile_" + userNm + ".xlsx"; // 다운로드할 파일 이름 설정
             document.body.appendChild(a);
             a.click();
             window.URL.revokeObjectURL(url);// URL 객체 해제
@@ -1720,11 +1799,37 @@
         return true;
     }
 
-    function back(){
+    function back() {
         $("#viewMode").css("display", "");
         $("#editMode").css("display", "none");
     }
 
+    function changePw() {
+        let user_id = `${loginUser}`;
+        let url = "/auth/change/password/" + user_id;
+        let properties = "width=600, height=220";
+        window.open(url, "changePassword", properties);
+    }
+
+    function initPw() {
+        if (confirm("초기화 하시겠습니까?")) {
+
+            $.ajax({
+                url: "/auth/save/password?flag=1",
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify({
+                    user_id: $("input[name=user_id]").val()
+                }),
+                success: function () {
+                    alert("초기화되었습니다.");
+                },
+                error: function () {
+                    alert("서버 오류가 발생했습니다. 다시 시도해 주세요");
+                }
+            });
+        }
+    }
 
 </script>
 
