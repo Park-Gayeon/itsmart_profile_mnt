@@ -14,6 +14,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,14 +25,17 @@ import java.util.Map;
 public class LoginServiceImpl implements LoginService {
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     private final AuthenticationManager authenticationManager;
+    private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
 
     private final CommonDAO commonDAO;
 
     public LoginServiceImpl(AuthenticationManager authenticationManager
+            , PasswordEncoder passwordEncoder
             , JwtService jwtService
             , CommonDAO commonDAO) {
         this.authenticationManager = authenticationManager;
+        this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
         this.commonDAO = commonDAO;
     }
@@ -94,5 +98,15 @@ public class LoginServiceImpl implements LoginService {
             }
         }
         return null;
+    }
+
+    @Override
+    public void changeUsrPassword(Map<String, String> params) {
+
+        // PASSWORD 암호화
+        String encodedPassword = passwordEncoder.encode(params.get("user_pw"));
+
+        params.put("user_pw", encodedPassword);
+        commonDAO.changeUsrPassword(params);
     }
 }

@@ -42,4 +42,7 @@ public interface CommonDAO {
     /* Refresh Token 저장 */
     void saveUsrRefreshToken(Map<String, String> params);
 
+    /* Password 변경 저장 */
+    void changeUsrPassword(Map<String, String> params);
+
 }

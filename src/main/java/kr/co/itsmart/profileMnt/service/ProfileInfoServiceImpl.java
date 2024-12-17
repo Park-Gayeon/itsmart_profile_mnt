@@ -46,7 +46,6 @@ public class ProfileInfoServiceImpl implements ProfileInfoService{
     public void insertUsrProfile(ProfileVO profile) {
         // PASSWORD 암호화
         String encodedPassword = passwordEncoder.encode(defaultPassword);
-        LOGGER.info("암호화 된 비밀번호: user_pw={}" , encodedPassword);
         profile.setUser_pw(encodedPassword);
 
         // INSERT
