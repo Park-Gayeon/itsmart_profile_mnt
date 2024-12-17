@@ -299,6 +299,7 @@
              ) TB
         where TB.no = 1
         order by create_date
+        LIMIT #{limit} OFFSET #{offset}
     </select>
 
     <!-- getUsrProfileInfoCnt : 직원 프로필 정보 목록 건수 SELECT-->

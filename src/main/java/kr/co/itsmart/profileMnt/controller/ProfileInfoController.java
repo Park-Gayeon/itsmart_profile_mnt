@@ -2,10 +2,7 @@ package kr.co.itsmart.profileMnt.controller;
 
 import kr.co.itsmart.profileMnt.service.CommonService;
 import kr.co.itsmart.profileMnt.service.ProfileInfoService;
-import kr.co.itsmart.profileMnt.vo.CommonVO;
-import kr.co.itsmart.profileMnt.vo.FileVO;
-import kr.co.itsmart.profileMnt.vo.LoginVO;
-import kr.co.itsmart.profileMnt.vo.ProfileVO;
+import kr.co.itsmart.profileMnt.vo.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -38,9 +35,23 @@ public class ProfileInfoController {
         LOGGER.info("== go usersProfileInfo[사용자 프로필 목록 조회 화면] ==");
 
         LOGGER.info("검색조건 확인 searchType={}, searchText={}", profile.getSearchType(), profile.getSearchText());
-        List<ProfileVO> profileList = profileInfoService.getUsrProfileInfoList(profile);
 
+        int defaultCurPage = 1;
+        if(profile.getCurPage() == 0){
+            profile.setCurPage(defaultCurPage);
+        }
+
+        int curPage = profile.getCurPage();
+        LOGGER.info("curPage : {}", curPage);
+
+        // 전체 리스트 건수
         int userProfileCnt = profileInfoService.getUsrProfileInfoCnt(profile);
+
+        PageVO pageVO = new PageVO(userProfileCnt, curPage);
+        profile.setOffset(pageVO.getStartIndex());
+        profile.setLimit(pageVO.getPageSize());
+
+        List<ProfileVO> profileList = profileInfoService.getUsrProfileInfoList(profile);
 
         model.addAttribute("loginUser", login.getUser_id());
         model.addAttribute("userRole", login.getAuthorities());
@@ -48,6 +59,7 @@ public class ProfileInfoController {
         model.addAttribute("cnt", userProfileCnt);
         model.addAttribute("searchType", profile.getSearchType());
         model.addAttribute("searchText", profile.getSearchText());
+        model.addAttribute("page", pageVO);
         return "usersProfileInfo";
     }
 

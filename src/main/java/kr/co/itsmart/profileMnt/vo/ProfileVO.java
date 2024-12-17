@@ -3,7 +3,7 @@ package kr.co.itsmart.profileMnt.vo;
 import java.math.BigDecimal;
 import java.util.List;
 
-public class ProfileVO {
+public class ProfileVO{
     private String user_id; // 직원 아이디
     private String user_pw; // 비밀번호
     private String user_nm; // 직원명
@@ -53,6 +53,11 @@ public class ProfileVO {
     private String searchType; // 검색타입
     private String searchText; // 검색내용
 
+    // paging
+    private int curPage;
+    private int offset;
+    private int limit;
+
     private List<ProjectVO> projectList;
     private List<QualificationVO> qualificationList;
     private List<WorkExperienceVO> workExperienceList;
@@ -63,6 +68,7 @@ public class ProfileVO {
     private String modified_date; // 수정일시
     private String creator; // 생성자
     private String modifier; /// 수정자
+
 
     public String getUser_id() {
         return user_id;
@@ -403,6 +409,30 @@ public class ProfileVO {
 
     public void setSearchText(String searchText) {
         this.searchText = searchText;
+    }
+
+    public int getCurPage() {
+        return curPage;
+    }
+
+    public void setCurPage(int curPage) {
+        this.curPage = curPage;
+    }
+
+    public int getOffset() {
+        return offset;
+    }
+
+    public void setOffset(int offset) {
+        this.offset = offset;
+    }
+
+    public int getLimit() {
+        return limit;
+    }
+
+    public void setLimit(int limit) {
+        this.limit = limit;
     }
 
     public int getFile_seq() {

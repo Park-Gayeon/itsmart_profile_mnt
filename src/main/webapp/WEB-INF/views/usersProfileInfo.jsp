@@ -90,23 +90,52 @@
                             </c:forEach>
                             </tbody>
                         </table>
-
-                        <%-- TODO : 페이징 처리 예정 --%>
+                        <hr>
+                        <input type="hidden" name="curPage"/>
                         <nav aria-label="Page navigation example">
                             <ul class="pagination justify-content-center">
-                                <li class="page-item disabled">
-                                    <a class="page-link">Previous</a>
-                                </li>
-                                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                <li class="page-item"><a class="page-link" href="#">3</a></li>
                                 <li class="page-item">
-                                    <a class="page-link" href="#">Next</a>
+                                <c:choose>
+                                    <c:when test="${page.curRange ne 1}">
+                                        <a class="page-link" href="#" aria-label="Previous" onClick="fn_paging(${page.startPage - 1})">
+                                            <span aria-hidden="true">&laquo;</span>
+                                        </a>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <a class="page-link disabled" href="#" aria-label="Previous">
+                                            <span aria-hidden="true">&laquo;</span>
+                                        </a>
+                                    </c:otherwise>
+                                </c:choose>
+                                </li>
+                                <c:forEach var="pageNum" begin="${page.startPage}" end="${page.endPage}">
+                                    <li class="page-item">
+                                        <c:choose>
+                                            <c:when test="${pageNum eq page.curPage}">
+                                                <a class="page-link disabled" href="#" onClick="fn_paging('${pageNum}')">${pageNum}</a>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <a class="page-link" href="#" onClick="fn_paging('${pageNum}')">${pageNum}</a>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </li>
+                                </c:forEach>
+                                <li class="page-item">
+                                <c:choose>
+                                    <c:when test="${page.curRange ne page.rangeCnt && page.rangeCnt > 1}">
+                                        <a class="page-link" href="#" aria-label="Next" onClick="fn_paging(${page.endPage + 1})">
+                                            <span aria-hidden="true">&raquo;</span>
+                                        </a>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <a class="page-link disabled" href="#" aria-label="Next">
+                                            <span aria-hidden="true">&raquo;</span>
+                                        </a>
+                                    </c:otherwise>
+                                </c:choose>
                                 </li>
                             </ul>
                         </nav>
-
-
                     </div>
                 </div>
             </div>
@@ -144,6 +173,17 @@
     }
 
     function goFind() {
+        $("input[name=curPage]").val(1);
+        const frm = $("#frm");
+
+        frm.attr('action', '/profile/info/list');
+        frm.attr('method', 'get');
+        frm.submit();
+    }
+
+    function fn_paging(pageNum){
+        $("input[name=curPage]").val(pageNum);
+
         const frm = $("#frm");
         frm.attr('action', '/profile/info/list');
         frm.attr('method', 'get');
