@@ -279,6 +279,112 @@ public class ExcelDownServiceImpl implements ExcelDownService {
         } catch (IOException e) {
             logger.error("IOException :", e.getMessage());
             e.printStackTrace();
+            throw new CustomException("엑셀파일 생성 중 오류가 발생했습니다");
+        }
+
+        byte[] outArray = outputStream.toByteArray();
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        response.setHeader("Content-Disposition", "attachment");
+
+        ServletOutputStream out = response.getOutputStream();
+        out.write(outArray);
+        out.flush();
+        out.close();
+    }
+
+    @Override
+    public void downloadUsrProfileAllListExcel(List<ProfileVO> list, HttpServletResponse response) throws IOException {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+
+        try {
+            XSSFWorkbook workbook = new XSSFWorkbook();
+            Sheet sheet = workbook.createSheet("user_list");
+
+            if(list == null){
+                logger.error("[downloadUsrProfileAllListExcel] 직원 목록이 존재하지 않습니다.");
+                throw new CustomException("직원 목록이 존재하지 않습니다.");
+            }
+
+            /* TITLE */
+            CellStyle titleStyle = workbook.createCellStyle();
+            Font titleFont = workbook.createFont();
+            titleFont.setBold(true);
+            titleFont.setFontName("맑은 고딕");
+            titleFont.setFontHeightInPoints((short) 12);
+            titleStyle.setFont(titleFont);
+            /* TITLE */
+
+            /* HEADER */
+            CellStyle headerStyle = workbook.createCellStyle();
+            Font headerFont = workbook.createFont();
+            headerFont.setFontName("맑은 고딕");
+            headerFont.setFontHeightInPoints((short) 11);
+            headerStyle.setFont(headerFont);
+            headerStyle.setFillForegroundColor(IndexedColors.PALE_BLUE.getIndex());
+            headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+            headerStyle.setAlignment(HorizontalAlignment.CENTER);
+            headerStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+            headerStyle.setBorderLeft(BorderStyle.THIN);
+            headerStyle.setBorderTop(BorderStyle.THIN);
+            headerStyle.setBorderRight(BorderStyle.THIN);
+            headerStyle.setBorderBottom(BorderStyle.THIN);
+            /* HEADER */
+
+            /* CONTENT */
+            CellStyle contentStyle = workbook.createCellStyle();
+            Font contentFont = workbook.createFont();
+            contentFont.setFontName("맑은 고딕");
+            contentFont.setFontHeightInPoints((short) 11);
+            contentStyle.setFont(contentFont);
+            contentStyle.setBorderLeft(BorderStyle.THIN);
+            contentStyle.setBorderTop(BorderStyle.THIN);
+            contentStyle.setBorderRight(BorderStyle.THIN);
+            contentStyle.setBorderBottom(BorderStyle.THIN);
+            /* CONTENT */
+
+            int rowCount = 0;
+
+            // 엑셀[직원목록] header
+            Row listHeader = sheet.createRow(rowCount++);
+            applyCellStyle(listHeader, 0, "순번", headerStyle);
+            applyCellStyle(listHeader, 1, "이름", headerStyle);
+            applyCellStyle(listHeader, 2, "소속", headerStyle);
+            applyCellStyle(listHeader, 3, "발주처", headerStyle);
+            applyCellStyle(listHeader, 4, "사업명", headerStyle);
+            applyCellStyle(listHeader, 5, "사업시작일", headerStyle);
+            applyCellStyle(listHeader, 6, "사업종료일", headerStyle);
+            applyCellStyle(listHeader, 7, "수행경력", headerStyle);
+            applyCellStyle(listHeader, 8, "자격증여부", headerStyle);
+
+            int num = 1;
+            for(ProfileVO profile : list){
+                // 엑셀[자격증] data
+                Row listData = sheet.createRow(rowCount++);
+                Cell cell = listData.createCell(0);
+                cell.setCellValue(num);
+                cell.setCellStyle(contentStyle);
+                applyCellStyle(listData, 1, profile.getUser_nm(), contentStyle);
+                applyCellStyle(listData, 2, profile.getUser_department_nm(), contentStyle);
+                applyCellStyle(listData, 3, nullChange(profile.getProject_client()), contentStyle);
+                applyCellStyle(listData, 4, nullChange(profile.getProject_nm()), contentStyle);
+                applyCellStyle(listData, 5, nullChange(profile.getProject_start_date()) == ""? "": formatDate(profile.getProject_start_date()), contentStyle);
+                applyCellStyle(listData, 6, nullChange(profile.getProject_end_date()) == "" ? "" : formatDate(profile.getProject_end_date()), contentStyle);
+                applyCellStyle(listData, 7, "수행경력", contentStyle);
+                applyCellStyle(listData, 8, profile.getQualification_yn() == "1" ? "Y":"N", contentStyle);
+
+                num++;
+            }
+            sheet.createRow(rowCount++); // 여백
+
+            sheet.setDefaultColumnWidth((short)20);
+
+            workbook.write(outputStream);
+            workbook.close();
+
+        } catch (IOException e) {
+            logger.error("IOException :", e.getMessage());
+            e.printStackTrace();
+            throw new CustomException("엑셀파일 생성 중 오류가 발생했습니다");
         }
 
         byte[] outArray = outputStream.toByteArray();
@@ -347,5 +453,12 @@ public class ExcelDownServiceImpl implements ExcelDownService {
         else if ("002".equals(code)){ rtnValue = "졸업예정";}
         else rtnValue = "재학중";
         return rtnValue;
+    }
+
+    private String nullChange(String str){
+        if(str == null || str.isEmpty()){
+            str = "";
+        }
+        return str;
     }
 }

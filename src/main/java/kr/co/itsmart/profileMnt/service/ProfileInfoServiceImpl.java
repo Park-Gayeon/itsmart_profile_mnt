@@ -63,4 +63,8 @@ public class ProfileInfoServiceImpl implements ProfileInfoService{
         return profileDAO.selectMaxHistSeq(user_id);
     }
 
+    @Override
+    public List<ProfileVO> getUsrProfileNotPagingInfoList() {
+        return profileDAO.getUsrProfileNotPagingInfoList();
+    }
 }
