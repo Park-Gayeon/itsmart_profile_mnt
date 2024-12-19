@@ -2,6 +2,7 @@ package kr.co.itsmart.profileMnt.service;
 
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletResponse;
+import kr.co.itsmart.profileMnt.configuration.handler.CustomException;
 import kr.co.itsmart.profileMnt.vo.*;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
@@ -35,26 +36,6 @@ public class ExcelDownServiceImpl implements ExcelDownService {
 
         try {
             XSSFWorkbook workbook = new XSSFWorkbook();
-
-            // read image file
-            FileInputStream fis = new FileInputStream(profile.getFileInfo().getFile_sver_path());
-            byte[] bytes = fis.readAllBytes();
-            fis.close();
-
-            String extension = profile.getFileInfo().getFile_extension();
-            int type = 0;
-            if("png".equals(extension)){
-                type = Workbook.PICTURE_TYPE_PNG;
-            }else if("jpg".equals(extension) || "jpeg".equals(extension)){
-                type = Workbook.PICTURE_TYPE_JPEG;
-            }
-
-            if(type == 0){
-                logger.error("잘못된 확장자 입니다. extension : {}", extension);
-                throw new IllegalArgumentException("지원하지 않는 파일 확장자입니다.: " + extension);
-            }
-
-            int pictureIdx = workbook.addPicture(bytes, type);
             Sheet sheet = workbook.createSheet("profile");
 
             /* TITLE */
@@ -101,22 +82,43 @@ public class ExcelDownServiceImpl implements ExcelDownService {
             applyCellStyle(profileInfo, 0, "인적사항", titleStyle);
             sheet.addMergedRegion(new CellRangeAddress(rowCount -1, rowCount -1, 0, 7)); //셀병합
 
+            // read image file
+            if(profile.getFileInfo() != null){
+                FileInputStream fis = new FileInputStream(profile.getFileInfo().getFile_sver_path());
+                byte[] bytes = fis.readAllBytes();
+                fis.close();
 
-            CreationHelper helper = workbook.getCreationHelper();
-            Drawing drawing = sheet.createDrawingPatriarch();
+                String extension = profile.getFileInfo().getFile_extension();
+                int type = 0;
+                if("png".equals(extension)){
+                    type = Workbook.PICTURE_TYPE_PNG;
+                }else if("jpg".equals(extension) || "jpeg".equals(extension)){
+                    type = Workbook.PICTURE_TYPE_JPEG;
+                }
 
-            // add a picture shape
-            ClientAnchor anchor = helper.createClientAnchor();
-            anchor.setCol1(0);
-            anchor.setCol2(1);
-            anchor.setRow1(1);
-            anchor.setRow2(10);
-            Picture pict = drawing.createPicture(anchor, pictureIdx);
+                if(type == 0){
+                    logger.error("[downloadUsrProfileDetailExcel] 잘못된 확장자 입니다. extension : {}", extension);
+                    throw new CustomException("지원하지 않는 파일 확장자입니다.: " + extension);
+                }
 
-            pict.resize(1.0, 1.1);
+                int pictureIdx = workbook.addPicture(bytes, type);
 
-            for(int i=0; i<anchor.getRow2(); i++){
-                sheet.createRow(rowCount++);
+                CreationHelper helper = workbook.getCreationHelper();
+                Drawing drawing = sheet.createDrawingPatriarch();
+
+                // add a picture shape
+                ClientAnchor anchor = helper.createClientAnchor();
+                anchor.setCol1(0);
+                anchor.setCol2(1);
+                anchor.setRow1(1);
+                anchor.setRow2(10);
+                Picture pict = drawing.createPicture(anchor, pictureIdx);
+
+                pict.resize(1.0, 1.1);
+
+                for(int i=0; i<anchor.getRow2(); i++){
+                    sheet.createRow(rowCount++);
+                }
             }
 
             // 엑셀[인적사항] header

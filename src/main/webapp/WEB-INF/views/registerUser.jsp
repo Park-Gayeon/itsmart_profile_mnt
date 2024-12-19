@@ -133,6 +133,13 @@
                 chgImg = false;
                 return;
             }
+            // 파일 이름 검증(20자)
+            const oriFileNm = fileInfo.name;
+            if(oriFileNm.length > 20 || oriFileNm.includes(" ")){
+                alert("파일명은 공백을 제외한 20자 이내로 작성해주세요");
+                return;
+            }
+
             // 파일 크기 검증
             if(fileInfo.size > maxSize){
                 alert("이미지 사진의 용량이 2MB를 초과합니다.");
