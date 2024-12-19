@@ -46,7 +46,7 @@
 
     <!-- saveUsrRefreshToken : refrest token 저장 -->
     <insert id="saveUsrRefreshToken" parameterType="map">
-        INSERT INTO TB_USER_REFRESH_TOKEN_INFO(user_id, token, create_date)
+        INSERT INTO TB_USER_REFRESH_TOKEN_INFO(user_id, token, created_date)
         VALUES (
                 #{user_id},
                 #{refreshToken},

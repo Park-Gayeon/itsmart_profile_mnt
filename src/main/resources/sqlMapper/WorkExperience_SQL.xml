@@ -4,11 +4,14 @@
 
     <!-- updateUsrWorkInfo : 근무 경력 INSERT -->
     <insert id="updateUsrWorkInfo" parameterType="workExperienceVO">
-        INSERT INTO TB_WORK_EXPERIENCE_INFO(USER_ID, WORK_SEQ, WORK_PLACE, WORK_START_DATE, WORK_END_DATE, CREATED_DATE,
+        INSERT INTO TB_WORK_EXPERIENCE_INFO(USER_ID, WORK_SEQ, WORK_PLACE, WORK_ASSIGNED_TASK, WORK_POSITION,
+                                            WORK_START_DATE, WORK_END_DATE, CREATED_DATE,
                                             MODIFIED_DATE, CREATOR, MODIFIER)
         VALUES (#{user_id},
                 #{work_seq},
                 #{work_place},
+                #{work_assigned_task},
+                #{work_position},
                 #{work_start_date},
                 #{work_end_date},
                 now(),
@@ -21,12 +24,14 @@
 
     <!-- insertUsrWorkInfoHist : 근무 경력 이력 INSERT -->
     <insert id="insertUsrWorkInfoHist" parameterType="workExperienceVO">
-        INSERT INTO TB_WORK_EXPERIENCE_INFO_HIST(user_id, work_seq, hist_seq, work_place, work_start_date,
+        INSERT INTO TB_WORK_EXPERIENCE_INFO_HIST(user_id, work_seq, hist_seq, work_place, work_assigned_task, work_position, work_start_date,
                                                  work_end_date, created_date, creator)
         SELECT USER_ID,
                WORK_SEQ,
                #{hist_seq},
                WORK_PLACE,
+               WORK_ASSIGNED_TASK,
+               WORK_POSITION,
                WORK_START_DATE,
                WORK_END_DATE,
                now(),
@@ -35,6 +40,4 @@
         WHERE WORK_SEQ = #{work_seq}
           AND USER_ID = #{user_id}
     </insert>
-
-
 </mapper>

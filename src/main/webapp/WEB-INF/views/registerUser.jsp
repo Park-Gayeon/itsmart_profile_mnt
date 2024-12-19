@@ -16,7 +16,7 @@
         <div class="container-info row-box row mb-0 g-0">
             <h2 class="header">직원 등록
                 <div class="description" >
-                    <button type="button" class="btn btn-success" onclick="save()">SAVE</button>
+                    <button type="button" class="btn btn-success" onclick="save()">저장</button>
                 </div>
             </h2>
 
@@ -32,7 +32,7 @@
                                 <input type="file" id="imgFile" name="imgFile" class="d-md-none" accept=".jpg, .png, .jpeg"/>
                         </div>
                         <!-- 개인정보 -->
-                        <div class="col-md-auto g-0">
+                        <div class="col-sm-auto g-0">
                             <!-- 첫번째 row -->
                             <div class="row mb-2 g-0">
                                 <div class="col-sm-2 common-box common-box input-box pt-4 me-2">

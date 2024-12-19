@@ -16,7 +16,7 @@
             <h2 class="header">직원 기술
                 <div class="description" >
                 <c:if test="${flag eq 1}">
-                    <button class="btn btn-success" onclick="saveSkill()"><span>SAVE</span></button>
+                    <button class="btn btn-success" onclick="saveSkill()"><span>저장</span></button>
                 </c:if>
                     <button class="btn btn-outline-danger" onclick="window.close()"><span>X</span></button>
                 </div>
@@ -25,7 +25,7 @@
                     <div class="container text-center" style="height: 280px;">
                         <input type="hidden" name="user_id" value="${project.user_id}"/>
                         <input type="hidden" name="project_seq" value="${project.project_seq}"/>
-                        <div class="col-md-auto g-0 add" style="height: 80%">
+                        <div class="col-sm-auto g-0 add" style="height: 80%">
                             <c:forEach var="skill" items="${skill.skillList}" varStatus="status">
                                 <c:choose>
                                     <c:when test="${flag ne 1}">
@@ -47,7 +47,7 @@
                         <c:if test="${flag eq 1}">
                             <div class="input-group p-3 justify-content-center">
                                 <input type="text" name="newSkill" class="search-input px-sm-3" maxlength="10">
-                                <button type="button" class="btn btn-secondary add_field"><span class="blind">ADD</span></button>
+                                <button type="button" class="btn btn-secondary add_field"><span class="blind">추가</span></button>
                             </div>
                         </c:if>
                     </div>
@@ -61,6 +61,12 @@
 <script src="/js/bootstrap.bundle.js"></script>
 <script type="text/javascript">
     $(document).ready(function(){
+        $(document).on("keydown", function (e){
+            if(e.which === 13){
+                e.preventDefault();
+                $(".add_field").click();
+            }
+        })
         $(".add_field").click(function(){
            const tarDiv = $(".add");
            let elCount = tarDiv.children().length;

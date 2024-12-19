@@ -18,25 +18,6 @@ public class ProfileVO{
     private String user_role; // 권한
     private String use_yn; // 사용여부
     private int file_seq; // 파일 순번
-    private String edu1_school_name; // 학력1_학교명
-    private String edu1_grad_status; // 학력1_졸업상태
-    private String edu1_start_date; // 학력1_입학년월
-    private String edu1_end_date; // 학력1_졸업년월
-    private String edu1_gubun; // 학력1_구분
-    private String edu2_school_name; // 학력2_학교명
-    private String edu2_grad_status; // 학력2_졸업상태
-    private String edu2_start_date; // 학력2_입학년월
-    private String edu2_end_date; // 학력2_졸업년월
-    private String edu2_gubun; // 학력2_구분
-    private String edu3_school_name; // 학력3_학교명
-    private String edu3_grad_status; // 학력3_졸업상태
-    private String edu3_start_date; // 학력3_입학년월
-    private String edu3_end_date; // 학력3_졸업년월
-    private String edu3_gubun; // 학력3_구분
-    private String major; // 전공
-    private String double_major; // 복수전공
-    private BigDecimal total_grade; // 졸업학점
-    private BigDecimal standard_grade; // 기준학점
 
     // 이력관리
     private int hist_seq; // 이력 순번
@@ -48,6 +29,7 @@ public class ProfileVO{
     private String project_start_date; // 프로젝트 시작일
     private String project_end_date; // 프로젝트 종료일
     private String project_client; // 발주처
+    private String qualification_yn; // 정보처리기사 자격증 여부
 
     // 검색조건
     private String searchType; // 검색타입
@@ -58,6 +40,7 @@ public class ProfileVO{
     private int offset;
     private int limit;
 
+    private List<EduVO> educationList;
     private List<ProjectVO> projectList;
     private List<QualificationVO> qualificationList;
     private List<WorkExperienceVO> workExperienceList;
@@ -174,167 +157,6 @@ public class ProfileVO{
         this.use_yn = use_yn;
     }
 
-    public String getEdu1_school_name() {
-        if(edu1_school_name == null){
-            edu1_school_name = "";
-        }
-        return edu1_school_name;
-    }
-
-    public void setEdu1_school_name(String edu1_school_name) {
-
-        this.edu1_school_name = edu1_school_name;
-    }
-
-    public String getEdu1_grad_status() {
-        return edu1_grad_status;
-    }
-
-    public void setEdu1_grad_status(String edu1_grad_status) {
-        this.edu1_grad_status = edu1_grad_status;
-    }
-
-    public String getEdu1_start_date() {
-        return edu1_start_date;
-    }
-
-    public void setEdu1_start_date(String edu1_start_date) {
-        this.edu1_start_date = edu1_start_date;
-    }
-
-    public String getEdu1_end_date() {
-        return edu1_end_date;
-    }
-
-    public void setEdu1_end_date(String edu1_end_date) {
-        this.edu1_end_date = edu1_end_date;
-    }
-
-    public String getEdu1_gubun() {
-        return edu1_gubun;
-    }
-
-    public void setEdu1_gubun(String edu1_gubun) {
-        this.edu1_gubun = edu1_gubun;
-    }
-
-    public String getEdu2_school_name() {
-        if(edu2_school_name == null)
-            edu2_school_name = "";
-        return edu2_school_name;
-    }
-
-    public void setEdu2_school_name(String edu2_school_name) {
-        this.edu2_school_name = edu2_school_name;
-    }
-
-    public String getEdu2_grad_status() {
-        return edu2_grad_status;
-    }
-
-    public void setEdu2_grad_status(String edu2_grad_status) {
-        this.edu2_grad_status = edu2_grad_status;
-    }
-
-    public String getEdu2_start_date() {
-        return edu2_start_date;
-    }
-
-    public void setEdu2_start_date(String edu2_start_date) {
-        this.edu2_start_date = edu2_start_date;
-    }
-
-    public String getEdu2_end_date() {
-        return edu2_end_date;
-    }
-
-    public void setEdu2_end_date(String edu2_end_date) {
-        this.edu2_end_date = edu2_end_date;
-    }
-
-    public String getEdu2_gubun() {
-        return edu2_gubun;
-    }
-
-    public void setEdu2_gubun(String edu2_gubun) {
-        this.edu2_gubun = edu2_gubun;
-    }
-
-    public String getEdu3_school_name() {
-        if(edu3_school_name == null) {
-            edu3_school_name = "";
-        }
-        return edu3_school_name;
-    }
-
-    public void setEdu3_school_name(String edu3_school_name) {
-        this.edu3_school_name = edu3_school_name;
-    }
-
-    public String getEdu3_grad_status() {
-        return edu3_grad_status;
-    }
-
-    public void setEdu3_grad_status(String edu3_grad_status) {
-        this.edu3_grad_status = edu3_grad_status;
-    }
-
-    public String getEdu3_start_date() {
-        return edu3_start_date;
-    }
-
-    public void setEdu3_start_date(String edu3_start_date) {
-        this.edu3_start_date = edu3_start_date;
-    }
-
-    public String getEdu3_end_date() {
-        return edu3_end_date;
-    }
-
-    public void setEdu3_end_date(String edu3_end_date) {
-        this.edu3_end_date = edu3_end_date;
-    }
-
-    public String getEdu3_gubun() {
-        return edu3_gubun;
-    }
-
-    public void setEdu3_gubun(String edu3_gubun) {
-        this.edu3_gubun = edu3_gubun;
-    }
-
-    public String getMajor() {
-        return major;
-    }
-
-    public void setMajor(String major) {
-        this.major = major;
-    }
-
-    public String getDouble_major() {
-        return double_major;
-    }
-
-    public void setDouble_major(String double_major) {
-        this.double_major = double_major;
-    }
-
-    public BigDecimal getTotal_grade() {
-        return total_grade;
-    }
-
-    public void setTotal_grade(BigDecimal total_grade) {
-        this.total_grade = total_grade;
-    }
-
-    public BigDecimal getStandard_grade() {
-        return standard_grade;
-    }
-
-    public void setStandard_grade(BigDecimal standard_grade) {
-        this.standard_grade = standard_grade;
-    }
-
     public int getHist_seq() {
         return hist_seq;
     }
@@ -391,6 +213,14 @@ public class ProfileVO{
         this.project_client = project_client;
     }
 
+    public String getQualification_yn() {
+        return qualification_yn;
+    }
+
+    public void setQualification_yn(String qualification_yn) {
+        this.qualification_yn = qualification_yn;
+    }
+
     public String getSearchType() {
         if (searchType == null)
             searchType = "";
@@ -441,6 +271,14 @@ public class ProfileVO{
 
     public void setFile_seq(int file_seq) {
         this.file_seq = file_seq;
+    }
+
+    public List<EduVO> getEducationList() {
+        return educationList;
+    }
+
+    public void setEducationList(List<EduVO> educationList) {
+        this.educationList = educationList;
     }
 
     public List<ProjectVO> getProjectList() {

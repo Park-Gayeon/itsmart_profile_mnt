@@ -33,7 +33,7 @@
                 <label for="floatingPassword">PW</label>
             </div>
         </form>
-        <button class="btn btn-dark w-100 py-2" onclick="goLogin()"><span class="basic-medium">Sign in</span></button>
+        <button id="login" class="btn btn-dark w-100 py-2"><span class="basic-medium">로그인</span></button>
     </div>
 </main>
 <!-- main-content -->
@@ -45,6 +45,17 @@
 </body>
 <script src="//code.jquery.com/jquery-3.7.1.min.js"></script>
 <script type="text/javascript">
+    $(document).ready(function(){
+       $(document).on("keydown", function (e){
+           if(e.which === 13){
+               e.preventDefault();
+               $("#login").click();
+           }
+       });
+       $("#login").on("click", function(){
+           goLogin();
+       });
+    });
     function goLogin() {
         const user_id = $("input[name=user_id]").val();
         const user_pw = $("input[name=user_pw]").val();

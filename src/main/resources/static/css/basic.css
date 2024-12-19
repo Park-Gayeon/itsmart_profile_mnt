@@ -97,7 +97,7 @@ h2, button span {
     display: flex;
     align-items: flex-end;
     justify-content: space-between;
-    font-size: 15px;
+    font-size: 16px;
 }
 
 .container header.description .primary-btn {
@@ -110,6 +110,10 @@ h2, button span {
     display: flex;
     align-items: center;
     gap: 5px;
+}
+
+.left-group span {
+    font-size: 14px;
 }
 
 .description .right-group {
@@ -221,8 +225,7 @@ h2, button span {
 }
 
 .table-responsive header {
-    font-size: 12px;
-    font-weight: bold;
+    font-size: 15px;
     color: var(--bs-gray-700);
     margin-bottom: 5px;
 }

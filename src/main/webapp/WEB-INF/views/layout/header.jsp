@@ -49,9 +49,8 @@
                                 <strong>${loginUser}</strong>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
-                                <!-- TODO : login 페이지 이동 -->
-                                <li><a class="dropdown-item" style="cursor:pointer;" onclick="logout()">Sign out
-                                </a></li>
+                                <li><a class="dropdown-item" style="cursor:pointer;" onclick="changePw(`${loginUser}`)">비밀번호변경</a></li>
+                                <li><a class="dropdown-item" style="cursor:pointer;" onclick="logout()">Sign out</a></li>
                             </ul>
                         </div>
                         <!-- drop down 끝 -->

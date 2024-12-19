@@ -10,7 +10,6 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <title>직원 프로필관리 시스템</title>
 </head>
-
 <body>
 <!-- header.jsp -->
 <%@ include file="layout/header.jsp" %>
@@ -41,8 +40,6 @@
             $('.nav-link').removeClass('active');
         })
     });
-
-
 </script>
 </body>
 </html>
