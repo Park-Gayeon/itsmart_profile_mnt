@@ -8,7 +8,6 @@
                                       CODE_VALUE,
                                       PARENT_ID,
                                       LEVEL,
-#                               CAST(CODE_VALUE AS CHAR)       AS HIERARCHY_VALUE,
                                       CODE_VALUE AS HIERARCHY_VALUE,
                                       CAST(CODE_VALUE AS CHAR(1000)) AS FULL_PATH
                                FROM TB_COMMON_CODE
@@ -19,7 +18,6 @@
                                       C.CODE_VALUE,
                                       C.PARENT_ID,
                                       C.LEVEL,
-#                               CONCAT(REPEAT('     ', C.LEVEL), C.CODE_VALUE) AS HIERARCHY_VALUE,
                                       C.CODE_VALUE AS HIERARCHY_VALUE,
                                       CONCAT(CH.FULL_PATH, ' > ', C.CODE_VALUE)   AS FULL_PATH
                                FROM TB_COMMON_CODE C
@@ -36,8 +34,8 @@
              , CD.CODE_VALUE AS USER_POSITION_NM
              , CD.CODE_ID
         FROM TB_USER_PROFILE_INFO U
-             LEFT JOIN TB_COMMON_CODE CD ON U.USER_POSITION = CD.CODE_ID
-        AND CD.CODE_GROUP_ID = 'PSIT'
+             LEFT JOIN TB_COMMON_CODE CD ON U.USER_POSITION = CD.CODE_ID AND CD.CODE_GROUP_ID = 'PSIT'
+        WHERE U.use_yn = 'Y'
         ORDER BY CODE_ID DESC, HIRE_DATE
     </select>
 

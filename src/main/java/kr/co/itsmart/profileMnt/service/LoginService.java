@@ -13,4 +13,6 @@ public interface LoginService {
 
     void changeUsrPassword(Map<String, String> params);
 
+    void deleteUsr(String user_id);
+
 }

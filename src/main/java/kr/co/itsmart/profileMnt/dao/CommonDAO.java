@@ -6,6 +6,7 @@ import kr.co.itsmart.profileMnt.vo.LoginVO;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 import java.util.Map;
@@ -28,7 +29,7 @@ public interface CommonDAO {
     void insertUsrFileInfo(FileVO file);
 
     /* 로그인 유저 조회 */
-    @Select("SELECT USER_ID, USER_PW, USER_ROLE FROM TB_USER_PROFILE_INFO WHERE USER_ID = #{user_id}")
+    @Select("SELECT USER_ID, USER_PW, USER_ROLE FROM TB_USER_PROFILE_INFO WHERE USER_ID = #{user_id} AND USE_YN = 'Y'")
     Optional<LoginVO> getUsrInfo(String user_id);
 
     /* 로그인 유저 token 조회 */
@@ -44,5 +45,9 @@ public interface CommonDAO {
 
     /* Password 변경 저장 */
     void changeUsrPassword(Map<String, String> params);
+
+    /* 회원 삭제 */
+    @Update("UPDATE TB_USER_PROFILE_INFO SET USE_YN = 'N' WHERE USER_ID = #{user_id}")
+    void deleteUsr(String user_id);
 
 }
