@@ -16,7 +16,7 @@
         <div class="container-info row-box row mb-0 g-0">
             <h2 class="header">직원 등록
                 <div class="description" >
-                    <button type="button" class="btn btn-success" onclick="save()">SAVE</button>
+                    <button type="button" class="btn btn-success" onclick="save()">저장</button>
                 </div>
             </h2>
 
@@ -32,7 +32,7 @@
                                 <input type="file" id="imgFile" name="imgFile" class="d-md-none" accept=".jpg, .png, .jpeg"/>
                         </div>
                         <!-- 개인정보 -->
-                        <div class="col-md-auto g-0">
+                        <div class="col-sm-auto g-0">
                             <!-- 첫번째 row -->
                             <div class="row mb-2 g-0">
                                 <div class="col-sm-2 common-box common-box input-box pt-4 me-2">
@@ -192,19 +192,18 @@
                 data: data,
                 processData: flag,
                 contentType: flag ? "application/x-www-form-urlencoded; charset=UTF-8" : false,
-                    success: function(response){
-                    if(response === "SUCCESS"){
-                        alert("저장되었습니다.");
-                        if (window.opener && !window.opener.closed) {
-                            window.opener.location.reload(); // 부모 창 리로드
-                        }
-                        window.close(); // 자식 창 닫기
-                    } else {
-                        alert(response);
+                success: function(){
+                    alert("저장되었습니다.");
+                    if (window.opener && !window.opener.closed) {
+                        window.opener.location.reload(); // 부모 창 리로드
                     }
+                    window.close(); // 자식 창 닫기
                 },
-                error: function (){
-                    alert("서버 오류가 발생했습니다. 다시 시도해 주세요");
+                error: function (response){
+                    alert(response.responseText);
+                    $("input[name=user_id]").val('');
+                    $("input[name=user_email]").val('');
+                    return;
                 }
             });
         }

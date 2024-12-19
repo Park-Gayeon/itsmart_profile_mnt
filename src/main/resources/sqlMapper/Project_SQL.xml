@@ -14,7 +14,7 @@
     <insert id="updateUsrProjectInfo" parameterType="projectVO">
         INSERT INTO TB_PROJECT_INFO(USER_ID, PROJECT_SEQ, PROJECT_NM, PROJECT_START_DATE, PROJECT_END_DATE,
                                     PROJECT_ROLE, PROJECT_CLIENT, ASSIGNED_TASK_LAR, ASSIGNED_TASK_MID,
-                                    CREATE_DATE, MODIFIED_DATE, CREATOR, MODIFIER)
+                                    CREATED_DATE, MODIFIED_DATE, CREATOR, MODIFIER)
         VALUES (#{user_id},
                 #{project_seq},
                 #{project_nm},
@@ -43,7 +43,7 @@
     <insert id="insertUsrProjectInfoHist" parameterType="projectVO">
         INSERT INTO TB_PROJECT_INFO_HIST(USER_ID, PROJECT_SEQ, HIST_SEQ, PROJECT_NM, PROJECT_START_DATE,
                                          PROJECT_END_DATE, PROJECT_ROLE, PROJECT_CLIENT, ASSIGNED_TASK_LAR,
-                                         ASSIGNED_TASK_MID, CREATE_DATE, CREATOR)
+                                         ASSIGNED_TASK_MID, CREATED_DATE, CREATOR)
         SELECT user_id,
                project_seq,
                #{hist_seq},

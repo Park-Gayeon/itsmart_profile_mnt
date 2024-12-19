@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class GlobalExceptionHandler {
 
     // 로그인 관련 사용자 정의 예외 처리
-    @ExceptionHandler(CustomAuthenticationException.class)
-    public ResponseEntity<String> customException(CustomAuthenticationException e){
+    @ExceptionHandler(CustomException.class)
+    public ResponseEntity<String> customException(CustomException e){
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(e.getMessage());
     }

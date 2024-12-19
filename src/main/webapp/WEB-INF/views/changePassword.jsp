@@ -16,7 +16,7 @@
         <div class="container-info row-box row mb-0 g-0">
             <h2 class="header">비밀번호 변경
                 <div class="description">
-                    <button type="button" class="btn btn-success" onclick="save()">SAVE</button>
+                    <button type="button" class="btn btn-success" onclick="save()">저장</button>
                 </div>
             </h2>
 
@@ -24,7 +24,7 @@
                 <div class="container text-center">
                     <form id="frm">
                         <!-- 개인정보 -->
-                        <div class="col-md-auto g-0">
+                        <div class="col-sm-auto g-0">
                             <div class="row mb-2 g-0">
                                 <div class="col-sm common-box common-box input-box pt-4">
                                     <span>NEW PASSWORD</span>

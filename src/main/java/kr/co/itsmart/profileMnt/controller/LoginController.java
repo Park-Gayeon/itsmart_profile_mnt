@@ -88,9 +88,15 @@ public class LoginController {
         params.put("user_pw", key);
         params.put("modifier", login.getUser_id());
 
-        logger.info("데이터는 ? :{}", key);
-
         loginService.changeUsrPassword(params);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/delete/{user_id}")
+    public ResponseEntity<Object> deleteUsr(@PathVariable("user_id") String user_id){
+        logger.info("== Ajax[사용자 삭제 처리] ==");
+        loginService.deleteUsr(user_id);
 
         return ResponseEntity.ok().build();
     }

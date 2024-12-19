@@ -13,25 +13,6 @@
         <result property="hire_date" column="HIRE_DATE"/>
         <result property="user_phone" column="USER_PHONE"/>
         <result property="user_address" column="USER_ADDRESS"/>
-        <result property="edu1_school_name" column="EDU1_SCHOOL_NAME"/>
-        <result property="edu1_grad_status" column="EDU1_GRAD_STATUS"/>
-        <result property="edu1_start_date" column="EDU1_START_DATE"/>
-        <result property="edu1_end_date" column="EDU1_END_DATE"/>
-        <result property="edu1_gubun" column="EDU1_GUBUN"/>
-        <result property="edu2_school_name" column="EDU2_SCHOOL_NAME"/>
-        <result property="edu2_grad_status" column="EDU2_GRAD_STATUS"/>
-        <result property="edu2_start_date" column="EDU2_START_DATE"/>
-        <result property="edu2_end_date" column="EDU2_END_DATE"/>
-        <result property="edu2_gubun" column="EDU2_GUBUN"/>
-        <result property="edu3_school_name" column="EDU3_SCHOOL_NAME"/>
-        <result property="edu3_grad_status" column="EDU3_GRAD_STATUS"/>
-        <result property="edu3_start_date" column="EDU3_START_DATE"/>
-        <result property="edu3_end_date" column="EDU3_END_DATE"/>
-        <result property="edu3_gubun" column="EDU3_GUBUN"/>
-        <result property="major" column="MAJOR"/>
-        <result property="double_major" column="DOUBLE_MAJOR"/>
-        <result property="total_grade" column="TOTAL_GRADE"/>
-        <result property="standard_grade" column="STANDARD_GRADE"/>
         <association column="user_id" property="fileInfo" javaType="FileVO">
             <result property="file_seq" column="FILE_SEQ"/>
             <result property="file_ori_nm" column="FILE_ORI_NM"/>
@@ -39,6 +20,19 @@
             <result property="file_sver_path" column="FILE_SVER_PATH"/>
             <result property="file_extension" column="FILE_EXTENSION"/>
         </association>
+        <collection column="user_id" property="educationList" javaType="List" ofType="EduVO"
+                    select="selectUsrEducationList">
+            <result property="school_seq" column="SCHOOL_SEQ"/>
+            <result property="school_gubun" column="SCHOOL_GUBUN"/>
+            <result property="school_nm" column="SCHOOL_NM"/>
+            <result property="school_start_date" column="SCHOOL_START_DATE"/>
+            <result property="school_end_date" column="SCHOOL_END_DATE"/>
+            <result property="major" column="MAJOR"/>
+            <result property="double_major" column="DOUBLE_MAJOR"/>
+            <result property="total_grade" column="TOTAL_GRADE"/>
+            <result property="standard_grade" column="STANDARD_GRADE"/>
+            <result property="grad_status" column="GRAD_STATUS"/>
+        </collection>
         <collection column="user_id" property="projectList" javaType="List" ofType="ProjectVO"
                     select="selectUsrProjectList">
             <result property="project_seq" column="PROJECT_SEQ"/>
@@ -64,6 +58,8 @@
                     select="selectUsrWorkList">
             <result property="work_seq" column="WORK_SEQ"/>
             <result property="work_place" column="WORK_PLACE"/>
+            <result property="work_assigned_task" column="WORK_ASSIGNED_TASK"/>
+            <result property="work_position" column="WORK_POSITION"/>
             <result property="work_start_date" column="WORK_START_DATE"/>
             <result property="word_end_date" column="WORD_END_DATE"/>
         </collection>
@@ -89,25 +85,6 @@
             PF.HIRE_DATE                         AS HIRE_DATE,
             PF.USER_PHONE                        AS USER_PHONE,
             PF.USER_ADDRESS                      AS USER_ADDRESS,
-            PF.EDU1_SCHOOL_NAME                  AS EDU1_SCHOOL_NAME,
-            PF.EDU1_GRAD_STATUS                  AS EDU1_GRAD_STATUS,
-            PF.EDU1_START_DATE                   AS EDU1_START_DATE,
-            PF.EDU1_END_DATE                     AS EDU1_END_DATE,
-            PF.EDU1_GUBUN                        AS EDU1_GUBUN,
-            PF.EDU2_SCHOOL_NAME                  AS EDU2_SCHOOL_NAME,
-            PF.EDU2_GRAD_STATUS                  AS EDU2_GRAD_STATUS,
-            PF.EDU2_START_DATE                   AS EDU2_START_DATE,
-            PF.EDU2_END_DATE                     AS EDU2_END_DATE,
-            PF.EDU2_GUBUN                        AS EDU2_GUBUN,
-            PF.EDU3_SCHOOL_NAME                  AS EDU3_SCHOOL_NAME,
-            PF.EDU3_GRAD_STATUS                  AS EDU3_GRAD_STATUS,
-            PF.EDU3_START_DATE                   AS EDU3_START_DATE,
-            PF.EDU3_END_DATE                     AS EDU3_END_DATE,
-            PF.EDU3_GUBUN                        AS EDU2_GUBUN,
-            PF.MAJOR                             AS MAJOR,
-            PF.DOUBLE_MAJOR                      AS DOUBLE_MAJOR,
-            PF.TOTAL_GRADE                       AS TOTAL_GRADE,
-            PF.STANDARD_GRADE                    AS STANDARD_GRADE,
 
             /* 파일 */
             AT.FILE_ORI_NM                       AS FILE_ORI_NM,
@@ -121,6 +98,21 @@
         WHERE PF.USER_ID = #{user_id}
           AND PF.USE_YN = 'Y'
         ]]>
+    </select>
+
+    <!-- profile + educationList -->
+    <select id="selectUsrEducationList" resultType="EduVO">
+        SELECT SCHOOL_GUBUN,
+               SCHOOL_NM,
+               SCHOOL_START_DATE,
+               SCHOOL_END_DATE,
+               MAJOR,
+               DOUBLE_MAJOR,
+               TOTAL_GRADE,
+               STANDARD_GRADE,
+               GRAD_STATUS
+        FROM TB_USER_EDUCATION_INFO
+        WHERE USER_ID = #{user_id}
     </select>
 
     <!-- profile + projectList -->
@@ -166,6 +158,8 @@
     <select id="selectUsrWorkList" resultType="workExperienceVO">
         SELECT WORK_SEQ,
                WORK_PLACE,
+               WORK_ASSIGNED_TASK,
+               WORK_POSITION,
                WORK_START_DATE,
                WORK_END_DATE
         FROM TB_WORK_EXPERIENCE_INFO
@@ -185,40 +179,37 @@
                                 FROM TB_ATTACHMENT_INFO
                                 WHERE USER_ID = #{user_id}
                                   AND USE_YN = 'Y'),
-            EDU1_SCHOOL_NAME = #{edu1_school_name},
-            EDU1_GRAD_STATUS = #{edu1_grad_status},
-            EDU1_START_DATE  = #{edu1_start_date},
-            EDU1_END_DATE    = #{edu1_end_date},
-            EDU1_GUBUN       = #{edu1_gubun},
-            EDU2_SCHOOL_NAME = #{edu2_school_name},
-            EDU2_GRAD_STATUS = #{edu2_grad_status},
-            EDU2_START_DATE  = #{edu2_start_date},
-            EDU2_END_DATE    = #{edu2_end_date},
-            EDU2_GUBUN       = #{edu2_gubun},
-            EDU3_SCHOOL_NAME = #{edu3_school_name},
-            EDU3_GRAD_STATUS = #{edu3_grad_status},
-            EDU3_START_DATE  = #{edu3_start_date},
-            EDU3_END_DATE    = #{edu3_end_date},
-            EDU3_GUBUN       = #{edu3_gubun},
-            MAJOR            = #{major},
-            DOUBLE_MAJOR     = #{double_major},
-            TOTAL_GRADE      = #{total_grade},
-            STANDARD_GRADE   = #{standard_grade},
             MODIFIED_DATE    = now(),
             MODIFIER         = #{user_id}
         WHERE USER_ID = #{user_id}
           AND USE_YN = 'Y'
     </update>
 
+    <!--updateUsrEducationInfo : 직원 학력 정보테이블 INSERT-->
+    <insert id="updateUsrEducationInfo" parameterType="EduVO">
+        INSERT INTO TB_USER_EDUCATION_INFO(user_id, school_seq, school_gubun, school_nm, school_start_date,
+                                           school_end_date, major, total_grade,
+                                           grad_status, created_date, modified_date, creator, modifier)
+        VALUES (#{user_id},
+                #{school_seq},
+                #{school_gubun},
+                #{school_nm},
+                #{school_start_date},
+                #{school_end_date},
+                #{major},
+                #{total_grade},
+                #{grad_status},
+                now(),
+                now(),
+                #{user_id},
+                #{user_id}
+               )
+    </insert>
+
     <!-- insertUsrProfileInfoHist : 직원 프로필 정보 이력 테이블 INSERT -->
     <insert id="insertUsrProfileInfoHist" parameterType="profileVO">
         INSERT INTO TB_USER_PROFILE_INFO_HIST(USER_ID, HIST_SEQ, USER_NM, USER_POSITION, USER_BIRTH, USER_DEPARTMENT,
-                                              HIRE_DATE, USER_PHONE, USER_ADDRESS, FILE_SEQ, EDU1_SCHOOL_NAME,
-                                              EDU1_GRAD_STATUS, EDU1_START_DATE, EDU1_END_DATE, EDU1_GUBUN,
-                                              EDU2_SCHOOL_NAME, EDU2_GRAD_STATUS, EDU2_START_DATE, EDU2_END_DATE,
-                                              EDU2_GUBUN, EDU3_SCHOOL_NAME, EDU3_GRAD_STATUS, EDU3_START_DATE,
-                                              EDU3_END_DATE, EDU3_GUBUN, MAJOR, DOUBLE_MAJOR, TOTAL_GRADE,
-                                              STANDARD_GRADE, CREATE_DATE, CREATOR)
+                                              HIRE_DATE, USER_PHONE, USER_ADDRESS, FILE_SEQ, CREATED_DATE, CREATOR)
         SELECT USER_ID,
                #{hist_seq},
                USER_NM,
@@ -229,30 +220,36 @@
                USER_PHONE,
                USER_ADDRESS,
                FILE_SEQ,
-               EDU1_SCHOOL_NAME,
-               EDU1_GRAD_STATUS,
-               EDU1_START_DATE,
-               EDU1_END_DATE,
-               EDU1_GUBUN,
-               EDU2_SCHOOL_NAME,
-               EDU2_GRAD_STATUS,
-               EDU2_START_DATE,
-               EDU2_END_DATE,
-               EDU2_GUBUN,
-               EDU3_SCHOOL_NAME,
-               EDU3_GRAD_STATUS,
-               EDU3_START_DATE,
-               EDU3_END_DATE,
-               EDU3_GUBUN,
-               MAJOR,
-               DOUBLE_MAJOR,
-               TOTAL_GRADE,
-               STANDARD_GRADE,
                now(),
                #{user_id}
         FROM TB_USER_PROFILE_INFO
         WHERE USER_ID = #{user_id}
           AND USE_YN = 'Y'
+    </insert>
+
+
+    <!-- insertUsrEducationInfoHist : 직원 학력 정보 이력 테이블 INSERT -->
+    <insert id="insertUsrEducationInfoHist" parameterType="EduVO">
+        INSERT INTO TB_USER_EDUCATION_INFO_HIST(USER_ID, SCHOOL_SEQ, HIST_SEQ, SCHOOL_GUBUN, SCHOOL_NM, SCHOOL_START_DATE,
+                                                SCHOOL_END_DATE, MAJOR, DOUBLE_MAJOR, TOTAL_GRADE, STANDARD_GRADE,
+                                                GRAD_STATUS, CREATED_DATE, CREATOR)
+        SELECT USER_ID,
+               SCHOOL_SEQ,
+               #{hist_seq},
+               SCHOOL_GUBUN,
+               SCHOOL_NM,
+               SCHOOL_START_DATE,
+               SCHOOL_END_DATE,
+               MAJOR,
+               DOUBLE_MAJOR,
+               TOTAL_GRADE,
+               STANDARD_GRADE,
+               GRAD_STATUS,
+               now(),
+               #{user_id}
+        FROM TB_USER_EDUCATION_INFO
+        WHERE SCHOOL_SEQ = #{school_seq}
+          AND USER_ID = #{user_id}
     </insert>
 
     <!-- getUsrProfileInfoList : 직원 프로필 정보 목록 SELECT -->
@@ -261,12 +258,18 @@
                TB.*
         from (select pf.user_id,
                      pf.user_nm,
-                     pf.create_date,
+                     pf.created_date,
                      cd.code_value                                                                   as user_department_nm,
                      pj.project_nm,
                      pj.project_start_date,
                      pj.project_end_date,
                      pj.project_client,
+                    exists(
+                            select 1
+                            from TB_USER_QUALIFICATION_INFO ql
+                            where pf.user_id = ql.user_id
+                            and trim(ql.qualification_nm) = '정보처리기사'
+                    ) as qualification_yn,
                      row_number() over (partition by pf.user_id order by pj.project_start_date desc) as no
               from TB_USER_PROFILE_INFO pf
                        left join (select user_id,
@@ -296,9 +299,10 @@
                       </otherwise>
                   </choose>
               </if>
+             AND pf.use_yn = 'Y'
              ) TB
         where TB.no = 1
-        order by create_date
+        order by created_date
         LIMIT #{limit} OFFSET #{offset}
     </select>
 
@@ -309,6 +313,7 @@
                  JOIN TB_COMMON_CODE CD
                       ON PF.USER_DEPARTMENT = CD.CODE_ID
         WHERE CD.CODE_GROUP_ID = 'ORG'
+          AND PF.use_yn = 'Y'
         <if test="searchText != ''">
             <choose>
                 <when test="searchType == 'userNm'">
@@ -334,7 +339,7 @@
     <!-- insertUsrProfile : 신규 직원 프로필 등록  -->
     <insert id="insertUsrProfile" parameterType="profileVO">
         INSERT INTO TB_USER_PROFILE_INFO(user_id, user_pw, user_nm, user_position, user_birth, user_department,
-                                         hire_date, user_phone, user_address, file_seq, create_date, modified_date,
+                                         hire_date, user_phone, user_address, file_seq, created_date, modified_date,
                                          creator, modifier)
         VALUES (#{user_id},
                 #{user_pw},

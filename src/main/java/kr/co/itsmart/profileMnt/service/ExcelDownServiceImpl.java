@@ -143,59 +143,34 @@ public class ExcelDownServiceImpl implements ExcelDownService {
 
             sheet.createRow(rowCount++); // 여백
 
-            // 학력사항이 비어있지 않다면
-            if(!profile.getEdu1_school_name().isEmpty()){
+            // 학력 list 가 비어있지 않다면
+            if(profile.getEducationList() != null){
                 // 엑셀[학력]
                 Row schoolInfo = sheet.createRow(rowCount++);
                 applyCellStyle(schoolInfo, 0, "학력", titleStyle);
-                sheet.addMergedRegion(new CellRangeAddress(rowCount -1, rowCount -1, 0, 8));
+                sheet.addMergedRegion(new CellRangeAddress(rowCount -1, rowCount -1, 0, 6));
 
                 // 엑셀[학력] header
                 Row schoolHeader = sheet.createRow(rowCount++);
                 applyCellStyle(schoolHeader, 0, "학교구분", headerStyle);
                 applyCellStyle(schoolHeader, 1, "학교명", headerStyle);
-                applyCellStyle(schoolHeader, 2, "입학년월", headerStyle);
-                applyCellStyle(schoolHeader, 3, "졸업년월", headerStyle);
-                applyCellStyle(schoolHeader, 4, "졸업상태", headerStyle);
-                applyCellStyle(schoolHeader, 5, "전공명", headerStyle);
-                applyCellStyle(schoolHeader, 6, "복수전공명", headerStyle);
-                applyCellStyle(schoolHeader, 7, "학점", headerStyle);
-                applyCellStyle(schoolHeader, 8, "총점", headerStyle);
+                applyCellStyle(schoolHeader, 2, "전공명", headerStyle);
+                applyCellStyle(schoolHeader, 3, "학점", headerStyle);
+                applyCellStyle(schoolHeader, 4, "입학일자", headerStyle);
+                applyCellStyle(schoolHeader, 5, "졸업일자", headerStyle);
+                applyCellStyle(schoolHeader, 6, "졸업상태", headerStyle);
 
-                // 엑셀[학력] data
-                Row schoolData = sheet.createRow(rowCount++);
-                applyCellStyle(schoolData, 0, gubunKor(profile.getEdu1_gubun()), contentStyle);
-                applyCellStyle(schoolData, 1, profile.getEdu1_school_name(), contentStyle);
-                applyCellStyle(schoolData, 2, formatDate(profile.getEdu1_start_date()), contentStyle);
-                applyCellStyle(schoolData, 3, formatDate(profile.getEdu1_end_date()), contentStyle);
-                applyCellStyle(schoolData, 4, statusKor(profile.getEdu1_grad_status()), contentStyle);
-
-                if(!profile.getEdu2_school_name().isEmpty()){
+                for(EduVO edu : profile.getEducationList()){
                     // 엑셀[학력] data
-                    Row schoolData2 = sheet.createRow(rowCount++);
-                    applyCellStyle(schoolData2, 0, gubunKor(profile.getEdu2_gubun()), contentStyle);
-                    applyCellStyle(schoolData2, 1, profile.getEdu2_school_name(), contentStyle);
-                    applyCellStyle(schoolData2, 2, formatDate(profile.getEdu2_start_date()), contentStyle);
-                    applyCellStyle(schoolData2, 3, formatDate(profile.getEdu2_end_date()), contentStyle);
-                    applyCellStyle(schoolData2, 4, statusKor(profile.getEdu2_grad_status()), contentStyle);
+                    Row schoolData = sheet.createRow(rowCount++);
+                    applyCellStyle(schoolData, 0, gubunKor(edu.getSchool_gubun()), contentStyle);
+                    applyCellStyle(schoolData, 1, edu.getSchool_nm(), contentStyle);
+                    applyCellStyle(schoolData, 2, edu.getMajor(), contentStyle);
+                    applyCellStyle(schoolData, 3, castType(edu.getTotal_grade()), contentStyle);
+                    applyCellStyle(schoolData, 4, formatDate(edu.getSchool_start_date()), contentStyle);
+                    applyCellStyle(schoolData, 5, formatDate(edu.getSchool_end_date()), contentStyle);
+                    applyCellStyle(schoolData, 6, statusKor(edu.getGrad_status()), contentStyle);
                 }
-
-                if(!profile.getEdu3_school_name().isEmpty()){
-                    // 엑셀[학력] data
-                    Row schoolData3 = sheet.createRow(rowCount++);
-                    applyCellStyle(schoolData3, 0, gubunKor(profile.getEdu3_gubun()), contentStyle);
-                    applyCellStyle(schoolData3, 1, profile.getEdu3_school_name(), contentStyle);
-                    applyCellStyle(schoolData3, 2, formatDate(profile.getEdu3_start_date()), contentStyle);
-                    applyCellStyle(schoolData3, 3, formatDate(profile.getEdu3_end_date()), contentStyle);
-                    applyCellStyle(schoolData3, 4, statusKor(profile.getEdu3_grad_status()), contentStyle);
-                }
-                int lastRowIndex = rowCount -1; // 마지막 학력 데이터 행
-                Row lastSchoolData = sheet.getRow(lastRowIndex);
-                applyCellStyle(lastSchoolData, 5, profile.getMajor(), contentStyle);
-                applyCellStyle(lastSchoolData, 6, profile.getDouble_major(), contentStyle);
-                applyCellStyle(lastSchoolData, 7, castType(profile.getStandard_grade()), contentStyle);
-                applyCellStyle(lastSchoolData, 8, castType(profile.getTotal_grade()), contentStyle);
-
                 sheet.createRow(rowCount++); // 여백
             }
 
@@ -229,20 +204,24 @@ public class ExcelDownServiceImpl implements ExcelDownService {
                 // 엑셀[근무경력]
                 Row workInfo = sheet.createRow(rowCount++);
                 applyCellStyle(workInfo, 0, "근무경력", titleStyle);
-                sheet.addMergedRegion(new CellRangeAddress(rowCount -1, rowCount -1, 0, 2));
+                sheet.addMergedRegion(new CellRangeAddress(rowCount -1, rowCount -1, 0, 4));
 
                 // 엑셀[근무경력] header
                 Row workInfoHeader = sheet.createRow(rowCount++);
                 applyCellStyle(workInfoHeader, 0, "회사명", headerStyle);
-                applyCellStyle(workInfoHeader, 1, "입사일자", headerStyle);
-                applyCellStyle(workInfoHeader, 2, "퇴사일자", headerStyle);
+                applyCellStyle(workInfoHeader, 1, "직급", headerStyle);
+                applyCellStyle(workInfoHeader, 2, "담당업무", headerStyle);
+                applyCellStyle(workInfoHeader, 3, "입사일자", headerStyle);
+                applyCellStyle(workInfoHeader, 4, "퇴사일자", headerStyle);
 
                 for(WorkExperienceVO work : profile.getWorkExperienceList()){
                     // 엑셀[근무경력] data
                     Row workData = sheet.createRow(rowCount++);
                     applyCellStyle(workData, 0, work.getWork_place(), contentStyle);
-                    applyCellStyle(workData, 1, formatDate(work.getWork_start_date()), contentStyle);
-                    applyCellStyle(workData, 2, formatDate(work.getWork_end_date()), contentStyle);
+                    applyCellStyle(workData, 1, work.getWork_position(), contentStyle);
+                    applyCellStyle(workData, 2, work.getWork_assigned_task(), contentStyle);
+                    applyCellStyle(workData, 3, formatDate(work.getWork_start_date()), contentStyle);
+                    applyCellStyle(workData, 4, formatDate(work.getWork_end_date()), contentStyle);
                 }
                 sheet.createRow(rowCount++); // 여백
             }

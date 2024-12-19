@@ -16,12 +16,12 @@
         <div class="container-info row-box row mb-0 g-0">
             <h2 class="header">수행이력 작성
                 <div class="description" >
-                    <button class="btn btn-success" onclick="sendDataToParent()"><span>SAVE</span></button>
+                    <button class="btn btn-success" onclick="sendDataToParent()"><span>저장</span></button>
                 </div>
             </h2>
             <div class="py-3">
                 <form>
-                    <div class="col-md-auto g-0">
+                    <div class="col-sm-auto g-0">
                         <div class="row mb-2 g-0">
                             <input type="hidden" id="project_seq" name="project_seq" value="${maxSeq}"/>
                             <div class="col-sm-4 common-box common-box input-box pt-4 me-2">

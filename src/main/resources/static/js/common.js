@@ -216,3 +216,9 @@ function logout() {
         }
     });
 }
+
+function changePw(user_id) {
+    let url = "/auth/change/password/" + user_id;
+    let properties = "width=600, height=220";
+    window.open(url, "changePassword", properties);
+}

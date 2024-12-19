@@ -1,10 +1,7 @@
 package kr.co.itsmart.profileMnt.controller;
 
 import kr.co.itsmart.profileMnt.service.*;
-import kr.co.itsmart.profileMnt.vo.CommonVO;
-import kr.co.itsmart.profileMnt.vo.FileVO;
-import kr.co.itsmart.profileMnt.vo.LoginVO;
-import kr.co.itsmart.profileMnt.vo.ProfileVO;
+import kr.co.itsmart.profileMnt.vo.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Lazy;
@@ -77,7 +74,7 @@ public class ProfileMntController {
     }
 
     @PostMapping("/save/{user_id}")
-    @ResponseBody
+
     public ResponseEntity<String> updateUsrProfile(@PathVariable("user_id") String user_id,
                                            @ModelAttribute ProfileVO profile,
                                            @RequestParam(required = false, value = "imgFile") MultipartFile file) {

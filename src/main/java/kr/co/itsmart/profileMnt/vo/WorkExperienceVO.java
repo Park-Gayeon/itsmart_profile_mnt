@@ -4,6 +4,8 @@ public class WorkExperienceVO {
     private String user_id; // 직원 아이디
     private int work_seq; // 근무지 순번
     private String work_place; // 근무지
+    private String work_assigned_task; // 담당업무
+    private String work_position; // 직급
     private String work_start_date; // 입사일자
     private String work_end_date; // 퇴사일자
     private String use_yn; // 사용여부
@@ -42,6 +44,22 @@ public class WorkExperienceVO {
 
     public void setWork_place(String work_place) {
         this.work_place = work_place;
+    }
+
+    public String getWork_assigned_task() {
+        return work_assigned_task;
+    }
+
+    public void setWork_assigned_task(String work_assigned_task) {
+        this.work_assigned_task = work_assigned_task;
+    }
+
+    public String getWork_position() {
+        return work_position;
+    }
+
+    public void setWork_position(String work_position) {
+        this.work_position = work_position;
     }
 
     public String getWork_start_date() {
