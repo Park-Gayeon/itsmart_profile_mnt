@@ -192,19 +192,18 @@
                 data: data,
                 processData: flag,
                 contentType: flag ? "application/x-www-form-urlencoded; charset=UTF-8" : false,
-                    success: function(response){
-                    if(response === "SUCCESS"){
-                        alert("저장되었습니다.");
-                        if (window.opener && !window.opener.closed) {
-                            window.opener.location.reload(); // 부모 창 리로드
-                        }
-                        window.close(); // 자식 창 닫기
-                    } else {
-                        alert(response);
+                success: function(){
+                    alert("저장되었습니다.");
+                    if (window.opener && !window.opener.closed) {
+                        window.opener.location.reload(); // 부모 창 리로드
                     }
+                    window.close(); // 자식 창 닫기
                 },
-                error: function (){
-                    alert("서버 오류가 발생했습니다. 다시 시도해 주세요");
+                error: function (response){
+                    alert(response.responseText);
+                    $("input[name=user_id]").val('');
+                    $("input[name=user_email]").val('');
+                    return;
                 }
             });
         }

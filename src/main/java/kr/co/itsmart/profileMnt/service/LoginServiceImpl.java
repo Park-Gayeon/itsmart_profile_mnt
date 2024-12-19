@@ -2,7 +2,7 @@ package kr.co.itsmart.profileMnt.service;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
-import kr.co.itsmart.profileMnt.configuration.handler.CustomAuthenticationException;
+import kr.co.itsmart.profileMnt.configuration.handler.CustomException;
 import kr.co.itsmart.profileMnt.configuration.security.provider.JwtService;
 import kr.co.itsmart.profileMnt.dao.CommonDAO;
 import kr.co.itsmart.profileMnt.vo.LoginVO;
@@ -81,10 +81,10 @@ public class LoginServiceImpl implements LoginService {
 
         } catch (UsernameNotFoundException e) {
             LOGGER.error("[authenticationManager.authenticate] 사용자를 찾을 수 없습니다.");
-            throw new CustomAuthenticationException("사용자를 찾을 수 없습니다");
+            throw new CustomException("사용자를 찾을 수 없습니다");
         } catch (BadCredentialsException e) {
             LOGGER.error("[authenticationManager.authenticate] 비밀번호가 일치하지 않습니다");
-            throw new CustomAuthenticationException("비밀번호가 일치하지 않습니다");
+            throw new CustomException("비밀번호가 일치하지 않습니다");
         }
     }
 
@@ -108,5 +108,10 @@ public class LoginServiceImpl implements LoginService {
 
         params.put("user_pw", encodedPassword);
         commonDAO.changeUsrPassword(params);
+    }
+
+    @Override
+    public void deleteUsr(String user_id) {
+        commonDAO.deleteUsr(user_id);
     }
 }
