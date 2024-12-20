@@ -371,8 +371,8 @@ public class ExcelDownServiceImpl implements ExcelDownService {
                 applyCellStyle(listData, 4, nullChange(profile.getProject_nm()), contentStyle);
                 applyCellStyle(listData, 5, nullChange(profile.getProject_start_date()) == ""? "": formatDate(profile.getProject_start_date()), contentStyle);
                 applyCellStyle(listData, 6, nullChange(profile.getProject_end_date()) == "" ? "" : formatDate(profile.getProject_end_date()), contentStyle);
-                applyCellStyle(listData, 7, "수행경력", contentStyle);
-                applyCellStyle(listData, 8, profile.getQualification_yn() == "1" ? "Y":"N", contentStyle);
+                applyCellStyle(listData, 7, convertToString(profile.getProject_totalMonth()), contentStyle);
+                applyCellStyle(listData, 8, "1".equals(profile.getQualification_yn()) ? "Y":"N", contentStyle);
 
                 num++;
             }
@@ -462,5 +462,25 @@ public class ExcelDownServiceImpl implements ExcelDownService {
             str = "";
         }
         return str;
+    }
+
+    private static String convertToString(int months) {
+        if(months == 0){
+            return "";
+        }
+        double year = Math.floor(months / 12);
+        double month = months % 12;
+
+        int fmtYear = (int)year;
+        int fmtMonth = (int)month;
+
+        String result = "";
+        if (year > 0) {
+            result += fmtYear + "년 ";
+        }
+        if (months > 0) {
+            result += fmtMonth + "개월";
+        }
+        return result;
     }
 }

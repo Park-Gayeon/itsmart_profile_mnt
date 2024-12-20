@@ -282,6 +282,86 @@ CREATE TABLE TB_USER_REFRESH_TOKEN_INFO
 
 -- parent_id 컬럼에 인덱스 추가
 CREATE INDEX idx_tb_common_code_parent_id ON TB_COMMON_CODE (parent_id);
+-- 수행경력 계산을 위한 인덱스 추가
+CREATE INDEX idx_start_end ON TB_PROJECT_INFO (project_start_date, project_end_date);
+
+-- 수행경력 계산 함수
+DELIMITER $$
+
+CREATE FUNCTION calculate_total_months_v2(input_user_id VARCHAR(8))
+    RETURNS INT
+    DETERMINISTIC
+BEGIN
+    DECLARE done INT DEFAULT 0; -- 반복 종료 플래그
+    DECLARE start_date DATE;
+    DECLARE end_date DATE;
+    DECLARE total_months INT;
+
+    -- 병합된 결과를 저장할 임시 테이블 생성
+    CREATE TEMPORARY TABLE temp_merged_periods (
+                                                   project_start_date DATE,
+                                                   project_end_date DATE
+    );
+
+    -- 처리할 데이터를 저장할 임시 테이블 생성
+    CREATE TEMPORARY TABLE temp_unmerged_periods AS
+    SELECT project_start_date, project_end_date
+    FROM TB_PROJECT_INFO
+    WHERE user_id = input_user_id
+    ORDER BY project_start_date;
+
+    -- 초기 시작일과 종료일 설정
+    SET start_date = (SELECT project_start_date FROM temp_unmerged_periods ORDER BY project_start_date LIMIT 1);
+    SET end_date = (SELECT project_end_date FROM temp_unmerged_periods ORDER BY project_start_date LIMIT 1);
+
+    -- 병합 반복문
+    REPEAT
+        IF NOT done THEN
+            -- 병합된 기간 삽입
+            INSERT INTO temp_merged_periods
+            SELECT project_start_date, project_end_date
+            FROM (
+                     SELECT
+                         LEAST(start_date, t1.project_start_date) AS project_start_date,
+                         GREATEST(end_date, t1.project_end_date) AS project_end_date
+                     FROM temp_unmerged_periods t1
+                     WHERE end_date >= t1.project_start_date
+                       AND start_date <= t1.project_end_date
+                 ) a
+            ORDER BY project_end_date DESC
+            LIMIT 1;
+
+            -- 병합된 데이터 삭제
+            DELETE FROM temp_unmerged_periods
+            WHERE end_date >= project_start_date
+              AND start_date <= project_end_date;
+
+            -- 다음 병합 대상 가져오기
+            IF EXISTS (SELECT 1 FROM temp_unmerged_periods) THEN
+                SELECT project_start_date, project_end_date
+                INTO start_date, end_date
+                FROM temp_unmerged_periods
+                ORDER BY project_start_date
+                LIMIT 1;
+            ELSE
+                SET done = 1;
+            END IF;
+        END IF;
+    UNTIL done END REPEAT;
+
+    -- 총 개월 수 계산
+    SELECT FLOOR(SUM(DATEDIFF(project_end_date, project_start_date) + 1) / 30)
+    INTO total_months
+    FROM temp_merged_periods;
+
+    -- 임시 테이블 삭제
+    DROP TEMPORARY TABLE temp_merged_periods;
+    DROP TEMPORARY TABLE temp_unmerged_periods;
+
+    RETURN total_months;
+END $$
+
+DELIMITER ;
 
 -- 최초 적재 데이터
 -- 초기 데이터
