@@ -13,6 +13,8 @@ public interface CommonService {
 
     List<CommonVO> selectCodeList(Map<String, String> params);
 
+    List<CommonVO> selectPureCodeList(String code_group_id);
+
     List<CommonVO> getTaskMidCodeList(String code_id);
 
     FileVO saveImageFile(MultipartFile file);

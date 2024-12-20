@@ -51,12 +51,13 @@ public class ProfileMntController {
         params.clear();
         params.put("code_group_id", "TASK");
         List<CommonVO> taskMidList = commonService.selectCodeList(params);
-        params.put("code_group_id", "ORG");
-        List<CommonVO> orgList = commonService.selectCodeList(params);
         params.put("code_group_id", "PSIT");
         List<CommonVO> psitList = commonService.selectCodeList(params);
         params.put("code_group_id", "ROLE");
         List<CommonVO> roleList = commonService.selectCodeList(params);
+
+        String code_group_id = "ORG";
+        List<CommonVO> orgList = commonService.selectPureCodeList(code_group_id);
         int pj_totalMonth = projectMntService.calcTotalMonth(user_id);
         int wk_totalMonth = workExperienceMntService.calcTotalMonth(user_id);
 
