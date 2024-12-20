@@ -23,6 +23,14 @@
           AND A.USE_YN = 'Y'
     </select>
 
+    <!-- selectPureCodeList : 순수 코드 list 조회 -->
+    <select id="selectPureCodeList" parameterType="String" resultType="CommonVO">
+        SELECT code_id, code_value
+        FROM TB_COMMON_CODE AS A
+        WHERE CODE_GROUP_ID = #{code_group_id}
+          AND A.USE_YN = 'Y';
+    </select>
+
     <select id="getTaskMidCodeList" parameterType="String" resultType="CommonVO">
         SELECT CODE_ID, CODE_VALUE
         FROM TB_COMMON_CODE

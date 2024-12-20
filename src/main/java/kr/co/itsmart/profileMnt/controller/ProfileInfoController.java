@@ -69,13 +69,14 @@ public class ProfileInfoController {
         LOGGER.info("== open registerUser[사용자 추가 팝업] ==");
 
         Map<String, String> params = new HashMap<>();
-        params.put("code_group_id", "ORG");
-        List<CommonVO> orgList = commonService.selectCodeList(params);
         params.put("code_group_id", "PSIT");
-        List<CommonVO> psitList = commonService.selectCodeList(params);
 
-        model.addAttribute("orgList", orgList);
+        List<CommonVO> psitList = commonService.selectCodeList(params);
+        String code_group_id = "ORG";
+        List<CommonVO> orgList = commonService.selectPureCodeList(code_group_id);
+
         model.addAttribute("psitList", psitList);
+        model.addAttribute("orgList", orgList);
         return "registerUser";
     }
 

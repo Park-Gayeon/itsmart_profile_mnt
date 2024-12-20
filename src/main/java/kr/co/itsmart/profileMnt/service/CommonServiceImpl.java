@@ -32,6 +32,10 @@ public class CommonServiceImpl implements CommonService {
         return commonDAO.selectCodeList(params);
     }
 
+    @Override
+    public List<CommonVO> selectPureCodeList(String code_group_id) {
+        return commonDAO.selectPureCodeList(code_group_id);
+    }
     ;
     @Override
     public List<CommonVO> getTaskMidCodeList(String code_id) {

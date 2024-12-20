@@ -29,7 +29,7 @@
                                 <label for="imgFile" class="align-self-end">
                                     <div class="img-profile-btn do-hyeon-regular">+</div>
                                 </label>
-                                <input type="file" id="imgFile" name="imgFile" class="d-md-none" accept=".jpg, .png, .jpeg"/>
+                                <input type="file" id="imgFile" name="imgFile" class="d-none" accept=".jpg, .png, .jpeg"/>
                         </div>
                         <!-- 개인정보 -->
                         <div class="col-sm-auto g-0">
