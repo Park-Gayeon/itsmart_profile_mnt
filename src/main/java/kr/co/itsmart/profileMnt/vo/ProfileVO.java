@@ -28,6 +28,7 @@ public class ProfileVO{
     private String project_nm; // 프로젝트 명
     private String project_start_date; // 프로젝트 시작일
     private String project_end_date; // 프로젝트 종료일
+    private int project_totalMonth; // 수행경력
     private String project_client; // 발주처
     private String qualification_yn; // 정보처리기사 자격증 여부
 
@@ -203,6 +204,14 @@ public class ProfileVO{
 
     public void setProject_end_date(String project_end_date) {
         this.project_end_date = project_end_date;
+    }
+
+    public int getProject_totalMonth() {
+        return project_totalMonth;
+    }
+
+    public void setProject_totalMonth(int project_totalMonth) {
+        this.project_totalMonth = project_totalMonth;
     }
 
     public String getProject_client() {

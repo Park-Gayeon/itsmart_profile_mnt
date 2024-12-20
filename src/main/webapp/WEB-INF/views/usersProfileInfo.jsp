@@ -92,7 +92,14 @@
                                             <td></td>
                                         </c:otherwise>
                                     </c:choose>
-                                    <td>수행기간</td>
+                                    <c:choose>
+                                        <c:when test="${info.project_totalMonth != null && info.project_totalMonth != 0}">
+                                            <td class="fmt">${info.project_totalMonth}</td>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <td></td>
+                                        </c:otherwise>
+                                    </c:choose>
                                     <c:choose>
                                         <c:when test="${info.qualification_yn eq 1}">
                                             <td class="text-center">Y</td>
@@ -128,7 +135,7 @@
                                     <li class="page-item">
                                         <c:choose>
                                             <c:when test="${pageNum eq page.curPage}">
-                                                <a class="page-link disabled" href="#"
+                                                <a class="page-link disabled" style="background-color: #fff;" href="#"
                                                    onClick="fn_paging('${pageNum}')">${pageNum}</a>
                                             </c:when>
                                             <c:otherwise>
@@ -177,6 +184,14 @@
             alert("접근권한이 없습니다");
             window.location.href = "/home";
         }
+        setTimeout(function () {
+            $(".fmt").each(function () {
+                let pj_totalMonth = $(this).text().trim();
+                let calc_pj_totalMonth = convertToString(pj_totalMonth);
+                $(this).text(calc_pj_totalMonth);
+            });
+        }, 100); // 렌더링 지연 후 실행
+
 
         $(document).on("keydown", ".searchInput", function(e){
             if(e.which == 13){

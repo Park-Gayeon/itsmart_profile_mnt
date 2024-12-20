@@ -106,4 +106,10 @@
           AND SKILL_ID = #{skill_id}
     </insert>
 
+    <!-- calculateTotalMonths : 수행 경력 SELECT -->
+    <select id="calcTotalMonth" resultType="int">
+        SELECT calculate_total_months_v2(#{input_user_id}) AS totalMonths
+    </select>
+
+
 </mapper>

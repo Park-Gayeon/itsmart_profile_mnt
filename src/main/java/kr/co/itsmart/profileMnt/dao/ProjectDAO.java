@@ -44,6 +44,5 @@ public interface ProjectDAO {
     void insertUsrSkillInfoHist(UserSkillVO skill);
 
     /* 사업경력 totalMonth 조회 */
-    @Select("SELECT COALESCE(SUM(TIMESTAMPDIFF(MONTH, PROJECT_START_DATE, PROJECT_END_DATE)),0) FROM TB_PROJECT_INFO WHERE USER_ID = #{user_id}")
-    int calcTotalMonth(String user_id);
+    int calcTotalMonth(String input_user_id);
 }

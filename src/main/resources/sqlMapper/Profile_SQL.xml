@@ -170,17 +170,17 @@
     <!--updateUsrProfileInfo : 직원 프로필 정보 테이블 UPDATE-->
     <update id="updateUsrProfileInfo" parameterType="profileVO">
         UPDATE TB_USER_PROFILE_INFO
-        SET USER_POSITION    = #{user_position},
-            USER_BIRTH       = #{user_birth},
-            USER_DEPARTMENT  = #{user_department},
-            USER_PHONE       = #{user_phone},
-            USER_ADDRESS     = #{user_address},
-            FILE_SEQ         = (SELECT COALESCE(MAX(FILE_SEQ), 0)
-                                FROM TB_ATTACHMENT_INFO
-                                WHERE USER_ID = #{user_id}
-                                  AND USE_YN = 'Y'),
-            MODIFIED_DATE    = now(),
-            MODIFIER         = #{user_id}
+        SET USER_POSITION   = #{user_position},
+            USER_BIRTH      = #{user_birth},
+            USER_DEPARTMENT = #{user_department},
+            USER_PHONE      = #{user_phone},
+            USER_ADDRESS    = #{user_address},
+            FILE_SEQ        = (SELECT COALESCE(MAX(FILE_SEQ), 0)
+                               FROM TB_ATTACHMENT_INFO
+                               WHERE USER_ID = #{user_id}
+                                 AND USE_YN = 'Y'),
+            MODIFIED_DATE   = now(),
+            MODIFIER        = #{user_id}
         WHERE USER_ID = #{user_id}
           AND USE_YN = 'Y'
     </update>
@@ -202,8 +202,7 @@
                 now(),
                 now(),
                 #{user_id},
-                #{user_id}
-               )
+                #{user_id})
     </insert>
 
     <!-- insertUsrProfileInfoHist : 직원 프로필 정보 이력 테이블 INSERT -->
@@ -230,7 +229,8 @@
 
     <!-- insertUsrEducationInfoHist : 직원 학력 정보 이력 테이블 INSERT -->
     <insert id="insertUsrEducationInfoHist" parameterType="EduVO">
-        INSERT INTO TB_USER_EDUCATION_INFO_HIST(USER_ID, SCHOOL_SEQ, HIST_SEQ, SCHOOL_GUBUN, SCHOOL_NM, SCHOOL_START_DATE,
+        INSERT INTO TB_USER_EDUCATION_INFO_HIST(USER_ID, SCHOOL_SEQ, HIST_SEQ, SCHOOL_GUBUN, SCHOOL_NM,
+                                                SCHOOL_START_DATE,
                                                 SCHOOL_END_DATE, MAJOR, DOUBLE_MAJOR, TOTAL_GRADE, STANDARD_GRADE,
                                                 GRAD_STATUS, CREATED_DATE, CREATOR)
         SELECT USER_ID,
@@ -255,52 +255,53 @@
     <!-- getUsrProfileInfoList : 직원 프로필 정보 목록 SELECT -->
     <select id="getUsrProfileInfoList" parameterType="ProfileVO" resultType="ProfileVO">
         select lpad(row_number() over (), 3, 0) as idx,
-               TB.*
+        (SELECT calculate_total_months_v2(TB.user_id)) AS project_totalMonth,
+        TB.*
         from (select pf.user_id,
-                     pf.user_nm,
-                     pf.created_date,
-                     cd.code_value                                                                   as user_department_nm,
-                     pj.project_nm,
-                     pj.project_start_date,
-                     pj.project_end_date,
-                     pj.project_client,
-                    exists(
-                            select 1
-                            from TB_USER_QUALIFICATION_INFO ql
-                            where pf.user_id = ql.user_id
-                            and trim(ql.qualification_nm) = '정보처리기사'
-                    ) as qualification_yn,
-                     row_number() over (partition by pf.user_id order by pj.project_start_date desc) as no
-              from TB_USER_PROFILE_INFO pf
-                       left join (select user_id,
-                                         project_nm,
-                                         project_start_date,
-                                         project_end_date,
-                                         project_client
-                                  from TB_PROJECT_INFO
-                                  where project_end_date > now()
-              ) pj
-                                 on pf.user_id = pj.user_id
-                       join (select code_id,
-                                    code_value
-                             from TB_COMMON_CODE a
-                             where a.code_group_id = 'ORG') cd
-                            on pf.user_department = cd.code_id
-              <if test="searchText != ''">
-                  <choose>
-                      <when test="searchType == 'userNm'">
-                          where pf.user_nm like concat('%', #{searchText}, '%')
-                      </when>
-                      <when test="searchType == 'userId'">
-                          where pf.user_id like concat('%', #{searchText}, '%')
-                      </when>
-                      <otherwise>
-                          where cd.code_value like concat('%', #{searchText}, '%')
-                      </otherwise>
-                  </choose>
-              </if>
-             AND pf.use_yn = 'Y'
-             ) TB
+        pf.user_nm,
+        pf.created_date,
+        cd.code_value as user_department_nm,
+        pj.project_nm,
+        pj.project_start_date,
+        pj.project_end_date,
+        pj.project_client,
+        exists(
+        select 1
+        from TB_USER_QUALIFICATION_INFO ql
+        where pf.user_id = ql.user_id
+        and trim(ql.qualification_nm) = '정보처리기사'
+        ) as qualification_yn,
+        row_number() over (partition by pf.user_id order by pj.project_start_date desc) as no
+        from TB_USER_PROFILE_INFO pf
+        left join (select user_id,
+        project_nm,
+        project_start_date,
+        project_end_date,
+        project_client
+        from TB_PROJECT_INFO
+        where project_end_date > now()
+        ) pj
+        on pf.user_id = pj.user_id
+        join (select code_id,
+        code_value
+        from TB_COMMON_CODE a
+        where a.code_group_id = 'ORG') cd
+        on pf.user_department = cd.code_id
+        <if test="searchText != ''">
+            <choose>
+                <when test="searchType == 'userNm'">
+                    where pf.user_nm like concat('%', #{searchText}, '%')
+                </when>
+                <when test="searchType == 'userId'">
+                    where pf.user_id like concat('%', #{searchText}, '%')
+                </when>
+                <otherwise>
+                    where cd.code_value like concat('%', #{searchText}, '%')
+                </otherwise>
+            </choose>
+        </if>
+        AND pf.use_yn = 'Y'
+        ) TB
         where TB.no = 1
         order by created_date
         LIMIT #{limit} OFFSET #{offset}
@@ -310,10 +311,10 @@
     <select id="getUsrProfileInfoCnt" parameterType="ProfileVO" resultType="int">
         SELECT COUNT(*) AS cnt
         FROM TB_USER_PROFILE_INFO PF
-                 JOIN TB_COMMON_CODE CD
-                      ON PF.USER_DEPARTMENT = CD.CODE_ID
+        JOIN TB_COMMON_CODE CD
+        ON PF.USER_DEPARTMENT = CD.CODE_ID
         WHERE CD.CODE_GROUP_ID = 'ORG'
-          AND PF.use_yn = 'Y'
+        AND PF.use_yn = 'Y'
         <if test="searchText != ''">
             <choose>
                 <when test="searchType == 'userNm'">
@@ -362,7 +363,7 @@
 
     <!-- getUsrProfileNotPagingInfoList : 직원 목록 전체 SELECT -->
     <select id="getUsrProfileNotPagingInfoList" parameterType="ProfileVO" resultType="ProfileVO">
-        select TB.*
+        select (SELECT calculate_total_months_v2(TB.user_id)) AS project_totalMonth, TB.*
         from (select pf.user_id,
                      pf.user_nm,
                      pf.created_date,
