@@ -603,7 +603,7 @@
                                                 <div class="col-sm-auto common-box input-box pt-4 me-1">
                                                     <span>학교구분</span>
                                                     <select name="educationList[${status.index}].school_gubun"
-                                                            class="form-select noneBorder schGb">
+                                                            class="form-select noneBorder schGb"  >
                                                         <option value="">-</option>
                                                         <option value="010" ${education.school_gubun == '010' ? 'selected' : ''}>
                                                             고등학교
@@ -1437,7 +1437,7 @@
                             </div>
                             <div class="col-sm common-box input-box pt-4">
                                 <span>학교명</span>
-                                <input type="text" name="educationList[].school_nm" maxlength="15"/>
+                                <input type="text" name="educationList[].school_nm" maxlength="15"  />
                             </div>
                             <div class="col-sm-2 common-box input-box pt-4 me-1" style="margin-left: -1px;">
                                 <span>전공명</span>
@@ -1445,11 +1445,11 @@
                             </div>
                             <div class="col-sm-2 common-box input-box pt-4">
                                 <span>입학일자</span>
-                                <input type="text" class="dateFmt" maxlength="10" name="educationList[].school_start_date"/>
+                                <input type="text" class="dateFmt" maxlength="10" name="educationList[].school_start_date"  />
                             </div>
                             <div class="col-sm-2 common-box input-box pt-4 me-1" style="margin-left: -1px;">
                                 <span>졸업일자</span>
-                                <input type="text" class="dateFmt" maxlength="10" name="educationList[].school_end_date"/>
+                                <input type="text" class="dateFmt" maxlength="10" name="educationList[].school_end_date"  />
                             </div>
                             <div class="col-sm-1 common-box input-box pt-4 me-1">
                                 <span>학점</span>
@@ -1640,6 +1640,11 @@
 
         $(".grade").each(function () {
             const grade = $(this).val();
+            // 고등학교는 검증제외
+            let gubun = $(this).closest(".add").find(".schGb").val();
+            if(gubun == '010'){
+                return;
+            }
             if (!chkGrade(grade)) {
                 alert("학점 입력값이 올바르지 않습니다");
                 $(this).focus();
@@ -1681,11 +1686,18 @@
             const name = $(this).attr("name");
             if (name) {
                 let input = $(this).val();
-                console.log(name + " - " + input);
-                const nullable = ['imgFile'];
-                /*const nullable = ['major', 'double_major', 'total_grade', 'standard_grade', 'imgFile'];*/
-                if (!nullable.includes(name) && input === '') {
-                    alert("항목을 입력하세요");
+                const nullable = ['major', 'total_grade', 'imgFile'];
+                let isNullable = false;
+
+                for (const nullableItem of nullable) {
+                    if (name.endsWith(nullableItem)) {
+                        isNullable = true;
+                        break;
+                    }
+                }
+
+                if (!isNullable && input === '') {
+                    alert("항목을 입력하세요.");
                     $(this).focus();
                     isValid = false;
                     return false;
