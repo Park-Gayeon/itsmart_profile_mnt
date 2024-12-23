@@ -17,9 +17,6 @@
 <%@ include file="layout/header.jsp" %>
 <!-- header.jsp -->
 
-<jsp:useBean id="now" class="java.util.Date"/>
-<fmt:formatDate value="${now}" pattern="yyyy-MM-dd" var="today"/>
-
 <!-- main-content -->
 <div class="content">
     <form id="frm">
@@ -69,9 +66,9 @@
                             </tr>
                             </thead>
                             <tbody class="table-group-divider">
-                            <c:forEach var="info" items="${info}">
+                            <c:forEach var="info" items="${info}" varStatus="status">
                                 <tr style="cursor: pointer" onclick="goDetail('${info.user_id}')">
-                                    <td>${info.idx}</td>
+                                    <td>${cnt - ((page.curPage -1) * page.pageSize + status.index)}</td>
                                     <td>${info.user_nm}</td>
                                     <td>${info.user_department_nm}</td>
                                     <td>${info.project_client}</td>
@@ -218,8 +215,6 @@
     }
 
     function goFind() {
-        console.log("페이지 : " + $("input[name=curPage]").val());
-
         $("input[name=curPage]").val(1);
         const frm = $("#frm");
 

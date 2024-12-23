@@ -254,10 +254,11 @@
 
     <!-- getUsrProfileInfoList : 직원 프로필 정보 목록 SELECT -->
     <select id="getUsrProfileInfoList" parameterType="ProfileVO" resultType="ProfileVO">
-        select lpad(row_number() over (), 3, 0) as idx,
+        select
         (SELECT calculate_total_months_v2(TB.user_id)) AS project_totalMonth,
         TB.*
-        from (select pf.user_id,
+        from
+        (select pf.user_id,
         pf.user_nm,
         pf.created_date,
         cd.code_value as user_department_nm,
@@ -279,7 +280,7 @@
         project_end_date,
         project_client
         from TB_PROJECT_INFO
-        where project_end_date > now()
+        where project_end_date >= now()
         ) pj
         on pf.user_id = pj.user_id
         join (select code_id,
@@ -302,8 +303,8 @@
         </if>
         AND pf.use_yn = 'Y'
         ) TB
-        where TB.no = 1
-        order by created_date
+        WHERE TB.no = 1
+        ORDER BY created_date DESC
         LIMIT #{limit} OFFSET #{offset}
     </select>
 

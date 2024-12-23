@@ -33,7 +33,7 @@ function formatTel(phone){
 
 function onlyCharKo(str){
     return str
-        .replace(/[^가-힣]/g, "");
+        .replace(/[^ㄱ-ㅎ가-힣]/g, "");
 }
 
 function onlyCharEn(str){
@@ -79,7 +79,8 @@ function chkGrade(grade){
 
 // 날짜 검증(정규식 체크)
 function chkDate(date){
-    const regEx = /^(19|20)\d{2}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[0-1])$/;
+    const regEx = /^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[0-1])$/;
+
     let rtn = false;
     if(!regEx.test(date)){
         return rtn;
