@@ -108,7 +108,7 @@
 
     <!-- calculateTotalMonths : 수행 경력 SELECT -->
     <select id="calcTotalMonth" resultType="int">
-        SELECT COALESCE(calculate_total_months_v2(#{input_user_id}),0) AS totalMonths
+        SELECT coalesce(calculate_total_months_v2(#{input_user_id}), 0) AS totalMonths
     </select>
 
 
