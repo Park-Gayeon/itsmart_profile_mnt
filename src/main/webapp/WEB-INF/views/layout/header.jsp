@@ -50,7 +50,7 @@
                             </a>
                             <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
                                 <li><a class="dropdown-item" style="cursor:pointer;" onclick="changePw(`${loginUser}`)">비밀번호변경</a></li>
-                                <li><a class="dropdown-item" style="cursor:pointer;" onclick="logout()">Sign out</a></li>
+                                <li><a class="dropdown-item" style="cursor:pointer;" onclick="logout()">로그아웃</a></li>
                             </ul>
                         </div>
                         <!-- drop down 끝 -->

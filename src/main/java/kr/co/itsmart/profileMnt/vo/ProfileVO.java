@@ -23,7 +23,6 @@ public class ProfileVO{
     private int hist_seq; // 이력 순번
 
     // etc
-    private int idx; // 순번
     private int cnt; // 건수
     private String project_nm; // 프로젝트 명
     private String project_start_date; // 프로젝트 시작일
@@ -164,14 +163,6 @@ public class ProfileVO{
 
     public void setHist_seq(int hist_seq) {
         this.hist_seq = hist_seq;
-    }
-
-    public int getIdx() {
-        return idx;
-    }
-
-    public void setIdx(int idx) {
-        this.idx = idx;
     }
 
     public int getCnt() {

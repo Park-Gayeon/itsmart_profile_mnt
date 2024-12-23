@@ -34,6 +34,11 @@
             <div class="form-floating">
                 <h2 class="header">프로필
                     <div class="description">
+                        <c:if test="${userRole[0] eq 'ROLE_ADMIN'}">
+                        <button type="button" class="btn btn-success" onclick=location.href="/profile/info/list">
+                            <span>목록가기</span>
+                        </button>
+                        </c:if>
                         <button type="button" class="btn btn-secondary" onclick="excel()">
                             <span>엑셀</span>
                         </button>
@@ -794,7 +799,8 @@
                                         <tr class="add" id="qualificationList_0">
                                             <td>1</td>
                                             <input type="hidden" class="seq"
-                                                   name="qualificationList[0].qualification_seq"/>
+                                                   name="qualificationList[0].qualification_seq"
+                                                   value="1"/>
                                             <td><input type="text"
                                                        name="qualificationList[0].qualification_nm"
                                                        maxlength="18"/></td>
@@ -916,7 +922,8 @@
                                             <tr class="add" id="workExperienceList_0">
                                                 <td>1</td>
                                                 <input type="hidden" class="seq"
-                                                       name="workExperienceList[0].work_seq"/>
+                                                       name="workExperienceList[0].work_seq"
+                                                       value="1"/>
                                                 <td><input type="text"
                                                            name="workExperienceList[0].work_place"
                                                            maxlength="18"/>
