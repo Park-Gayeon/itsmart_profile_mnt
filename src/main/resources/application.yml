@@ -18,6 +18,10 @@ spring:
     username: itsmart
     password: itsmart1!
     driver-class-name: com.mysql.cj.jdbc.Driver
+  sql:
+    init:
+      mode: always
+      encoding: utf-8
   web:
     resources:
       static-locations: classpath:static/, file:/opt/profileMnt/uploads/images/ # 정적 리소스 경로설정
