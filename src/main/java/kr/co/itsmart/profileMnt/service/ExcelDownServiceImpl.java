@@ -1,39 +1,14 @@
 package kr.co.itsmart.profileMnt.service;
 
-import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.math.BigDecimal;
-import java.text.NumberFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import kr.co.itsmart.profileMnt.configuration.handler.CustomException;
+import kr.co.itsmart.profileMnt.dao.*;
+import kr.co.itsmart.profileMnt.vo.*;
+import net.sf.jxls.transformer.XLSTransformer;
 import org.apache.poi.EncryptedDocumentException;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.ss.usermodel.BorderStyle;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.ClientAnchor;
-import org.apache.poi.ss.usermodel.CreationHelper;
-import org.apache.poi.ss.usermodel.Drawing;
-import org.apache.poi.ss.usermodel.FillPatternType;
-import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.ss.usermodel.HorizontalAlignment;
-import org.apache.poi.ss.usermodel.IndexedColors;
-import org.apache.poi.ss.usermodel.Picture;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.VerticalAlignment;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
@@ -43,22 +18,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import jakarta.servlet.ServletOutputStream;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import kr.co.itsmart.profileMnt.configuration.handler.CustomException;
-import kr.co.itsmart.profileMnt.dao.CommonDAO;
-import kr.co.itsmart.profileMnt.dao.ProfileDAO;
-import kr.co.itsmart.profileMnt.dao.ProjectDAO;
-import kr.co.itsmart.profileMnt.dao.QualificationDAO;
-import kr.co.itsmart.profileMnt.dao.WorkExperienceDAO;
-import kr.co.itsmart.profileMnt.vo.EduVO;
-import kr.co.itsmart.profileMnt.vo.ProfileVO;
-import kr.co.itsmart.profileMnt.vo.ProjectVO;
-import kr.co.itsmart.profileMnt.vo.QualificationVO;
-import kr.co.itsmart.profileMnt.vo.UserSkillVO;
-import kr.co.itsmart.profileMnt.vo.WorkExperienceVO;
-import net.sf.jxls.transformer.XLSTransformer;
+import java.io.*;
+import java.math.BigDecimal;
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Service
 public class ExcelDownServiceImpl implements ExcelDownService {
@@ -503,7 +468,7 @@ public class ExcelDownServiceImpl implements ExcelDownService {
                         Cell cell = row.getCell(idxArray.get(c)); // n번째 행의 n번째 cell을 가지고 와서
                         String value = getValue(cell); // cell 에 담긴 데이터를 가지고 옴
 
-                        if("false".equals(value)){ // 만약 데이터가 비어있는 항목이라면
+                        if(value.isEmpty()){ // 만약 데이터가 비어있는 항목이라면
                             cnt++; // 빈 row 를 찾기 위해서 cnt++ 해줌
                             logger.info("|      "+value+"     |");
                             if(cnt == idxArray.size()){ // 만약 한 row 가 전부 false 를 가지고 있다면
@@ -611,7 +576,7 @@ public class ExcelDownServiceImpl implements ExcelDownService {
                         projectDAO.insertUsrProjectInfoHist(project);
                         logger.info("사용자 기술경력 정보 이력을 생성했습니다: user_id={}", user_id);
 
-                        if(skillStr == "false"){
+                        if(skillStr.isEmpty()){
                             logger.info("작성된 기술이 없습니다");
                             chk = false;
                         }
@@ -646,12 +611,7 @@ public class ExcelDownServiceImpl implements ExcelDownService {
                         edu.setHist_seq(profile_hist_seq);
                         edu.setUser_id(user_id);
                         edu.setSchool_nm(getValue(row.getCell(idxArray.get(0))));// 학교명
-                        String major = getValue(row.getCell(idxArray.get(1)));
-                        if("false".equals(major)){
-                            edu.setMajor("");
-                        } else {
-                            edu.setMajor(major);
-                        }
+                        edu.setMajor(getValue(row.getCell(idxArray.get(1))));
                         String gubun = getValue(row.getCell(idxArray.get(2))); // 학위
                         String code = setGubunCode(gubun);
                         edu.setSchool_gubun(code);

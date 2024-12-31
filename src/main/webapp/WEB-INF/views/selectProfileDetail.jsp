@@ -607,11 +607,11 @@
                                             <div class="row mb-2 g-0 add" id="educationList_${status.index}">
                                                 <input type="hidden"
                                                        name="educationList[${status.index}].school_seq"
-                                                       class="seq" value="${education.school_seq}">
+                                                       class="seq" value="${education.school_seq}"/>
                                                 <div class="col-sm-auto common-box input-box pt-4 me-1">
                                                     <span>학교구분</span>
                                                     <select name="educationList[${status.index}].school_gubun"
-                                                            class="form-select noneBorder schGb"  >
+                                                            class="form-select noneBorder schGb">
                                                         <option value="">-</option>
                                                         <option value="010" ${education.school_gubun == '010' ? 'selected' : ''}>
                                                             고등학교
@@ -1119,6 +1119,7 @@
                                                         <td>
                                                             <select name="projectList[${pjStatus.index}].project_role"
                                                                     class="form-select noneBorder">
+                                                                <option>--</option>
                                                                 <c:forEach var="roleList" items="${roleList}">
                                                                     <option value="${roleList.code_id}"
                                                                             <c:if test="${roleList.code_id eq project_ing.project_role}">selected</c:if>>${roleList.code_value}</option>
@@ -1233,6 +1234,7 @@
                                                         <td>
                                                             <select name="projectList[${pjStatus.index}].project_role"
                                                                     class="form-select noneBorder">
+                                                                <option>--</option>
                                                                 <c:forEach var="roleList" items="${roleList}">
                                                                     <option value="${roleList.code_id}"
                                                                             <c:if test="${roleList.code_id eq project_hist.project_role}">selected</c:if>>${roleList.code_value}</option>
@@ -1671,12 +1673,18 @@
         let isValidDates = true;
         $("#" + frmId).find(".dateFmt").each(function () {
             const date = $(this).val();
-            if (!chkDate(date)) {
-                alert("입력일자를 확인해주세요");
-                $(this).focus();
-                isValidDates = false;
-                return false;
-            }
+
+            let name = $(this).attr("name");
+            if(name.endsWith("expiry_date") && date === ""){
+                return;
+            } else {
+                if (!chkDate(date)) {
+                    alert("입력일자를 확인해주세요");
+                    $(this).focus();
+                    isValidDates = false;
+                    return false;
+                }
+            };
         });
 
         if (!isValidDates) return false;
@@ -1696,7 +1704,7 @@
             const name = $(this).attr("name");
             if (name) {
                 let input = $(this).val();
-                const nullable = ['major', 'total_grade', 'imgFile'];
+                const nullable = ['major', 'total_grade', 'imgFile', 'expiry_date'];
                 let isNullable = false;
 
                 for (const nullableItem of nullable) {
@@ -1869,7 +1877,7 @@
                 }
                 if (name && name.endsWith(endDt)) {
                     endVal = $(this).val();
-                    if (!endVal) {
+                    if (!endVal && endDt != "expiry_date") {
                         alert("입력값을 확인해주세요");
                         $(this).focus();
                         isValid = false;
