@@ -1,11 +1,39 @@
 package kr.co.itsmart.profileMnt.service;
 
-import jakarta.servlet.ServletOutputStream;
-import jakarta.servlet.http.HttpServletResponse;
-import kr.co.itsmart.profileMnt.configuration.handler.CustomException;
-import kr.co.itsmart.profileMnt.dao.*;
-import kr.co.itsmart.profileMnt.vo.*;
-import org.apache.poi.ss.usermodel.*;
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.math.BigDecimal;
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.poi.EncryptedDocumentException;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.BorderStyle;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.ClientAnchor;
+import org.apache.poi.ss.usermodel.CreationHelper;
+import org.apache.poi.ss.usermodel.Drawing;
+import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.usermodel.Picture;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.VerticalAlignment;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
@@ -15,15 +43,22 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.math.BigDecimal;
-import java.text.NumberFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import kr.co.itsmart.profileMnt.configuration.handler.CustomException;
+import kr.co.itsmart.profileMnt.dao.CommonDAO;
+import kr.co.itsmart.profileMnt.dao.ProfileDAO;
+import kr.co.itsmart.profileMnt.dao.ProjectDAO;
+import kr.co.itsmart.profileMnt.dao.QualificationDAO;
+import kr.co.itsmart.profileMnt.dao.WorkExperienceDAO;
+import kr.co.itsmart.profileMnt.vo.EduVO;
+import kr.co.itsmart.profileMnt.vo.ProfileVO;
+import kr.co.itsmart.profileMnt.vo.ProjectVO;
+import kr.co.itsmart.profileMnt.vo.QualificationVO;
+import kr.co.itsmart.profileMnt.vo.UserSkillVO;
+import kr.co.itsmart.profileMnt.vo.WorkExperienceVO;
+import net.sf.jxls.transformer.XLSTransformer;
 
 @Service
 public class ExcelDownServiceImpl implements ExcelDownService {
@@ -427,7 +462,13 @@ public class ExcelDownServiceImpl implements ExcelDownService {
         }
 
         try (InputStream inputStream = excel.getInputStream()) {
-            Workbook workbook = WorkbookFactory.create(inputStream);
+            Workbook workbook = null;
+			try {
+				workbook = WorkbookFactory.create(inputStream);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
             Sheet sheet = workbook.getSheetAt(0);
 
             int rows = sheet.getPhysicalNumberOfRows();
@@ -740,8 +781,241 @@ public class ExcelDownServiceImpl implements ExcelDownService {
 
         } catch (IOException e) {
             throw new CustomException("엑셀 업로드 중 오류 확인 : " + e.getMessage());
+        } catch (EncryptedDocumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+    }
+    
+    /* 규현 작성중 */
+    /* 템플릿 파일 다운로드 */
+    @Override
+    public void downloadExcelTemplate(HttpServletRequest request, HttpServletResponse response) {
+        String filePath = "template/template.xlsx"; // 템플릿 파일 경로
+
+        try (InputStream fis = getClass().getClassLoader().getResourceAsStream(filePath)) {
+            if (fis == null) {
+                throw new FileNotFoundException("Template file not found: " + filePath);
+            }
+
+            // 파일 다운로드를 위한 HTTP 응답 설정
+            response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+            response.setHeader("Content-Disposition", "attachment; filename=\"template.xlsx\"");
+
+            // 파일 데이터를 HTTP 응답 출력 스트림으로 복사
+            try (OutputStream os = response.getOutputStream()) {
+                byte[] buffer = new byte[1024];
+                int bytesRead;
+                while ((bytesRead = fis.read(buffer)) != -1) {
+                    os.write(buffer, 0, bytesRead);
+                }
+                os.flush();
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    /* 템플릿 형식으로 다운*/
+    @Override
+    public void downloadUsrProfileDetailExcelTemplate(ProfileVO profile, HttpServletRequest request,
+            HttpServletResponse response) throws IOException {
+        String templatePath = "template/template.xlsx"; // 템플릿 경로
+        String outputFileName = "test_template.xlsx"; // 출력 파일명
+        
+        Map<String, Object> 		personalInfo 			= new HashMap<>();		//인적사항
+        List<Map<String, Object>> 	educationList 			= new ArrayList<>();	//학력
+        List<Map<String, Object>> 	certificationList 		= new ArrayList<>();	//자격증
+        List<Map<String, Object>> 	workExperienceList 		= new ArrayList<>();	//근무경력
+        List<Map<String, Object>> 	projectExperienceList 	= new ArrayList<>();	//수행경력
+
+        // [인적사항] (단일 데이터)
+        personalInfo.put("name"			, profile.getUser_nm()						);
+        personalInfo.put("birthdate"	, formatDate(profile.getUser_birth())		);
+        personalInfo.put("phone"		, formatPhone(profile.getUser_phone())		);
+        personalInfo.put("email"		, profile.getUser_id() + "@itsmart.co.kr"	);
+        personalInfo.put("affiliation"	, profile.getUser_department_nm()			);
+        personalInfo.put("position"		, profile.getUser_position_nm()				);
+        personalInfo.put("hireDate"		, formatDate(profile.getHire_date())		);
+        personalInfo.put("address"		, profile.getUser_address()					);
+
+        //학력
+        for (EduVO edu : profile.getEducationList()) {
+            Map<String, Object> educationInfo = new HashMap<>();
+            educationInfo.put("schoolType"			, gubunKor(edu.getSchool_gubun())		);	//학교구분
+            educationInfo.put("schoolName"			, edu.getSchool_nm()					);	//학교명
+            educationInfo.put("major"				, edu.getMajor()						);	//전공명
+            educationInfo.put("gpa"					, castType(edu.getTotal_grade())		);	//학점
+            educationInfo.put("entranceDate"		, formatDate(edu.getSchool_start_date()));	//입학일자
+            educationInfo.put("graduationDate"		, formatDate(edu.getSchool_end_date())	);	//졸업일자
+            educationInfo.put("graduationStatus"	, statusKor(edu.getGrad_status())		);	//졸업상태
+            
+            educationList.add(educationInfo);
+        }
+        
+        //자격증
+        for(QualificationVO ql : profile.getQualificationList()){
+            Map<String, Object> certificationInfo = new HashMap<>();
+            certificationInfo.put("certificateName"			, ql.getQualification_nm()				);	//자격증명
+            certificationInfo.put("issuingOrganization"		, ql.getIssuer()						);	//발행기관
+            certificationInfo.put("acquisitionDate"			, formatDate(ql.getAcquisition_date())	);	//취득일자
+            certificationInfo.put("expirationDate"			, formatDate(ql.getExpiry_date())		);	//만기일자
+            
+            certificationList.add(certificationInfo);
+        }
+        
+        // [근무경력]
+        for(WorkExperienceVO work : profile.getWorkExperienceList()){
+            Map<String, Object> workExperience = new HashMap<>();
+            workExperience.put("companyName"			, work.getWork_place()					);	//회사명
+            workExperience.put("position"				, work.getWork_position()				);	//직급
+            workExperience.put("jobDescription"			, work.getWork_assigned_task()			);	//담당업무
+            workExperience.put("hireDate"				, formatDate(work.getWork_start_date())	);	//입사일자
+            workExperience.put("resignationDate"		, formatDate(work.getWork_end_date())	);	//퇴사일자
+            
+            workExperienceList.add(workExperience);
+        }
+        
+        // [수행경력]
+        for(ProjectVO pj : profile.getProjectList()){
+            Map<String, Object> projectExperience = new HashMap<>();
+            List<String> skillNames = new ArrayList<>();
+            
+            int project_seq = pj.getProject_seq();
+            ProjectVO temp = new ProjectVO();
+            temp.setUser_id(profile.getUser_id());
+            temp.setProject_seq(project_seq);
+            
+            ProjectVO rst = projectMntService.selectUsrSkillList(temp);
+            for(UserSkillVO skill : rst.getSkillList()){
+                skillNames.add(skill.getSkill_nm());
+            }
+            String skillList = String.join(", ", skillNames);
+            
+            projectExperience.put("client"					, pj.getProject_client()				);	//발주처
+            projectExperience.put("projectName"				, pj.getProject_nm()					);	//사업명
+            projectExperience.put("startDate"				, formatDate(pj.getProject_start_date()));	//참여시작일
+            projectExperience.put("endDate"					, formatDate(pj.getProject_end_date())	);	//참여종료일
+            projectExperience.put("majorResponsibilities"	, pj.getAssigned_task_lar_nm()			);	//담당업무(대)
+            projectExperience.put("minorResponsibilities"	, pj.getAssigned_task_mid_nm()			);	//담당업무(소)
+            projectExperience.put("role"					, pj.getProject_role_nm()				);	//역할
+            projectExperience.put("skills"					, skillList								);	//기술
+            projectExperienceList.add(projectExperience);
+        }
+        
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("personalInfo"			, personalInfo);
+        data.put("educationList"		, educationList);
+        data.put("certificationList"	, certificationList);
+        data.put("workExperienceList"	, workExperienceList);
+        data.put("projectExperienceList", projectExperienceList);
+        
+        if(profile.getFileInfo() != null){
+        	
+        	InputStream img = new FileInputStream(profile.getFileInfo().getFile_sver_path());
+        	byte[] imageBytes = toByteArray(img);
+            img.close();
+        	
+        	data.put("profileImg", imageBytes);
+
         }
 
+        // XLSTransformer를 이용한 변환
+        XLSTransformer transformer = new XLSTransformer();
+        try (InputStream fis = getClass().getClassLoader().getResourceAsStream(templatePath)) {
+            if (fis == null) {
+                throw new IOException("Template file not found: " + templatePath);
+            }
+
+            // 변환된 워크북 생성
+            Workbook workbook = transformer.transformXLS(fis, data);
+            
+            // 이미지 삽입
+            Sheet sheet = workbook.getSheetAt(0); // 첫 번째 시트 가져오기
+            for (Row row : sheet) {
+                for (Cell cell : row) {
+                	if ("#IMG#".equals(cell.toString())) {
+                        // #IMG# 텍스트가 있는 셀 찾기
+                        int rowIndex = cell.getRowIndex();
+                        int colIndex = cell.getColumnIndex();
+                        
+                        // 이미지 바이트 배열 가져오기 (이미지 삽입)
+                        byte[] imageBytes = (byte[]) data.get("profileImg");
+                        
+                        String extension = profile.getFileInfo().getFile_extension();
+                        int type = 0;
+                        if("png".equals(extension)){
+                            type = Workbook.PICTURE_TYPE_PNG;
+                        }else if("jpg".equals(extension) || "jpeg".equals(extension)){
+                            type = Workbook.PICTURE_TYPE_JPEG;
+                        }
+
+                        if(type == 0){
+                            logger.error("[downloadUsrProfileDetailExcel] 잘못된 확장자 입니다. extension : {}", extension);
+                            throw new CustomException("지원하지 않는 파일 확장자입니다.: " + extension);
+                        }
+
+                        // 이미지 삽입
+                        int pictureIndex = workbook.addPicture(imageBytes, type);
+                        CreationHelper helper = workbook.getCreationHelper();
+                        Drawing drawing = sheet.createDrawingPatriarch();
+                        ClientAnchor anchor = helper.createClientAnchor();
+                        
+                        // 이미지 시작 위치 (a2 위치)
+                        anchor.setCol1(colIndex); // 열 위치 (a열)
+                        anchor.setRow1(rowIndex); // 행 위치 (2행)
+                        
+                        // 이미지 끝 위치 (b8 위치)
+                        anchor.setCol2(colIndex + 1); // 열 위치 (b열)
+                        anchor.setRow2(rowIndex + 7); // 행 위치 (8행)
+                        
+                        // 이미지 삽입
+                        Picture picture = drawing.createPicture(anchor, pictureIndex);
+                        picture.resize(1.0); // 이미지 크기 조정 (필요시)
+                        
+                        // #IMG# 텍스트를 지워줍니다
+                        cell.setCellValue(""); 
+                    }
+                }
+            }
+            
+            // 데이터가 들어가는 부분에서 각 열의 너비를 자동으로 조정
+            for (int colIndex = 0; colIndex < sheet.getRow(0).getPhysicalNumberOfCells(); colIndex++) {
+                sheet.autoSizeColumn(colIndex);  // 각 열에 대해 자동 너비 조정
+            }
+            
+            // 텍스트가 잘리지 않게 열 너비를 더 넓게 설정 (특히 긴 텍스트가 있을 경우)
+            for (int colIndex = 0; colIndex < sheet.getRow(0).getPhysicalNumberOfCells(); colIndex++) {
+                sheet.setColumnWidth(colIndex, sheet.getColumnWidth(colIndex) * 2); // 열 너비를 두 배로 늘려서 긴 텍스트도 보이도록 설정
+            }
+            
+            // HTTP 응답으로 파일 전송
+            response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+            response.setHeader("Content-Disposition", "attachment; filename=\"" + outputFileName + "\"");
+            try (ServletOutputStream os = response.getOutputStream()) {
+                workbook.write(os);
+                workbook.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new IOException("엑셀 생성 중 오류가 발생했습니다.");
+        }
+    }
+    
+    public static byte[] toByteArray(InputStream inputStream) throws IOException { // used by templates and SimpleExporter
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        copy(inputStream, baos);
+        return baos.toByteArray();
+    }
+    
+    public static void copy(InputStream in, OutputStream out) throws IOException {
+        byte[] buffer = new byte[8 * 1024];
+        for (int count; (count = in.read(buffer)) != -1;) {
+            out.write(buffer, 0, count);
+        }
     }
 
     private void applyCellStyle(Row rowName, int i, String data, CellStyle cellStyle) {
@@ -829,25 +1103,30 @@ public class ExcelDownServiceImpl implements ExcelDownService {
         return result;
     }
 
-    private String getValue(Cell cell){
+    private String getValue(Cell cell) {
         NumberFormat f = NumberFormat.getInstance();
         f.setGroupingUsed(false);
-        String value="";
+        String value = "";
 
-        if(cell != null){
-            switch (cell.getCellType()){
+        if (cell != null) {
+            switch (cell.getCellTypeEnum()) { // 권장 메서드 사용
                 case STRING:
                     value = cell.getStringCellValue();
                     break;
                 case NUMERIC:
-                    value = f.format(cell.getNumericCellValue())+"";
+                    value = f.format(cell.getNumericCellValue());
                     break;
                 case BLANK:
-                    value = cell.getBooleanCellValue() + "";
+                    value = "";
+                    break;
+                case BOOLEAN:
+                    value = String.valueOf(cell.getBooleanCellValue());
                     break;
                 case ERROR:
-                    value = cell.getErrorCellValue() + "";
+                    value = String.valueOf(cell.getErrorCellValue());
                     break;
+                default:
+                    value = "";
             }
         }
         return value;
