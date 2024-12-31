@@ -3,31 +3,50 @@ package kr.co.itsmart.profileMnt.service;
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletResponse;
 import kr.co.itsmart.profileMnt.configuration.handler.CustomException;
+import kr.co.itsmart.profileMnt.dao.*;
 import kr.co.itsmart.profileMnt.vo.*;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class ExcelDownServiceImpl implements ExcelDownService {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final ProjectMntService projectMntService;
+    private final WorkExperienceDAO workExperienceDAO;
+    private final ProjectDAO projectDAO;
+    private final ProfileDAO profileDAO;
+    private final QualificationDAO qualificationDAO;
+    private final CommonDAO commonDAO;
 
-    public ExcelDownServiceImpl(ProjectMntService projectMntService) {
+    public ExcelDownServiceImpl(ProjectMntService projectMntService,
+                                @Lazy WorkExperienceDAO workExperienceDAO,
+                                @Lazy ProjectDAO projectDAO,
+                                ProfileDAO profileDAO,
+                                @Lazy QualificationDAO qualificationDAO,
+                                @Lazy CommonDAO commonDAO) {
         this.projectMntService = projectMntService;
+        this.projectDAO = projectDAO;
+        this.workExperienceDAO = workExperienceDAO;
+        this.profileDAO = profileDAO;
+        this.qualificationDAO = qualificationDAO;
+        this.commonDAO = commonDAO;
     }
 
     @Override
@@ -399,6 +418,332 @@ public class ExcelDownServiceImpl implements ExcelDownService {
         out.close();
     }
 
+    @Override
+    @Transactional
+    public void uploadKosaExcel(MultipartFile excel, String user_id) {
+        if(excel.isEmpty()){
+            logger.error("[uploadKosaExcel] 파일이 존재하지 않습니다.");
+            throw new CustomException("파일이 존재하지 않습니다.");
+        }
+
+        try (InputStream inputStream = excel.getInputStream()) {
+            Workbook workbook = WorkbookFactory.create(inputStream);
+            Sheet sheet = workbook.getSheetAt(0);
+
+            int rows = sheet.getPhysicalNumberOfRows();
+            logger.info("행 개수 : " + rows);
+            boolean deleteYn = false; // 테이블 삭제여부
+            boolean createYn = false; // 프로필 이력 생성여부
+            int rangeCnt = 0; // kosa 파일의 분류별 range (근무경력, 기술경력, 학력, 기술자격, 교육, 상훈)
+            int seq = 0; // 테이블별 seq
+            ArrayList<Integer> idxArray = new ArrayList<>();
+
+            WorkExperienceVO work = new WorkExperienceVO(); // 근무경력
+            ProjectVO project = new ProjectVO(); // 기술경력
+            ProfileVO profile = new ProfileVO(); // 프로필
+            EduVO edu = new EduVO(); // 학력
+            QualificationVO qualification = new QualificationVO(); // 기술자격
+            UserSkillVO skill = new UserSkillVO(); // 기술
+
+            int work_hist_seq = workExperienceDAO.selectMaxHistSeq(user_id);
+            int project_hist_seq = projectDAO.selectMaxHistSeq(user_id);
+            int profile_hist_seq = profileDAO.selectMaxHistSeq(user_id);
+            int qualification_hist_seq = qualificationDAO.selectMaxHistSeq(user_id);
+
+            for(int r= 0; r < rows; r++){ // 행 갯수만큼 for 문을 돌린다.
+                Row row = sheet.getRow(r); // 행을 하나 가지고 와서
+                int cells = row.getPhysicalNumberOfCells(); // 해당 행의 cell들을 가지고 온다
+                int cnt = 0;
+
+                logger.info("|      "+(r+1)+"     |"); // n번째 행 확인
+
+                if(!idxArray.isEmpty()){
+                    for(int c =0; c < idxArray.size(); c++){
+                        Cell cell = row.getCell(idxArray.get(c)); // n번째 행의 n번째 cell을 가지고 와서
+                        String value = getValue(cell); // cell 에 담긴 데이터를 가지고 옴
+
+                        if("false".equals(value)){ // 만약 데이터가 비어있는 항목이라면
+                            cnt++; // 빈 row 를 찾기 위해서 cnt++ 해줌
+                            logger.info("|      "+value+"     |");
+                            if(cnt == idxArray.size()){ // 만약 한 row 가 전부 false 를 가지고 있다면
+                                logger.info("지금은 empty row 입니다");
+                                rangeCnt++; // 다음 form 설정
+                                idxArray.clear(); // indxArray 비움
+                                deleteYn = false; // 테이블 기본 설정
+                                break; // for문 빠져나감
+                            }
+                        } else {
+                            logger.info("|      "+value+"     |");
+                        }
+                    }
+
+                    if(idxArray.isEmpty()){ // 한 row가 전부 false 라서 배열을 초기화 해주었으면
+                        seq = 0; // 테이블에 적용할 seq는 0으로 초기화해준다
+                        logger.info("직전에 idxArray 비워줬고 seq 도 0으로 초기화함. > 다음 form을 읽을 예정");
+                        continue;
+                    }
+
+                    if(rangeCnt == 0){
+                        logger.info("rangeCnt : " + rangeCnt + " >> 근무경력에 대한 DB 처리");
+                        seq++;
+                        work.setWork_seq(seq); // 1 부터
+                        work.setHist_seq(work_hist_seq);
+                        work.setUser_id(user_id); // user_id
+                        work.setWork_place(getValue(row.getCell(idxArray.get(0)))); // 근무지
+                        work.setWork_position(getValue(row.getCell(idxArray.get(1))));// 직위
+                        String[] dateArr = getValue(row.getCell(idxArray.get(2))).split("~");
+                        String start_date = dateArr[0].trim().replace(".", "");
+                        String end_date = dateArr[1].trim().replace(".", "");
+                        work.setWork_start_date(start_date);// 근무기간(시작일)
+                        work.setWork_end_date(end_date);// 근무기간(종료일)
+                        work.setWork_assigned_task(getValue(row.getCell(idxArray.get(3))));// 직무
+
+
+                        logger.info(String.valueOf(work.getWork_seq()));
+                        logger.info("user_id : " + work.getUser_id());
+                        logger.info("place : " + work.getWork_place());
+                        logger.info("position : " + work.getWork_position());
+                        logger.info("start_date : " + work.getWork_start_date());
+                        logger.info("end_date : " + work.getWork_end_date());
+                        logger.info("task : " + work.getWork_assigned_task());
+
+                        if(!deleteYn){
+                            // DELETE TB
+                            logger.info("사용자 근무경력 정보를 삭제합니다: user_id={}", user_id);
+                            workExperienceDAO.deleteUsrWorkInfo(user_id);
+                            deleteYn = true;
+                        }
+
+                        // UPDATE(=INSERT)
+                        logger.info("사용자 근무경력 정보를 입력합니다: user_id={}, work_place", user_id, work.getWork_place());
+                        workExperienceDAO.updateUsrWorkInfo(work);
+
+                        // CREATE HIST
+                        workExperienceDAO.insertUsrWorkInfoHist(work);
+                        logger.info("사용자 근무경력 정보 이력을 생성했습니다: user_id={}", user_id);
+
+                    } else if(rangeCnt == 1){ // 기술경력
+                        boolean chk = true;
+                        logger.info("rangeCnt : " + rangeCnt + " >> 기술경력에 대한 DB 처리");
+                        seq++;
+                        project.setProject_seq(seq); // 1 부터
+                        project.setHist_seq(project_hist_seq);
+                        project.setUser_id(user_id);
+                        project.setProject_nm(getValue(row.getCell(idxArray.get(0)))); // 참여사업명
+                        String[] dateArr = getValue(row.getCell(idxArray.get(1))).split("~");
+                        String start_date = dateArr[0].trim().replace(".", "");
+                        String end_date = dateArr[1].trim().replace(".", "");
+                        project.setProject_start_date(start_date); // 사업시작일
+                        project.setProject_end_date(end_date); // 사업종료일
+                        String[] taskArr = getValue(row.getCell(idxArray.get(2))).split(">");
+                        String task_lar = taskArr[0].replace(" ","");
+                        String task_mid = taskArr[1].replace(" ","");
+                        String task_code_lar = findTaskCode(task_lar, 1); // 업무구분코드 대분류
+                        String task_code_mid = findTaskCode(task_mid, 2); // 업무구분코드 중분류
+
+                        project.setAssigned_task_lar(task_code_lar);
+                        project.setAssigned_task_mid(task_code_mid);
+                        String skillStr = getValue(row.getCell(idxArray.get(3)));
+                        project.setProject_client(getValue(row.getCell(idxArray.get(4)))); // 발주처
+
+                        logger.info(String.valueOf(project.getProject_seq()));
+                        logger.info("프로젝트명 : " + project.getProject_nm());
+                        logger.info("시작일자 : " + project.getProject_start_date());
+                        logger.info("종료일자 : " + project.getProject_end_date());
+                        logger.info("직무영역, 기술 : " + getValue(row.getCell(idxArray.get(3))));
+                        logger.info("발주처 : " + project.getProject_client());
+
+                        if(!deleteYn){
+                            // DELETE TB
+                            logger.info("사용자 기술정보를 삭제합니다: user_id={}", user_id);
+                            projectDAO.deleteUsrAllSkillInfo(user_id);
+                            logger.info("사용자 기술경력을 삭제합니다: user_id={}", user_id);
+                            projectDAO.deleteUsrAllProjectInfo(user_id);
+                            deleteYn = true;
+                        }
+
+                        // UPDATE(=INSERT)
+                        logger.info("사용자 기술경력 정보를 입력합니다: user_id={}, project_nm", user_id, project.getProject_seq());
+                        projectDAO.updateUsrProjectInfo(project);
+
+                        // CREATE HIST
+                        projectDAO.insertUsrProjectInfoHist(project);
+                        logger.info("사용자 기술경력 정보 이력을 생성했습니다: user_id={}", user_id);
+
+                        if(skillStr == "false"){
+                            logger.info("작성된 기술이 없습니다");
+                            chk = false;
+                        }
+                        if(chk){ // 작성된 기술이 있다면
+                            // SKILL UPDATE(INSERT)
+                            int skill_hist_seq = projectDAO.selectSkMaxSeq(project);
+                            skill.setUser_id(user_id);
+                            skill.setHist_seq(skill_hist_seq);
+                            skill.setProject_seq(seq);
+
+                            logger.info("배열에 기술을 담습니다");
+                            String[] skillArr = skillStr.split(",");
+
+                            for(int i = 0; i < skillArr.length; i++){
+                                int skillId = i+1;
+                                String skillNm = skillArr[i].trim();
+                                logger.info("skillNm : " + skillNm);
+                                skill.setSkill_id(skillId);
+                                skill.setSkill_nm(skillNm);
+
+                                logger.info("사용자 기술정보를 입력합니다: project_nm={}, skill_nm={}", project.getProject_nm(), skill.getSkill_nm());
+                                projectDAO.updateUsrSkillInfo(skill);
+                                projectDAO.insertUsrSkillInfoHist(skill);
+                                logger.info("사용자 기술정보 이력을 생성했습니다");
+                            }
+                        }
+                    } else if(rangeCnt == 2){ // 학력
+                        seq++;
+                        profile.setHist_seq(profile_hist_seq);
+                        profile.setUser_id(user_id);
+                        edu.setSchool_seq(seq);
+                        edu.setHist_seq(profile_hist_seq);
+                        edu.setUser_id(user_id);
+                        edu.setSchool_nm(getValue(row.getCell(idxArray.get(0))));// 학교명
+                        String major = getValue(row.getCell(idxArray.get(1)));
+                        if("false".equals(major)){
+                            edu.setMajor("");
+                        } else {
+                            edu.setMajor(major);
+                        }
+                        String gubun = getValue(row.getCell(idxArray.get(2))); // 학위
+                        String code = setGubunCode(gubun);
+                        edu.setSchool_gubun(code);
+                        edu.setGrad_status("001"); // 졸업
+                        String startDate = getValue(row.getCell(idxArray.get(3))).replace(".","");
+                        String endDate = getValue(row.getCell(idxArray.get(4))).replace(".","");
+                        edu.setSchool_start_date(startDate); // 입학년월일
+                        edu.setSchool_end_date(endDate); // 졸업년월일
+
+                        logger.info(String.valueOf(edu.getSchool_seq()));
+                        logger.info(String.valueOf(edu.getHist_seq()));
+                        logger.info("학교구분" + edu.getSchool_gubun());
+                        logger.info("학교명" + edu.getSchool_nm());
+                        logger.info("입학일자" + edu.getSchool_start_date());
+                        logger.info("졸업일자" + edu.getSchool_end_date());
+                        logger.info("전공" + edu.getMajor());
+                        logger.info("상태" + edu.getGrad_status());
+
+                        if(!deleteYn){
+                            // DELETE TB
+                            logger.info("사용자 학력 정보를 삭제합니다: user_id={}", user_id);
+                            profileDAO.deleteUsrEducationInfo(user_id);
+                            deleteYn = true;
+                        }
+
+                        // UPDATE(=INSERT)
+                        logger.info("사용자 학력 정보를 입력합니다: user_id={}, school_nm", user_id, edu.getSchool_nm());
+                        profileDAO.updateUsrEducationInfo(edu);
+
+                        // CREATE HIST
+                        if(!createYn){
+                            logger.info("사용자 프로필이력 정보를 입력합니다: user_id={}", user_id);
+                            profileDAO.insertUsrProfileInfoHist(profile);
+                            createYn = true;
+                        }
+                        profileDAO.insertUsrEducationInfoHist(edu);
+                        logger.info("사용자 학력 정보 이력을 생성했습니다: user_id={}", user_id);
+                    } else if(rangeCnt == 3){ // 기술자격
+                        seq++;
+                        qualification.setQualification_seq(seq);
+                        qualification.setHist_seq(qualification_hist_seq);
+                        qualification.setUser_id(user_id);
+                        qualification.setQualification_nm(getValue(row.getCell(idxArray.get(0)))); // 자격명
+                        String startDate = getValue(row.getCell(idxArray.get(1))).replace(".","");
+                        qualification.setAcquisition_date(startDate);
+                        qualification.setIssuer(getValue(row.getCell(idxArray.get(2)))); // 발급기관
+
+                        logger.info(String.valueOf(qualification.getQualification_seq()));
+                        logger.info(String.valueOf(qualification.getHist_seq()));
+                        logger.info("자격명" + qualification.getQualification_nm());
+                        logger.info("합격일자" + qualification.getAcquisition_date());
+                        logger.info("발급기관" + qualification.getIssuer());
+
+                        if(!deleteYn){
+                            // DELETE TB
+                            logger.info("사용자 기술자격 정보를 삭제합니다: user_id={}", user_id);
+                            qualificationDAO.deleteUsrQualificationInfo(user_id);
+                            deleteYn = true;
+                        }
+
+                        // UPDATE(=INSERT)
+                        logger.info("사용자 기술자격 정보를 입력합니다: user_id={}, Qualification_nm={}", user_id, qualification.getQualification_nm());
+                        qualificationDAO.updateUsrQualificationInfo(qualification);
+
+                        // CREATE HIST
+                        qualificationDAO.insertUsrQualificationInfoHist(qualification);
+                        logger.info("사용자 기술자격 정보 이력을 생성했습니다: user_id={}", user_id);
+                    }
+                } else { // idxArray가 null 이라면 == 처음에 컬럼명을 읽으면서 idxArray 배열에 추가해줄 것이기 때문에
+                    for(int c =0; c < cells; c++){
+                        logger.info("idxArray가 null");
+                        Cell cell = row.getCell(c); // n번째 행의 n번째 cell을 가지고 와서
+                        String value = getValue(cell); // cell 에 담긴 데이터를 가지고 옴
+
+                        if(rangeCnt == 0){ // 근무 경력
+                            logger.info("rangeCnt == " + rangeCnt+ " >> 근무경력에 대한 indxArray 설정 중");
+                            if("회사명".equals(value)){
+                                idxArray.add(cell.getColumnIndex());
+                            }else if("직위".equals(value)){
+                                idxArray.add(cell.getColumnIndex());
+                            }else if("근무기간".equals(value)){
+                                idxArray.add(cell.getColumnIndex());
+                            }else if("담당업무".equals(value)){
+                                idxArray.add(cell.getColumnIndex());
+                            }
+                        } else if(rangeCnt == 1){ // 기술 경력
+                            logger.info("rangeCnt == " + rangeCnt+ " >> 기술경력에 대한 indxArray 설정 중");
+                            if("참여사업명".equals(value)){
+                                idxArray.add(cell.getColumnIndex());
+                            } else if("수행기간".equals(value)){
+                                idxArray.add(cell.getColumnIndex());
+                            } else if("수행업무".equals(value)){
+                                idxArray.add(cell.getColumnIndex());
+                            } else if(value.startsWith("직무")){
+                                idxArray.add(cell.getColumnIndex());
+                            } else if("발주처".equals(value)){
+                                idxArray.add(cell.getColumnIndex());
+                            }
+                        } else if(rangeCnt == 2) { // 학력
+                            logger.info("rangeCnt == " + rangeCnt+ " >> 학력에 대한 indxArray 설정 중");
+                            if("학교명".equals(value)){
+                                idxArray.add(cell.getColumnIndex());
+                            }else if("학과(전공)".equals(value)){
+                                idxArray.add(cell.getColumnIndex());
+                            }else if("학위".equals(value)){
+                                idxArray.add(cell.getColumnIndex());
+                            }else if("입학년월일".equals(value)){
+                                idxArray.add(cell.getColumnIndex());
+                            }else if("졸업년월일".equals(value)){
+                                idxArray.add(cell.getColumnIndex());
+                            }
+                        } else if(rangeCnt == 3){ // 기술자격
+                            logger.info("rangeCnt == " + rangeCnt+ " >> 기술자격에 대한 indxArray 설정 중");
+                            if("자격명".equals(value)){
+                                idxArray.add(cell.getColumnIndex());
+                            } else if("합격일자".equals(value)){
+                                idxArray.add(cell.getColumnIndex());
+                            } else if("발급기관".equals(value)){
+                                idxArray.add(cell.getColumnIndex());
+                            }
+                        }
+                        logger.info("|      "+value+"     |");
+                    }
+                }
+            }
+
+
+        } catch (IOException e) {
+            throw new CustomException("엑셀 업로드 중 오류 확인 : " + e.getMessage());
+        }
+
+    }
+
     private void applyCellStyle(Row rowName, int i, String data, CellStyle cellStyle) {
         Cell cell = rowName.createCell(i);
         cell.setCellValue(data);
@@ -464,7 +809,7 @@ public class ExcelDownServiceImpl implements ExcelDownService {
         return str;
     }
 
-    private static String convertToString(int months) {
+    private String convertToString(int months) {
         if(months == 0){
             return "";
         }
@@ -482,5 +827,48 @@ public class ExcelDownServiceImpl implements ExcelDownService {
             result += fmtMonth + "개월";
         }
         return result;
+    }
+
+    private String getValue(Cell cell){
+        NumberFormat f = NumberFormat.getInstance();
+        f.setGroupingUsed(false);
+        String value="";
+
+        if(cell != null){
+            switch (cell.getCellType()){
+                case STRING:
+                    value = cell.getStringCellValue();
+                    break;
+                case NUMERIC:
+                    value = f.format(cell.getNumericCellValue())+"";
+                    break;
+                case BLANK:
+                    value = cell.getBooleanCellValue() + "";
+                    break;
+                case ERROR:
+                    value = cell.getErrorCellValue() + "";
+                    break;
+            }
+        }
+        return value;
+    }
+
+    private String setGubunCode(String gubun){
+        if("박사".equals(gubun) || "석사".equals(gubun)){ // 대학원
+            return "013";
+        } else if("학사".equals(gubun)){ // 대학교 4년제
+            return "012";
+        } else if(gubun.startsWith("전문")){ // 대학교 2-3년제[전문학사, 전문학사(3년)]
+            return "011";
+        } else { // [고졸, 기능대졸, 직업훈련기관이수, 기능실기시험합격, 기타]
+            return "010"; // 고등학교
+        }
+    }
+
+    private String findTaskCode(String str, int level){
+        Map<String, Object> map = new HashMap<>();
+        map.put("value", str);
+        map.put("level", level);
+        return commonDAO.getTaskCodeId(map);
     }
 }

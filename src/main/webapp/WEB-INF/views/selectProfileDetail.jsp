@@ -498,6 +498,9 @@
                             <button type="button" class="btn btn-secondary" onclick="back();">
                                 <span>뒤로가기</span>
                             </button>
+                            <button type="button" class="btn btn-secondary" onclick="excelUpload();">
+                                <span>일괄업로드</span>
+                            </button>
                             <button type="button" class="btn btn-success" data-name="profile" onclick="goSave(this);">
                                 <span>저장</span>
                             </button>
@@ -1953,6 +1956,14 @@
                 }
             });
         }
+    }
+
+    function excelUpload(){
+        let user_id = $("input[name=user_id]").val();
+
+        let url = "/excel/" + user_id + "/upload";
+        let properties = "width=600, height=200";
+        window.open(url, "excelUpload", properties)
     }
 
 </script>
