@@ -99,23 +99,23 @@ public class ExcelDownServiceImpl implements ExcelDownService {
             // 엑셀[인적사항]
             Row profileInfo = sheet.createRow(rowCount++);
             applyCellStyle(profileInfo, 0, "인적사항", titleStyle);
-            sheet.addMergedRegion(new CellRangeAddress(rowCount -1, rowCount -1, 0, 7)); //셀병합
+            sheet.addMergedRegion(new CellRangeAddress(rowCount - 1, rowCount - 1, 0, 7)); //셀병합
 
             // read image file
-            if(profile.getFileInfo() != null){
+            if (profile.getFileInfo() != null) {
                 FileInputStream fis = new FileInputStream(profile.getFileInfo().getFile_sver_path());
                 byte[] bytes = fis.readAllBytes();
                 fis.close();
 
                 String extension = profile.getFileInfo().getFile_extension();
                 int type = 0;
-                if("png".equals(extension)){
+                if ("png".equals(extension)) {
                     type = Workbook.PICTURE_TYPE_PNG;
-                }else if("jpg".equals(extension) || "jpeg".equals(extension)){
+                } else if ("jpg".equals(extension) || "jpeg".equals(extension)) {
                     type = Workbook.PICTURE_TYPE_JPEG;
                 }
 
-                if(type == 0){
+                if (type == 0) {
                     logger.error("[downloadUsrProfileDetailExcel] 잘못된 확장자 입니다. extension : {}", extension);
                     throw new CustomException("지원하지 않는 파일 확장자입니다.: " + extension);
                 }
@@ -135,7 +135,7 @@ public class ExcelDownServiceImpl implements ExcelDownService {
 
                 pict.resize(1.0, 1.1);
 
-                for(int i=0; i<anchor.getRow2(); i++){
+                for (int i = 0; i < anchor.getRow2(); i++) {
                     sheet.createRow(rowCount++);
                 }
             }
@@ -165,11 +165,11 @@ public class ExcelDownServiceImpl implements ExcelDownService {
             sheet.createRow(rowCount++); // 여백
 
             // 학력 list 가 비어있지 않다면
-            if(profile.getEducationList() != null){
+            if (profile.getEducationList() != null) {
                 // 엑셀[학력]
                 Row schoolInfo = sheet.createRow(rowCount++);
                 applyCellStyle(schoolInfo, 0, "학력", titleStyle);
-                sheet.addMergedRegion(new CellRangeAddress(rowCount -1, rowCount -1, 0, 6));
+                sheet.addMergedRegion(new CellRangeAddress(rowCount - 1, rowCount - 1, 0, 6));
 
                 // 엑셀[학력] header
                 Row schoolHeader = sheet.createRow(rowCount++);
@@ -181,7 +181,7 @@ public class ExcelDownServiceImpl implements ExcelDownService {
                 applyCellStyle(schoolHeader, 5, "졸업일자", headerStyle);
                 applyCellStyle(schoolHeader, 6, "졸업상태", headerStyle);
 
-                for(EduVO edu : profile.getEducationList()){
+                for (EduVO edu : profile.getEducationList()) {
                     // 엑셀[학력] data
                     Row schoolData = sheet.createRow(rowCount++);
                     applyCellStyle(schoolData, 0, gubunKor(edu.getSchool_gubun()), contentStyle);
@@ -196,11 +196,11 @@ public class ExcelDownServiceImpl implements ExcelDownService {
             }
 
             // 자격증 list 가 비어있지 않다면
-            if(profile.getQualificationList() != null){
+            if (profile.getQualificationList() != null) {
                 // 엑셀[자격증]
                 Row qualificationInfo = sheet.createRow(rowCount++);
                 applyCellStyle(qualificationInfo, 0, "자격증", titleStyle);
-                sheet.addMergedRegion(new CellRangeAddress(rowCount -1, rowCount -1, 0, 3));
+                sheet.addMergedRegion(new CellRangeAddress(rowCount - 1, rowCount - 1, 0, 3));
 
                 // 엑셀[자격증] header
                 Row qualificationInfoHeader = sheet.createRow(rowCount++);
@@ -209,7 +209,7 @@ public class ExcelDownServiceImpl implements ExcelDownService {
                 applyCellStyle(qualificationInfoHeader, 2, "취득일자", headerStyle);
                 applyCellStyle(qualificationInfoHeader, 3, "만기일자", headerStyle);
 
-                for(QualificationVO ql : profile.getQualificationList()){
+                for (QualificationVO ql : profile.getQualificationList()) {
                     // 엑셀[자격증] data
                     Row qualificationData = sheet.createRow(rowCount++);
                     applyCellStyle(qualificationData, 0, ql.getQualification_nm(), contentStyle);
@@ -221,11 +221,11 @@ public class ExcelDownServiceImpl implements ExcelDownService {
             }
 
             // 근무경력 list 가 비어있지 않다면
-            if(profile.getWorkExperienceList() != null){
+            if (profile.getWorkExperienceList() != null) {
                 // 엑셀[근무경력]
                 Row workInfo = sheet.createRow(rowCount++);
                 applyCellStyle(workInfo, 0, "근무경력", titleStyle);
-                sheet.addMergedRegion(new CellRangeAddress(rowCount -1, rowCount -1, 0, 4));
+                sheet.addMergedRegion(new CellRangeAddress(rowCount - 1, rowCount - 1, 0, 4));
 
                 // 엑셀[근무경력] header
                 Row workInfoHeader = sheet.createRow(rowCount++);
@@ -235,7 +235,7 @@ public class ExcelDownServiceImpl implements ExcelDownService {
                 applyCellStyle(workInfoHeader, 3, "입사일자", headerStyle);
                 applyCellStyle(workInfoHeader, 4, "퇴사일자", headerStyle);
 
-                for(WorkExperienceVO work : profile.getWorkExperienceList()){
+                for (WorkExperienceVO work : profile.getWorkExperienceList()) {
                     // 엑셀[근무경력] data
                     Row workData = sheet.createRow(rowCount++);
                     applyCellStyle(workData, 0, work.getWork_place(), contentStyle);
@@ -248,13 +248,13 @@ public class ExcelDownServiceImpl implements ExcelDownService {
             }
 
             // 사업수행 경력 list 가 비어있지 않다면
-            if(profile.getProjectList() != null){
+            if (profile.getProjectList() != null) {
                 ProjectVO temp = new ProjectVO();
 
                 // 엑셀[수행경력]
                 Row projectInfo = sheet.createRow(rowCount++);
                 applyCellStyle(projectInfo, 0, "수행경력", titleStyle);
-                sheet.addMergedRegion(new CellRangeAddress(rowCount -1, rowCount -1, 0, 7));
+                sheet.addMergedRegion(new CellRangeAddress(rowCount - 1, rowCount - 1, 0, 7));
 
                 // 엑셀[수행경력] header
                 Row projectInfoHeader = sheet.createRow(rowCount++);
@@ -267,14 +267,14 @@ public class ExcelDownServiceImpl implements ExcelDownService {
                 applyCellStyle(projectInfoHeader, 6, "역할", headerStyle);
                 applyCellStyle(projectInfoHeader, 7, "기술", headerStyle);
 
-                for(ProjectVO pj : profile.getProjectList()){
+                for (ProjectVO pj : profile.getProjectList()) {
                     int project_seq = pj.getProject_seq();
                     temp.setUser_id(profile.getUser_id());
                     temp.setProject_seq(project_seq);
 
                     ProjectVO rst = projectMntService.selectUsrSkillList(temp);
                     List<String> skillNames = new ArrayList<>();
-                    for(UserSkillVO skill : rst.getSkillList()){
+                    for (UserSkillVO skill : rst.getSkillList()) {
                         skillNames.add(skill.getSkill_nm());
                     }
                     String skillList = String.join(", ", skillNames);
@@ -292,7 +292,7 @@ public class ExcelDownServiceImpl implements ExcelDownService {
                 }
             }
 
-            sheet.setDefaultColumnWidth((short)20);
+            sheet.setDefaultColumnWidth((short) 20);
 
             workbook.write(outputStream);
             workbook.close();
@@ -321,7 +321,7 @@ public class ExcelDownServiceImpl implements ExcelDownService {
             XSSFWorkbook workbook = new XSSFWorkbook();
             Sheet sheet = workbook.createSheet("user_list");
 
-            if(list == null){
+            if (list == null) {
                 logger.error("[downloadUsrProfileAllListExcel] 직원 목록이 존재하지 않습니다.");
                 throw new CustomException("직원 목록이 존재하지 않습니다.");
             }
@@ -378,7 +378,7 @@ public class ExcelDownServiceImpl implements ExcelDownService {
             applyCellStyle(listHeader, 8, "자격증여부", headerStyle);
 
             int num = 1;
-            for(ProfileVO profile : list){
+            for (ProfileVO profile : list) {
                 // 엑셀[자격증] data
                 Row listData = sheet.createRow(rowCount++);
                 Cell cell = listData.createCell(0);
@@ -388,16 +388,16 @@ public class ExcelDownServiceImpl implements ExcelDownService {
                 applyCellStyle(listData, 2, profile.getUser_department_nm(), contentStyle);
                 applyCellStyle(listData, 3, nullChange(profile.getProject_client()), contentStyle);
                 applyCellStyle(listData, 4, nullChange(profile.getProject_nm()), contentStyle);
-                applyCellStyle(listData, 5, nullChange(profile.getProject_start_date()) == ""? "": formatDate(profile.getProject_start_date()), contentStyle);
+                applyCellStyle(listData, 5, nullChange(profile.getProject_start_date()) == "" ? "" : formatDate(profile.getProject_start_date()), contentStyle);
                 applyCellStyle(listData, 6, nullChange(profile.getProject_end_date()) == "" ? "" : formatDate(profile.getProject_end_date()), contentStyle);
                 applyCellStyle(listData, 7, convertToString(profile.getProject_totalMonth()), contentStyle);
-                applyCellStyle(listData, 8, "1".equals(profile.getQualification_yn()) ? "Y":"N", contentStyle);
+                applyCellStyle(listData, 8, "1".equals(profile.getQualification_yn()) ? "Y" : "N", contentStyle);
 
                 num++;
             }
             sheet.createRow(rowCount++); // 여백
 
-            sheet.setDefaultColumnWidth((short)20);
+            sheet.setDefaultColumnWidth((short) 20);
 
             workbook.write(outputStream);
             workbook.close();
@@ -421,75 +421,84 @@ public class ExcelDownServiceImpl implements ExcelDownService {
     @Override
     @Transactional
     public void uploadKosaExcel(MultipartFile excel, String user_id) {
-        if(excel.isEmpty()){
+        if (excel.isEmpty()) {
             logger.error("[uploadKosaExcel] 파일이 존재하지 않습니다.");
             throw new CustomException("파일이 존재하지 않습니다.");
         }
 
         try (InputStream inputStream = excel.getInputStream()) {
             Workbook workbook = null;
-			try {
-				workbook = WorkbookFactory.create(inputStream);
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+            try {
+                workbook = WorkbookFactory.create(inputStream);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             Sheet sheet = workbook.getSheetAt(0);
 
             int rows = sheet.getPhysicalNumberOfRows();
-            logger.info("행 개수 : " + rows);
+            logger.info("rowCnt : " + rows);
             boolean deleteYn = false; // 테이블 삭제여부
             boolean createYn = false; // 프로필 이력 생성여부
             int rangeCnt = 0; // kosa 파일의 분류별 range (근무경력, 기술경력, 학력, 기술자격, 교육, 상훈)
-            int seq = 0; // 테이블별 seq
+            int seq = 0;
             ArrayList<Integer> idxArray = new ArrayList<>();
 
-            WorkExperienceVO work = new WorkExperienceVO(); // 근무경력
-            ProjectVO project = new ProjectVO(); // 기술경력
-            ProfileVO profile = new ProfileVO(); // 프로필
-            EduVO edu = new EduVO(); // 학력
-            QualificationVO qualification = new QualificationVO(); // 기술자격
-            UserSkillVO skill = new UserSkillVO(); // 기술
+            // 범주별 키워드를 미리 정의
+            Map<Integer, Set<String>> categoryKeywords = new HashMap<>();
+            categoryKeywords.put(0, Set.of("회사명", "직위", "근무기간", "담당업무")); // 근무경력
+            categoryKeywords.put(1, Set.of("참여사업명", "수행기간", "수행업무", "직무영역 및 기술", "발주처")); // 기술경력
+            categoryKeywords.put(2, Set.of("학교명", "학과(전공)", "학위", "입학년월일", "졸업년월일")); // 학력
+            categoryKeywords.put(3, Set.of("자격명", "합격일자", "발급기관")); // 기술자격
+
+            WorkExperienceVO work = new WorkExperienceVO();
+            ProjectVO project = new ProjectVO();
+            ProfileVO profile = new ProfileVO();
+            EduVO edu = new EduVO();
+            QualificationVO qualification = new QualificationVO();
+            UserSkillVO skill = new UserSkillVO();
 
             int work_hist_seq = workExperienceDAO.selectMaxHistSeq(user_id);
             int project_hist_seq = projectDAO.selectMaxHistSeq(user_id);
             int profile_hist_seq = profileDAO.selectMaxHistSeq(user_id);
             int qualification_hist_seq = qualificationDAO.selectMaxHistSeq(user_id);
 
-            for(int r= 0; r < rows; r++){ // 행 갯수만큼 for 문을 돌린다.
-                Row row = sheet.getRow(r); // 행을 하나 가지고 와서
-                int cells = row.getPhysicalNumberOfCells(); // 해당 행의 cell들을 가지고 온다
+            for (int r = 0; r < rows; r++) {
+                Row row = sheet.getRow(r);
+                int cells = row.getPhysicalNumberOfCells();
                 int cnt = 0;
 
-                logger.info("|      "+(r+1)+"     |"); // n번째 행 확인
+                logger.info("|      " + (r + 1) + "     |");
 
-                if(!idxArray.isEmpty()){
-                    for(int c =0; c < idxArray.size(); c++){
-                        Cell cell = row.getCell(idxArray.get(c)); // n번째 행의 n번째 cell을 가지고 와서
-                        String value = getValue(cell); // cell 에 담긴 데이터를 가지고 옴
+                if (rangeCnt > 3) {
+                    logger.info("교육, 상훈 데이터는 가져오지 않습니다");
+                    break;
+                }
 
-                        if(value.isEmpty()){ // 만약 데이터가 비어있는 항목이라면
-                            cnt++; // 빈 row 를 찾기 위해서 cnt++ 해줌
-                            logger.info("|      "+value+"     |");
-                            if(cnt == idxArray.size()){ // 만약 한 row 가 전부 false 를 가지고 있다면
-                                logger.info("지금은 empty row 입니다");
-                                rangeCnt++; // 다음 form 설정
-                                idxArray.clear(); // indxArray 비움
-                                deleteYn = false; // 테이블 기본 설정
-                                break; // for문 빠져나감
+                if (!idxArray.isEmpty()) {
+                    for (int c = 0; c < idxArray.size(); c++) {
+                        Cell cell = row.getCell(idxArray.get(c));
+                        String value = getValue(cell);
+
+                        if (value.isEmpty()) {
+                            cnt++;
+                            logger.info("|      " + value + "     |");
+                            if (cnt == idxArray.size()) {
+                                rangeCnt++;
+                                idxArray.clear();
+                                deleteYn = false;
+                                break;
                             }
                         } else {
-                            logger.info("|      "+value+"     |");
+                            logger.info("|      " + value + "     |");
                         }
                     }
 
-                    if(idxArray.isEmpty()){ // 한 row가 전부 false 라서 배열을 초기화 해주었으면
-                        seq = 0; // 테이블에 적용할 seq는 0으로 초기화해준다
-                        logger.info("직전에 idxArray 비워줬고 seq 도 0으로 초기화함. > 다음 form을 읽을 예정");
+                    if (idxArray.isEmpty()) {
+                        seq = 0;
                         continue;
                     }
 
-                    if(rangeCnt == 0){
+                    if (rangeCnt == 0) {
                         logger.info("rangeCnt : " + rangeCnt + " >> 근무경력에 대한 DB 처리");
                         seq++;
                         work.setWork_seq(seq); // 1 부터
@@ -513,7 +522,7 @@ public class ExcelDownServiceImpl implements ExcelDownService {
                         logger.info("end_date : " + work.getWork_end_date());
                         logger.info("task : " + work.getWork_assigned_task());
 
-                        if(!deleteYn){
+                        if (!deleteYn) {
                             // DELETE TB
                             logger.info("사용자 근무경력 정보를 삭제합니다: user_id={}", user_id);
                             workExperienceDAO.deleteUsrWorkInfo(user_id);
@@ -528,11 +537,11 @@ public class ExcelDownServiceImpl implements ExcelDownService {
                         workExperienceDAO.insertUsrWorkInfoHist(work);
                         logger.info("사용자 근무경력 정보 이력을 생성했습니다: user_id={}", user_id);
 
-                    } else if(rangeCnt == 1){ // 기술경력
+                    } else if (rangeCnt == 1) {
                         boolean chk = true;
                         logger.info("rangeCnt : " + rangeCnt + " >> 기술경력에 대한 DB 처리");
                         seq++;
-                        project.setProject_seq(seq); // 1 부터
+                        project.setProject_seq(seq);
                         project.setHist_seq(project_hist_seq);
                         project.setUser_id(user_id);
                         project.setProject_nm(getValue(row.getCell(idxArray.get(0)))); // 참여사업명
@@ -542,8 +551,8 @@ public class ExcelDownServiceImpl implements ExcelDownService {
                         project.setProject_start_date(start_date); // 사업시작일
                         project.setProject_end_date(end_date); // 사업종료일
                         String[] taskArr = getValue(row.getCell(idxArray.get(2))).split(">");
-                        String task_lar = taskArr[0].replace(" ","");
-                        String task_mid = taskArr[1].replace(" ","");
+                        String task_lar = taskArr[0].replace(" ", "");
+                        String task_mid = taskArr[1].replace(" ", "");
                         String task_code_lar = findTaskCode(task_lar, 1); // 업무구분코드 대분류
                         String task_code_mid = findTaskCode(task_mid, 2); // 업무구분코드 중분류
 
@@ -552,14 +561,7 @@ public class ExcelDownServiceImpl implements ExcelDownService {
                         String skillStr = getValue(row.getCell(idxArray.get(3)));
                         project.setProject_client(getValue(row.getCell(idxArray.get(4)))); // 발주처
 
-                        logger.info(String.valueOf(project.getProject_seq()));
-                        logger.info("프로젝트명 : " + project.getProject_nm());
-                        logger.info("시작일자 : " + project.getProject_start_date());
-                        logger.info("종료일자 : " + project.getProject_end_date());
-                        logger.info("직무영역, 기술 : " + getValue(row.getCell(idxArray.get(3))));
-                        logger.info("발주처 : " + project.getProject_client());
-
-                        if(!deleteYn){
+                        if (!deleteYn) {
                             // DELETE TB
                             logger.info("사용자 기술정보를 삭제합니다: user_id={}", user_id);
                             projectDAO.deleteUsrAllSkillInfo(user_id);
@@ -576,22 +578,21 @@ public class ExcelDownServiceImpl implements ExcelDownService {
                         projectDAO.insertUsrProjectInfoHist(project);
                         logger.info("사용자 기술경력 정보 이력을 생성했습니다: user_id={}", user_id);
 
-                        if(skillStr.isEmpty()){
+                        if (skillStr.isEmpty()) {
                             logger.info("작성된 기술이 없습니다");
                             chk = false;
                         }
-                        if(chk){ // 작성된 기술이 있다면
+                        if (chk) { // 작성된 기술이 있다면
                             // SKILL UPDATE(INSERT)
                             int skill_hist_seq = projectDAO.selectSkMaxSeq(project);
                             skill.setUser_id(user_id);
                             skill.setHist_seq(skill_hist_seq);
                             skill.setProject_seq(seq);
 
-                            logger.info("배열에 기술을 담습니다");
                             String[] skillArr = skillStr.split(",");
 
-                            for(int i = 0; i < skillArr.length; i++){
-                                int skillId = i+1;
+                            for (int i = 0; i < skillArr.length; i++) {
+                                int skillId = i + 1;
                                 String skillNm = skillArr[i].trim();
                                 logger.info("skillNm : " + skillNm);
                                 skill.setSkill_id(skillId);
@@ -603,7 +604,7 @@ public class ExcelDownServiceImpl implements ExcelDownService {
                                 logger.info("사용자 기술정보 이력을 생성했습니다");
                             }
                         }
-                    } else if(rangeCnt == 2){ // 학력
+                    } else if (rangeCnt == 2) {
                         seq++;
                         profile.setHist_seq(profile_hist_seq);
                         profile.setUser_id(user_id);
@@ -616,21 +617,12 @@ public class ExcelDownServiceImpl implements ExcelDownService {
                         String code = setGubunCode(gubun);
                         edu.setSchool_gubun(code);
                         edu.setGrad_status("001"); // 졸업
-                        String startDate = getValue(row.getCell(idxArray.get(3))).replace(".","");
-                        String endDate = getValue(row.getCell(idxArray.get(4))).replace(".","");
+                        String startDate = getValue(row.getCell(idxArray.get(3))).replace(".", "");
+                        String endDate = getValue(row.getCell(idxArray.get(4))).replace(".", "");
                         edu.setSchool_start_date(startDate); // 입학년월일
                         edu.setSchool_end_date(endDate); // 졸업년월일
 
-                        logger.info(String.valueOf(edu.getSchool_seq()));
-                        logger.info(String.valueOf(edu.getHist_seq()));
-                        logger.info("학교구분" + edu.getSchool_gubun());
-                        logger.info("학교명" + edu.getSchool_nm());
-                        logger.info("입학일자" + edu.getSchool_start_date());
-                        logger.info("졸업일자" + edu.getSchool_end_date());
-                        logger.info("전공" + edu.getMajor());
-                        logger.info("상태" + edu.getGrad_status());
-
-                        if(!deleteYn){
+                        if (!deleteYn) {
                             // DELETE TB
                             logger.info("사용자 학력 정보를 삭제합니다: user_id={}", user_id);
                             profileDAO.deleteUsrEducationInfo(user_id);
@@ -642,30 +634,24 @@ public class ExcelDownServiceImpl implements ExcelDownService {
                         profileDAO.updateUsrEducationInfo(edu);
 
                         // CREATE HIST
-                        if(!createYn){
+                        if (!createYn) {
                             logger.info("사용자 프로필이력 정보를 입력합니다: user_id={}", user_id);
                             profileDAO.insertUsrProfileInfoHist(profile);
                             createYn = true;
                         }
                         profileDAO.insertUsrEducationInfoHist(edu);
                         logger.info("사용자 학력 정보 이력을 생성했습니다: user_id={}", user_id);
-                    } else if(rangeCnt == 3){ // 기술자격
+                    } else if (rangeCnt == 3) {
                         seq++;
                         qualification.setQualification_seq(seq);
                         qualification.setHist_seq(qualification_hist_seq);
                         qualification.setUser_id(user_id);
                         qualification.setQualification_nm(getValue(row.getCell(idxArray.get(0)))); // 자격명
-                        String startDate = getValue(row.getCell(idxArray.get(1))).replace(".","");
+                        String startDate = getValue(row.getCell(idxArray.get(1))).replace(".", "");
                         qualification.setAcquisition_date(startDate);
                         qualification.setIssuer(getValue(row.getCell(idxArray.get(2)))); // 발급기관
 
-                        logger.info(String.valueOf(qualification.getQualification_seq()));
-                        logger.info(String.valueOf(qualification.getHist_seq()));
-                        logger.info("자격명" + qualification.getQualification_nm());
-                        logger.info("합격일자" + qualification.getAcquisition_date());
-                        logger.info("발급기관" + qualification.getIssuer());
-
-                        if(!deleteYn){
+                        if (!deleteYn) {
                             // DELETE TB
                             logger.info("사용자 기술자격 정보를 삭제합니다: user_id={}", user_id);
                             qualificationDAO.deleteUsrQualificationInfo(user_id);
@@ -680,60 +666,17 @@ public class ExcelDownServiceImpl implements ExcelDownService {
                         qualificationDAO.insertUsrQualificationInfoHist(qualification);
                         logger.info("사용자 기술자격 정보 이력을 생성했습니다: user_id={}", user_id);
                     }
-                } else { // idxArray가 null 이라면 == 처음에 컬럼명을 읽으면서 idxArray 배열에 추가해줄 것이기 때문에
-                    for(int c =0; c < cells; c++){
+                } else {
+                    for (int c = 0; c < cells; c++) {
                         logger.info("idxArray가 null");
-                        Cell cell = row.getCell(c); // n번째 행의 n번째 cell을 가지고 와서
-                        String value = getValue(cell); // cell 에 담긴 데이터를 가지고 옴
+                        Cell cell = row.getCell(c);
+                        String value = getValue(cell);
 
-                        if(rangeCnt == 0){ // 근무 경력
-                            logger.info("rangeCnt == " + rangeCnt+ " >> 근무경력에 대한 indxArray 설정 중");
-                            if("회사명".equals(value)){
-                                idxArray.add(cell.getColumnIndex());
-                            }else if("직위".equals(value)){
-                                idxArray.add(cell.getColumnIndex());
-                            }else if("근무기간".equals(value)){
-                                idxArray.add(cell.getColumnIndex());
-                            }else if("담당업무".equals(value)){
-                                idxArray.add(cell.getColumnIndex());
-                            }
-                        } else if(rangeCnt == 1){ // 기술 경력
-                            logger.info("rangeCnt == " + rangeCnt+ " >> 기술경력에 대한 indxArray 설정 중");
-                            if("참여사업명".equals(value)){
-                                idxArray.add(cell.getColumnIndex());
-                            } else if("수행기간".equals(value)){
-                                idxArray.add(cell.getColumnIndex());
-                            } else if("수행업무".equals(value)){
-                                idxArray.add(cell.getColumnIndex());
-                            } else if(value.startsWith("직무")){
-                                idxArray.add(cell.getColumnIndex());
-                            } else if("발주처".equals(value)){
-                                idxArray.add(cell.getColumnIndex());
-                            }
-                        } else if(rangeCnt == 2) { // 학력
-                            logger.info("rangeCnt == " + rangeCnt+ " >> 학력에 대한 indxArray 설정 중");
-                            if("학교명".equals(value)){
-                                idxArray.add(cell.getColumnIndex());
-                            }else if("학과(전공)".equals(value)){
-                                idxArray.add(cell.getColumnIndex());
-                            }else if("학위".equals(value)){
-                                idxArray.add(cell.getColumnIndex());
-                            }else if("입학년월일".equals(value)){
-                                idxArray.add(cell.getColumnIndex());
-                            }else if("졸업년월일".equals(value)){
-                                idxArray.add(cell.getColumnIndex());
-                            }
-                        } else if(rangeCnt == 3){ // 기술자격
-                            logger.info("rangeCnt == " + rangeCnt+ " >> 기술자격에 대한 indxArray 설정 중");
-                            if("자격명".equals(value)){
-                                idxArray.add(cell.getColumnIndex());
-                            } else if("합격일자".equals(value)){
-                                idxArray.add(cell.getColumnIndex());
-                            } else if("발급기관".equals(value)){
-                                idxArray.add(cell.getColumnIndex());
-                            }
+                        Set<String> keywords = categoryKeywords.get(rangeCnt);
+                        if (keywords != null && keywords.contains(value)) {
+                            idxArray.add(cell.getColumnIndex());
                         }
-                        logger.info("|      "+value+"     |");
+                        logger.info("|      " + value + "     |");
                     }
                 }
             }
@@ -742,12 +685,11 @@ public class ExcelDownServiceImpl implements ExcelDownService {
         } catch (IOException e) {
             throw new CustomException("엑셀 업로드 중 오류 확인 : " + e.getMessage());
         } catch (EncryptedDocumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+            e.printStackTrace();
+        }
 
     }
-    
+
     /* 규현 작성중 */
     /* 템플릿 파일 다운로드 */
     @Override
@@ -777,109 +719,109 @@ public class ExcelDownServiceImpl implements ExcelDownService {
             e.printStackTrace();
         }
     }
-    
+
     /* 템플릿 형식으로 다운*/
     @Override
     public void downloadUsrProfileDetailExcelTemplate(ProfileVO profile, HttpServletRequest request,
-            HttpServletResponse response) throws IOException {
+                                                      HttpServletResponse response) throws IOException {
         String templatePath = "template/template.xlsx"; // 템플릿 경로
         String outputFileName = "test_template.xlsx"; // 출력 파일명
-        
-        Map<String, Object> 		personalInfo 			= new HashMap<>();		//인적사항
-        List<Map<String, Object>> 	educationList 			= new ArrayList<>();	//학력
-        List<Map<String, Object>> 	certificationList 		= new ArrayList<>();	//자격증
-        List<Map<String, Object>> 	workExperienceList 		= new ArrayList<>();	//근무경력
-        List<Map<String, Object>> 	projectExperienceList 	= new ArrayList<>();	//수행경력
+
+        Map<String, Object> personalInfo = new HashMap<>();        //인적사항
+        List<Map<String, Object>> educationList = new ArrayList<>();    //학력
+        List<Map<String, Object>> certificationList = new ArrayList<>();    //자격증
+        List<Map<String, Object>> workExperienceList = new ArrayList<>();    //근무경력
+        List<Map<String, Object>> projectExperienceList = new ArrayList<>();    //수행경력
 
         // [인적사항] (단일 데이터)
-        personalInfo.put("name"			, profile.getUser_nm()						);
-        personalInfo.put("birthdate"	, formatDate(profile.getUser_birth())		);
-        personalInfo.put("phone"		, formatPhone(profile.getUser_phone())		);
-        personalInfo.put("email"		, profile.getUser_id() + "@itsmart.co.kr"	);
-        personalInfo.put("affiliation"	, profile.getUser_department_nm()			);
-        personalInfo.put("position"		, profile.getUser_position_nm()				);
-        personalInfo.put("hireDate"		, formatDate(profile.getHire_date())		);
-        personalInfo.put("address"		, profile.getUser_address()					);
+        personalInfo.put("name", profile.getUser_nm());
+        personalInfo.put("birthdate", formatDate(profile.getUser_birth()));
+        personalInfo.put("phone", formatPhone(profile.getUser_phone()));
+        personalInfo.put("email", profile.getUser_id() + "@itsmart.co.kr");
+        personalInfo.put("affiliation", profile.getUser_department_nm());
+        personalInfo.put("position", profile.getUser_position_nm());
+        personalInfo.put("hireDate", formatDate(profile.getHire_date()));
+        personalInfo.put("address", profile.getUser_address());
 
         //학력
         for (EduVO edu : profile.getEducationList()) {
             Map<String, Object> educationInfo = new HashMap<>();
-            educationInfo.put("schoolType"			, gubunKor(edu.getSchool_gubun())		);	//학교구분
-            educationInfo.put("schoolName"			, edu.getSchool_nm()					);	//학교명
-            educationInfo.put("major"				, edu.getMajor()						);	//전공명
-            educationInfo.put("gpa"					, castType(edu.getTotal_grade())		);	//학점
-            educationInfo.put("entranceDate"		, formatDate(edu.getSchool_start_date()));	//입학일자
-            educationInfo.put("graduationDate"		, formatDate(edu.getSchool_end_date())	);	//졸업일자
-            educationInfo.put("graduationStatus"	, statusKor(edu.getGrad_status())		);	//졸업상태
-            
+            educationInfo.put("schoolType", gubunKor(edu.getSchool_gubun()));    //학교구분
+            educationInfo.put("schoolName", edu.getSchool_nm());    //학교명
+            educationInfo.put("major", edu.getMajor());    //전공명
+            educationInfo.put("gpa", castType(edu.getTotal_grade()));    //학점
+            educationInfo.put("entranceDate", formatDate(edu.getSchool_start_date()));    //입학일자
+            educationInfo.put("graduationDate", formatDate(edu.getSchool_end_date()));    //졸업일자
+            educationInfo.put("graduationStatus", statusKor(edu.getGrad_status()));    //졸업상태
+
             educationList.add(educationInfo);
         }
-        
+
         //자격증
-        for(QualificationVO ql : profile.getQualificationList()){
+        for (QualificationVO ql : profile.getQualificationList()) {
             Map<String, Object> certificationInfo = new HashMap<>();
-            certificationInfo.put("certificateName"			, ql.getQualification_nm()				);	//자격증명
-            certificationInfo.put("issuingOrganization"		, ql.getIssuer()						);	//발행기관
-            certificationInfo.put("acquisitionDate"			, formatDate(ql.getAcquisition_date())	);	//취득일자
-            certificationInfo.put("expirationDate"			, formatDate(ql.getExpiry_date())		);	//만기일자
-            
+            certificationInfo.put("certificateName", ql.getQualification_nm());    //자격증명
+            certificationInfo.put("issuingOrganization", ql.getIssuer());    //발행기관
+            certificationInfo.put("acquisitionDate", formatDate(ql.getAcquisition_date()));    //취득일자
+            certificationInfo.put("expirationDate", formatDate(ql.getExpiry_date()));    //만기일자
+
             certificationList.add(certificationInfo);
         }
-        
+
         // [근무경력]
-        for(WorkExperienceVO work : profile.getWorkExperienceList()){
+        for (WorkExperienceVO work : profile.getWorkExperienceList()) {
             Map<String, Object> workExperience = new HashMap<>();
-            workExperience.put("companyName"			, work.getWork_place()					);	//회사명
-            workExperience.put("position"				, work.getWork_position()				);	//직급
-            workExperience.put("jobDescription"			, work.getWork_assigned_task()			);	//담당업무
-            workExperience.put("hireDate"				, formatDate(work.getWork_start_date())	);	//입사일자
-            workExperience.put("resignationDate"		, formatDate(work.getWork_end_date())	);	//퇴사일자
-            
+            workExperience.put("companyName", work.getWork_place());    //회사명
+            workExperience.put("position", work.getWork_position());    //직급
+            workExperience.put("jobDescription", work.getWork_assigned_task());    //담당업무
+            workExperience.put("hireDate", formatDate(work.getWork_start_date()));    //입사일자
+            workExperience.put("resignationDate", formatDate(work.getWork_end_date()));    //퇴사일자
+
             workExperienceList.add(workExperience);
         }
-        
+
         // [수행경력]
-        for(ProjectVO pj : profile.getProjectList()){
+        for (ProjectVO pj : profile.getProjectList()) {
             Map<String, Object> projectExperience = new HashMap<>();
             List<String> skillNames = new ArrayList<>();
-            
+
             int project_seq = pj.getProject_seq();
             ProjectVO temp = new ProjectVO();
             temp.setUser_id(profile.getUser_id());
             temp.setProject_seq(project_seq);
-            
+
             ProjectVO rst = projectMntService.selectUsrSkillList(temp);
-            for(UserSkillVO skill : rst.getSkillList()){
+            for (UserSkillVO skill : rst.getSkillList()) {
                 skillNames.add(skill.getSkill_nm());
             }
             String skillList = String.join(", ", skillNames);
-            
-            projectExperience.put("client"					, pj.getProject_client()				);	//발주처
-            projectExperience.put("projectName"				, pj.getProject_nm()					);	//사업명
-            projectExperience.put("startDate"				, formatDate(pj.getProject_start_date()));	//참여시작일
-            projectExperience.put("endDate"					, formatDate(pj.getProject_end_date())	);	//참여종료일
-            projectExperience.put("majorResponsibilities"	, pj.getAssigned_task_lar_nm()			);	//담당업무(대)
-            projectExperience.put("minorResponsibilities"	, pj.getAssigned_task_mid_nm()			);	//담당업무(소)
-            projectExperience.put("role"					, pj.getProject_role_nm()				);	//역할
-            projectExperience.put("skills"					, skillList								);	//기술
+
+            projectExperience.put("client", pj.getProject_client());    //발주처
+            projectExperience.put("projectName", pj.getProject_nm());    //사업명
+            projectExperience.put("startDate", formatDate(pj.getProject_start_date()));    //참여시작일
+            projectExperience.put("endDate", formatDate(pj.getProject_end_date()));    //참여종료일
+            projectExperience.put("majorResponsibilities", pj.getAssigned_task_lar_nm());    //담당업무(대)
+            projectExperience.put("minorResponsibilities", pj.getAssigned_task_mid_nm());    //담당업무(소)
+            projectExperience.put("role", pj.getProject_role_nm());    //역할
+            projectExperience.put("skills", skillList);    //기술
             projectExperienceList.add(projectExperience);
         }
-        
+
 
         Map<String, Object> data = new HashMap<>();
-        data.put("personalInfo"			, personalInfo);
-        data.put("educationList"		, educationList);
-        data.put("certificationList"	, certificationList);
-        data.put("workExperienceList"	, workExperienceList);
+        data.put("personalInfo", personalInfo);
+        data.put("educationList", educationList);
+        data.put("certificationList", certificationList);
+        data.put("workExperienceList", workExperienceList);
         data.put("projectExperienceList", projectExperienceList);
-        
-        if(profile.getFileInfo() != null){
-        	
-        	InputStream img = new FileInputStream(profile.getFileInfo().getFile_sver_path());
-        	byte[] imageBytes = toByteArray(img);
+
+        if (profile.getFileInfo() != null) {
+
+            InputStream img = new FileInputStream(profile.getFileInfo().getFile_sver_path());
+            byte[] imageBytes = toByteArray(img);
             img.close();
-        	
-        	data.put("profileImg", imageBytes);
+
+            data.put("profileImg", imageBytes);
 
         }
 
@@ -892,28 +834,28 @@ public class ExcelDownServiceImpl implements ExcelDownService {
 
             // 변환된 워크북 생성
             Workbook workbook = transformer.transformXLS(fis, data);
-            
+
             // 이미지 삽입
             Sheet sheet = workbook.getSheetAt(0); // 첫 번째 시트 가져오기
             for (Row row : sheet) {
                 for (Cell cell : row) {
-                	if ("#IMG#".equals(cell.toString())) {
+                    if ("#IMG#".equals(cell.toString())) {
                         // #IMG# 텍스트가 있는 셀 찾기
                         int rowIndex = cell.getRowIndex();
                         int colIndex = cell.getColumnIndex();
-                        
+
                         // 이미지 바이트 배열 가져오기 (이미지 삽입)
                         byte[] imageBytes = (byte[]) data.get("profileImg");
-                        
+
                         String extension = profile.getFileInfo().getFile_extension();
                         int type = 0;
-                        if("png".equals(extension)){
+                        if ("png".equals(extension)) {
                             type = Workbook.PICTURE_TYPE_PNG;
-                        }else if("jpg".equals(extension) || "jpeg".equals(extension)){
+                        } else if ("jpg".equals(extension) || "jpeg".equals(extension)) {
                             type = Workbook.PICTURE_TYPE_JPEG;
                         }
 
-                        if(type == 0){
+                        if (type == 0) {
                             logger.error("[downloadUsrProfileDetailExcel] 잘못된 확장자 입니다. extension : {}", extension);
                             throw new CustomException("지원하지 않는 파일 확장자입니다.: " + extension);
                         }
@@ -923,35 +865,35 @@ public class ExcelDownServiceImpl implements ExcelDownService {
                         CreationHelper helper = workbook.getCreationHelper();
                         Drawing drawing = sheet.createDrawingPatriarch();
                         ClientAnchor anchor = helper.createClientAnchor();
-                        
+
                         // 이미지 시작 위치 (a2 위치)
                         anchor.setCol1(colIndex); // 열 위치 (a열)
                         anchor.setRow1(rowIndex); // 행 위치 (2행)
-                        
+
                         // 이미지 끝 위치 (b8 위치)
                         anchor.setCol2(colIndex + 1); // 열 위치 (b열)
                         anchor.setRow2(rowIndex + 7); // 행 위치 (8행)
-                        
+
                         // 이미지 삽입
                         Picture picture = drawing.createPicture(anchor, pictureIndex);
                         picture.resize(1.0); // 이미지 크기 조정 (필요시)
-                        
+
                         // #IMG# 텍스트를 지워줍니다
-                        cell.setCellValue(""); 
+                        cell.setCellValue("");
                     }
                 }
             }
-            
+
             // 데이터가 들어가는 부분에서 각 열의 너비를 자동으로 조정
             for (int colIndex = 0; colIndex < sheet.getRow(0).getPhysicalNumberOfCells(); colIndex++) {
                 sheet.autoSizeColumn(colIndex);  // 각 열에 대해 자동 너비 조정
             }
-            
+
             // 텍스트가 잘리지 않게 열 너비를 더 넓게 설정 (특히 긴 텍스트가 있을 경우)
             for (int colIndex = 0; colIndex < sheet.getRow(0).getPhysicalNumberOfCells(); colIndex++) {
                 sheet.setColumnWidth(colIndex, sheet.getColumnWidth(colIndex) * 2); // 열 너비를 두 배로 늘려서 긴 텍스트도 보이도록 설정
             }
-            
+
             // HTTP 응답으로 파일 전송
             response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
             response.setHeader("Content-Disposition", "attachment; filename=\"" + outputFileName + "\"");
@@ -964,16 +906,16 @@ public class ExcelDownServiceImpl implements ExcelDownService {
             throw new IOException("엑셀 생성 중 오류가 발생했습니다.");
         }
     }
-    
+
     public static byte[] toByteArray(InputStream inputStream) throws IOException { // used by templates and SimpleExporter
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         copy(inputStream, baos);
         return baos.toByteArray();
     }
-    
+
     public static void copy(InputStream in, OutputStream out) throws IOException {
         byte[] buffer = new byte[8 * 1024];
-        for (int count; (count = in.read(buffer)) != -1;) {
+        for (int count; (count = in.read(buffer)) != -1; ) {
             out.write(buffer, 0, count);
         }
     }
@@ -987,71 +929,76 @@ public class ExcelDownServiceImpl implements ExcelDownService {
     private String formatDate(String strDate) {
         String rst = "";
         try {
-            SimpleDateFormat dateFormat= new SimpleDateFormat("yyyyMMdd");
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
             SimpleDateFormat newDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-            if(strDate != null || !strDate.isEmpty()){
+            if (strDate != null || !strDate.isEmpty()) {
                 Date formatDate = dateFormat.parse(strDate);
                 rst = newDateFormat.format(formatDate);
             }
 
-        } catch (ParseException e){
+        } catch (ParseException e) {
             e.printStackTrace();
         }
         return rst;
     }
 
-    private String formatPhone(String strPhone){
-        if(strPhone.length() == 8){
+    private String formatPhone(String strPhone) {
+        if (strPhone.length() == 8) {
             return strPhone.replaceAll("^([0-9]{4})([0-9]{4})$", "$1-$2");
-        } else if(strPhone.length() == 12){
+        } else if (strPhone.length() == 12) {
             return strPhone.replaceAll("(^[0-9]{4})([0-9]{4})([0-9]{4})$", "$1-$2-$3");
         } else {
             return strPhone.replaceAll("(^02|[0-9]{3})([0-9]{3,4})([0-9]{4})$", "$1-$2-$3");
         }
     }
 
-    private String castType(BigDecimal data){
+    private String castType(BigDecimal data) {
         String replaceData = String.valueOf(data);
-        if(replaceData == "null"){
+        if (replaceData == "null") {
             replaceData = "";
         }
         return replaceData;
     }
 
-    private String gubunKor(String code){
+    private String gubunKor(String code) {
         String rtnValue = "";
-        if("010".equals(code)){ rtnValue = "고등학교"; }
-        else if ("011".equals(code)){ rtnValue = "대학교(2,3년)";}
-        else if ("012".equals(code)){ rtnValue = "대학교(4년)";}
-        else rtnValue = "대학원";
+        if ("010".equals(code)) {
+            rtnValue = "고등학교";
+        } else if ("011".equals(code)) {
+            rtnValue = "대학교(2,3년)";
+        } else if ("012".equals(code)) {
+            rtnValue = "대학교(4년)";
+        } else rtnValue = "대학원";
         return rtnValue;
     }
 
-    private String statusKor(String code){
+    private String statusKor(String code) {
         String rtnValue = "";
-        if("001".equals(code)){ rtnValue = "졸업"; }
-        else if ("002".equals(code)){ rtnValue = "졸업예정";}
-        else rtnValue = "재학중";
+        if ("001".equals(code)) {
+            rtnValue = "졸업";
+        } else if ("002".equals(code)) {
+            rtnValue = "졸업예정";
+        } else rtnValue = "재학중";
         return rtnValue;
     }
 
-    private String nullChange(String str){
-        if(str == null || str.isEmpty()){
+    private String nullChange(String str) {
+        if (str == null || str.isEmpty()) {
             str = "";
         }
         return str;
     }
 
     private String convertToString(int months) {
-        if(months == 0){
+        if (months == 0) {
             return "";
         }
         double year = Math.floor(months / 12);
         double month = months % 12;
 
-        int fmtYear = (int)year;
-        int fmtMonth = (int)month;
+        int fmtYear = (int) year;
+        int fmtMonth = (int) month;
 
         String result = "";
         if (year > 0) {
@@ -1092,19 +1039,19 @@ public class ExcelDownServiceImpl implements ExcelDownService {
         return value;
     }
 
-    private String setGubunCode(String gubun){
-        if("박사".equals(gubun) || "석사".equals(gubun)){ // 대학원
+    private String setGubunCode(String gubun) {
+        if ("박사".equals(gubun) || "석사".equals(gubun)) { // 대학원
             return "013";
-        } else if("학사".equals(gubun)){ // 대학교 4년제
+        } else if ("학사".equals(gubun)) { // 대학교 4년제
             return "012";
-        } else if(gubun.startsWith("전문")){ // 대학교 2-3년제[전문학사, 전문학사(3년)]
+        } else if (gubun.startsWith("전문")) { // 대학교 2-3년제[전문학사, 전문학사(3년)]
             return "011";
         } else { // [고졸, 기능대졸, 직업훈련기관이수, 기능실기시험합격, 기타]
             return "010"; // 고등학교
         }
     }
 
-    private String findTaskCode(String str, int level){
+    private String findTaskCode(String str, int level) {
         Map<String, Object> map = new HashMap<>();
         map.put("value", str);
         map.put("level", level);
