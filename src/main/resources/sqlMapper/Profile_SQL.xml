@@ -103,6 +103,7 @@
     <!-- profile + educationList -->
     <select id="selectUsrEducationList" resultType="EduVO">
         SELECT SCHOOL_GUBUN,
+               SCHOOL_SEQ,
                SCHOOL_NM,
                SCHOOL_START_DATE,
                SCHOOL_END_DATE,

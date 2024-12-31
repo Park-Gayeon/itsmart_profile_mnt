@@ -50,7 +50,7 @@ public class ProfileMntServiceImpl implements ProfileMntService {
 
             for (EduVO edu : profile.getEducationList()){
                 edu.setUser_id(user_id);
-                edu.setHist_seq(hist_seq-1);
+                edu.setHist_seq(hist_seq);
 
                 // UPDATE(=INSERT)
                 LOGGER.info("사용자 학력 정보를 입력합니다: user_id={}, school_nm={}", user_id, edu.getSchool_nm());
