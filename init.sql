@@ -232,6 +232,7 @@ CREATE TABLE TB_ATTACHMENT_INFO
 (
     user_id        VARCHAR(10)  NOT NULL COMMENT '직원 아이디',
     file_seq       INT          NOT NULL COMMENT '파일 순번',
+    file_se        VARCHAR(30)  NOT NULL COMMENT '파일 구분',
     file_ori_nm    VARCHAR(20)  NOT NULL COMMENT '로컬파일명',
     file_sver_nm   VARCHAR(50)  NOT NULL COMMENT '서버파일명',
     file_sver_path VARCHAR(100) NOT NULL COMMENT '파일 서버경로',
@@ -240,7 +241,7 @@ CREATE TABLE TB_ATTACHMENT_INFO
     created_date   TIMESTAMP    NOT NULL COMMENT '생성일시',
     creator        VARCHAR(10)  NOT NULL COMMENT '생성자',
 
-    PRIMARY KEY (user_id, file_seq)
+    PRIMARY KEY (file_seq, file_se, user_id)
 ) COMMENT ='첨부파일 정보테이블';
 
 CREATE TABLE TB_COMMON_CODE

@@ -3,6 +3,7 @@ package kr.co.itsmart.profileMnt.vo;
 public class FileVO {
     private String user_id;
     private int file_seq;
+    private String file_se;
     private String file_ori_nm;
     private String file_sver_nm;
     private String file_sver_path;
@@ -85,5 +86,15 @@ public class FileVO {
     public void setCreator(String creator) {
         this.creator = creator;
     }
+
+	public String getFile_se() {
+		return file_se;
+	}
+
+	public void setFile_se(String file_se) {
+		this.file_se = file_se;
+	}
+    
+    
 
 }

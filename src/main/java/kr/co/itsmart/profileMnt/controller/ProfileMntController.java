@@ -23,15 +23,19 @@ public class ProfileMntController {
     private final CommonService commonService;
     private final ProfileMntService profileMntService;
     private final ProjectMntService projectMntService;
+    private final FileService fileService;
+    
     private final WorkExperienceMntService workExperienceMntService;
 
     public ProfileMntController(ProfileMntService profileMntService,
                                 CommonService commonService,
+                                FileService fileService,
                                 @Lazy ProjectMntService projectMntService,
                                 @Lazy WorkExperienceMntService workExperienceMntService
     ) {
         this.profileMntService = profileMntService;
         this.commonService = commonService;
+        this.fileService = fileService;
         this.projectMntService = projectMntService;
         this.workExperienceMntService = workExperienceMntService;
     }
@@ -60,6 +64,12 @@ public class ProfileMntController {
         List<CommonVO> orgList = commonService.selectPureCodeList(code_group_id);
         int pj_totalMonth = projectMntService.calcTotalMonth(user_id);
         int wk_totalMonth = workExperienceMntService.calcTotalMonth(user_id);
+        
+        FileVO fileVo = new FileVO();
+        fileVo.setFile_se("EXCEL_TEMP");
+        
+        List<FileVO> attachFileList = fileService.selectFileList(fileVo);
+        model.addAttribute("attachFileList", attachFileList);
 
         model.addAttribute("loginUser", login.getUser_id());
         model.addAttribute("userRole", login.getAuthorities());
@@ -92,6 +102,7 @@ public class ProfileMntController {
                 // 파일 정보 DB 저장
                 fileVO.setUser_id(user_id);
                 fileVO.setFile_seq(file_seq);
+                fileVO.setFile_se("PROFILE");
                 commonService.insertUsrFileInfo(fileVO);
             }
 
