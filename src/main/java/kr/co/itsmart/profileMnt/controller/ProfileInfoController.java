@@ -97,6 +97,7 @@ public class ProfileInfoController {
             // 파일 정보 DB 저장
             fileVO.setUser_id(user_id);
             fileVO.setFile_seq(file_seq);
+            fileVO.setFile_se("PROFILE");
             commonService.insertUsrFileInfo(fileVO);
         }
 

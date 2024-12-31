@@ -40,10 +40,11 @@
 
     <!-- insertUsrFileInfo : 파일 정보 저장 -->
     <insert id="insertUsrFileInfo" parameterType="FileVO">
-        INSERT INTO TB_ATTACHMENT_INFO(USER_ID, FILE_SEQ, FILE_ORI_NM, FILE_SVER_NM, FILE_SVER_PATH, FILE_EXTENSION,
+        INSERT INTO TB_ATTACHMENT_INFO(USER_ID, FILE_SEQ, FILE_SE, FILE_ORI_NM, FILE_SVER_NM, FILE_SVER_PATH, FILE_EXTENSION,
                                        CREATED_DATE, CREATOR)
         VALUES (#{user_id},
                 #{file_seq},
+                #{file_se},
                 #{file_ori_nm},
                 #{file_sver_nm},
                 #{file_sver_path},

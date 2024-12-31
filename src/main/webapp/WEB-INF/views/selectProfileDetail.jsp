@@ -39,9 +39,7 @@
                             <span>목록가기</span>
                         </button>
                         </c:if>
-                        <button type="button" class="btn btn-secondary" onclick="excel()">
-                            <span>엑셀</span>
-                        </button>
+                        
                         <c:if test="${profile.user_id != loginUser && userRole[0] eq 'ROLE_ADMIN'}">
                             <button type="button" class="btn btn-danger" onclick="usrDelete()">
                                 <span>삭제</span>
@@ -54,7 +52,23 @@
                         </c:if>
                     </div>
                 </h2>
-                <div class="container-info row-box row mb-5 g-0">
+                <div style="float: right; display: block; width: 344px; text-align: right; margin-bottom: 10px;">
+                	<select class="form-select" aria-label="Default select example" id="excelTempate" style="width: 150px; float: left;">
+         	  			<option value="0" selected>template.xlsx</option>
+			  			<c:forEach var="attachFileList" items="${attachFileList}">
+                     		<option value="${attachFileList.file_seq}">${attachFileList.file_ori_nm}</option>
+                 		</c:forEach>
+					</select>
+			
+                    <button type="button" class="btn btn-secondary" onclick="excel()" style="float: left; margin-left: 10px;">
+                    	<span>엑셀</span>
+                   	</button>
+                   	
+                   	<button type="button" class="btn btn-dark" onclick="openExcelTemplatePop()" style="float: right;">
+                    	<span>엑셀템플릿업로드</span>
+                   	</button>
+                </div>
+                <div class="container-info row-box row mb-5 g-0" style="clear: both;">
                     <!-- 인적사항 -->
                     <header class="description mb-sm-3">인적사항
                         <c:if test="${userRole[0] eq 'ROLE_ADMIN'}">
@@ -1585,8 +1599,9 @@
     function excel() {
         const userId = $('input[name=user_id]').val();
         const userNm = $('input[name=user_nm]').val();
+        const fileSeq = $("#excelTempate").val();
 
-        fetch("/excel/" + userId + "/download", {
+        fetch("/excel/" + userId + "/downloadTemplate/" + fileSeq, {
             method: 'POST'
         }).then(response => {
             if (!response.ok) { // HTTP 상태 코드가 200-299 범위에 없을 경우
@@ -1971,6 +1986,12 @@
 
         let url = "/excel/" + user_id + "/upload";
         let properties = "width=600, height=200";
+        window.open(url, "excelUpload", properties)
+    }
+    
+    function openExcelTemplatePop(){
+    	let url = "/excel/excelTemplateUpload";
+        let properties = "width=900, height=600";
         window.open(url, "excelUpload", properties)
     }
 

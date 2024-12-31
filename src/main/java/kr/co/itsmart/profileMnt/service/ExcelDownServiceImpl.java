@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
 import java.math.BigDecimal;
+import java.net.URLEncoder;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -29,24 +30,38 @@ import java.util.*;
 public class ExcelDownServiceImpl implements ExcelDownService {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final ProjectMntService projectMntService;
+    private final FileService fileService;
+    private final CommonService commonService;
+
     private final WorkExperienceDAO workExperienceDAO;
     private final ProjectDAO projectDAO;
     private final ProfileDAO profileDAO;
+    private final FileDAO fileDAO;
+
+
     private final QualificationDAO qualificationDAO;
     private final CommonDAO commonDAO;
 
+    private static final String UPLOAD_DIR = "template"; // 리소스 디렉토리 내 template 폴더
+
     public ExcelDownServiceImpl(ProjectMntService projectMntService,
+                                FileService fileService,
+                                CommonService commonService,
                                 @Lazy WorkExperienceDAO workExperienceDAO,
                                 @Lazy ProjectDAO projectDAO,
                                 ProfileDAO profileDAO,
                                 @Lazy QualificationDAO qualificationDAO,
-                                @Lazy CommonDAO commonDAO) {
+                                @Lazy CommonDAO commonDAO,
+                                @Lazy FileDAO fileDAO) {
         this.projectMntService = projectMntService;
+        this.commonService = commonService;
+        this.fileService = fileService;
         this.projectDAO = projectDAO;
         this.workExperienceDAO = workExperienceDAO;
         this.profileDAO = profileDAO;
         this.qualificationDAO = qualificationDAO;
         this.commonDAO = commonDAO;
+        this.fileDAO = fileDAO;
     }
 
     @Override
@@ -690,42 +705,120 @@ public class ExcelDownServiceImpl implements ExcelDownService {
 
     }
 
-    /* 규현 작성중 */
-    /* 템플릿 파일 다운로드 */
+    /**
+     * 템플릿 파일(자체) 다운로드
+     *
+     * @param file_seq, request, response
+     * @return 엑셀파일
+     */
     @Override
-    public void downloadExcelTemplate(HttpServletRequest request, HttpServletResponse response) {
-        String filePath = "template/template.xlsx"; // 템플릿 파일 경로
+    public void downloadExcelTemplate(Integer file_seq, HttpServletRequest request, HttpServletResponse response) {
 
-        try (InputStream fis = getClass().getClassLoader().getResourceAsStream(filePath)) {
-            if (fis == null) {
-                throw new FileNotFoundException("Template file not found: " + filePath);
+        if (file_seq == 0) {
+            String filePath = "template/template.xlsx"; // 템플릿 파일 경로
+            try (InputStream fis = getClass().getClassLoader().getResourceAsStream(filePath)) {
+                if (fis == null) {
+                    throw new FileNotFoundException("Template file not found: " + filePath);
+                }
+
+                // 파일 다운로드를 위한 HTTP 응답 설정
+                response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+                response.setHeader("Content-Disposition", "attachment; filename=\"template.xlsx\"");
+
+                // 파일 데이터를 HTTP 응답 출력 스트림으로 복사
+                try (OutputStream os = response.getOutputStream()) {
+                    byte[] buffer = new byte[1024];
+                    int bytesRead;
+                    while ((bytesRead = fis.read(buffer)) != -1) {
+                        os.write(buffer, 0, bytesRead);
+                    }
+                    os.flush();
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            File file = null;
+            // 파일 정보 조회 (예: file_seq를 사용하여 DB에서 파일 경로 또는 파일명을 가져옵니다.)
+            try {
+                FileVO fileInfo = new FileVO();
+
+                fileInfo.setFile_seq(file_seq);
+                fileInfo.setFile_se("EXCEL_TEMP");
+
+                FileVO fileVO = fileDAO.selectFileInfo(fileInfo);
+
+
+                if (fileVO == null) {
+                    // 파일을 찾을 수 없는 경우 예외 처리
+                    logger.error("File not found with file_seq: " + file_seq);
+                }
+
+                // 파일 경로 가져오기 (FileVO에 저장된 파일 경로를 사용)
+                String filePath = fileVO.getFile_sver_path();  // 예시: DB에서 저장된 파일 경로
+
+                file = new File(filePath);
+                if (!file.exists()) {
+                    logger.error("File not found with file_seq: " + file_seq);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
 
-            // 파일 다운로드를 위한 HTTP 응답 설정
-            response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-            response.setHeader("Content-Disposition", "attachment; filename=\"template.xlsx\"");
+            // 파일을 다운로드하기 위한 설정
+            try (InputStream in = new FileInputStream(file);
+                 OutputStream out = response.getOutputStream()) {
 
-            // 파일 데이터를 HTTP 응답 출력 스트림으로 복사
-            try (OutputStream os = response.getOutputStream()) {
+                // 파일 이름 설정
+                String fileName = URLEncoder.encode(file.getName(), "UTF-8");
+
+                // 파일 다운로드 헤더 설정
+                response.setContentType("application/vnd.ms-excel");
+                response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
+
+                // 파일 데이터 스트림 전송
                 byte[] buffer = new byte[1024];
                 int bytesRead;
-                while ((bytesRead = fis.read(buffer)) != -1) {
-                    os.write(buffer, 0, bytesRead);
+                while ((bytesRead = in.read(buffer)) != -1) {
+                    out.write(buffer, 0, bytesRead);
                 }
-                os.flush();
+                out.flush();  // 데이터 전송 후 flush
+            } catch (IOException e) {
+                logger.error("Error while downloading file with file_seq: " + file_seq, e);
+                throw new RuntimeException("Error while downloading file", e);
             }
-
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
-    /* 템플릿 형식으로 다운*/
+    /**
+     * 엑셀 템플릿 다운로드
+     *
+     * @param profile, templateFile, request, response
+     * @return 엑셀파일
+     */
     @Override
-    public void downloadUsrProfileDetailExcelTemplate(ProfileVO profile, HttpServletRequest request,
+    public void downloadUsrProfileDetailExcelTemplate(ProfileVO profile, FileVO templateFile, HttpServletRequest request,
                                                       HttpServletResponse response) throws IOException {
-        String templatePath = "template/template.xlsx"; // 템플릿 경로
         String outputFileName = "test_template.xlsx"; // 출력 파일명
+        FileVO fileVo = new FileVO();
+        InputStream fis = null;
+        
+        logger.info("downloadUsrProfileDetailExcelTemplate 진입했다");
+
+        if (templateFile != null) {
+            File file = new File(templateFile.getFile_sver_path());
+            if (!file.exists()) {
+                logger.error("File not found at: {}", file.getAbsolutePath());
+                throw new IOException("Template file not found at: " + file.getAbsolutePath());
+            }
+            fis = new FileInputStream(file);
+
+        } else {
+            String templatePath = UPLOAD_DIR + "/template.xlsx";
+            fis = getClass().getClassLoader().getResourceAsStream(templatePath);
+        }
+
 
         Map<String, Object> personalInfo = new HashMap<>();        //인적사항
         List<Map<String, Object>> educationList = new ArrayList<>();    //학력
@@ -816,20 +909,18 @@ public class ExcelDownServiceImpl implements ExcelDownService {
         data.put("projectExperienceList", projectExperienceList);
 
         if (profile.getFileInfo() != null) {
-
             InputStream img = new FileInputStream(profile.getFileInfo().getFile_sver_path());
             byte[] imageBytes = toByteArray(img);
             img.close();
 
             data.put("profileImg", imageBytes);
-
         }
 
         // XLSTransformer를 이용한 변환
         XLSTransformer transformer = new XLSTransformer();
-        try (InputStream fis = getClass().getClassLoader().getResourceAsStream(templatePath)) {
+        try {
             if (fis == null) {
-                throw new IOException("Template file not found: " + templatePath);
+                throw new IOException("Template file not found: ");
             }
 
             // 변환된 워크북 생성
@@ -847,37 +938,38 @@ public class ExcelDownServiceImpl implements ExcelDownService {
                         // 이미지 바이트 배열 가져오기 (이미지 삽입)
                         byte[] imageBytes = (byte[]) data.get("profileImg");
 
-                        String extension = profile.getFileInfo().getFile_extension();
-                        int type = 0;
-                        if ("png".equals(extension)) {
-                            type = Workbook.PICTURE_TYPE_PNG;
-                        } else if ("jpg".equals(extension) || "jpeg".equals(extension)) {
-                            type = Workbook.PICTURE_TYPE_JPEG;
+                        if (profile.getFileInfo() != null) {
+                            String extension = profile.getFileInfo().getFile_extension();
+                            int type = 0;
+                            if ("png".equals(extension)) {
+                                type = Workbook.PICTURE_TYPE_PNG;
+                            } else if ("jpg".equals(extension) || "jpeg".equals(extension)) {
+                                type = Workbook.PICTURE_TYPE_JPEG;
+                            }
+
+                            if (type == 0) {
+                                logger.error("[downloadUsrProfileDetailExcel] 잘못된 확장자 입니다. extension : {}", extension);
+                                throw new CustomException("지원하지 않는 파일 확장자입니다.: " + extension);
+                            }
+                            // 이미지 삽입
+                            int pictureIndex = workbook.addPicture(imageBytes, type);
+                            CreationHelper helper = workbook.getCreationHelper();
+                            Drawing drawing = sheet.createDrawingPatriarch();
+                            ClientAnchor anchor = helper.createClientAnchor();
+
+                            // 이미지 시작 위치 (a2 위치)
+                            anchor.setCol1(colIndex); // 열 위치 (a열)
+                            anchor.setRow1(rowIndex); // 행 위치 (2행)
+
+                            // 이미지 끝 위치 (b8 위치)
+                            anchor.setCol2(colIndex + 1); // 열 위치 (b열)
+                            anchor.setRow2(rowIndex + 7); // 행 위치 (8행)
+
+                            // 이미지 삽입
+                            Picture picture = drawing.createPicture(anchor, pictureIndex);
+                            picture.resize(1.0); // 이미지 크기 조정 (필요시)
+
                         }
-
-                        if (type == 0) {
-                            logger.error("[downloadUsrProfileDetailExcel] 잘못된 확장자 입니다. extension : {}", extension);
-                            throw new CustomException("지원하지 않는 파일 확장자입니다.: " + extension);
-                        }
-
-                        // 이미지 삽입
-                        int pictureIndex = workbook.addPicture(imageBytes, type);
-                        CreationHelper helper = workbook.getCreationHelper();
-                        Drawing drawing = sheet.createDrawingPatriarch();
-                        ClientAnchor anchor = helper.createClientAnchor();
-
-                        // 이미지 시작 위치 (a2 위치)
-                        anchor.setCol1(colIndex); // 열 위치 (a열)
-                        anchor.setRow1(rowIndex); // 행 위치 (2행)
-
-                        // 이미지 끝 위치 (b8 위치)
-                        anchor.setCol2(colIndex + 1); // 열 위치 (b열)
-                        anchor.setRow2(rowIndex + 7); // 행 위치 (8행)
-
-                        // 이미지 삽입
-                        Picture picture = drawing.createPicture(anchor, pictureIndex);
-                        picture.resize(1.0); // 이미지 크기 조정 (필요시)
-
                         // #IMG# 텍스트를 지워줍니다
                         cell.setCellValue("");
                     }
@@ -905,6 +997,55 @@ public class ExcelDownServiceImpl implements ExcelDownService {
             e.printStackTrace();
             throw new IOException("엑셀 생성 중 오류가 발생했습니다.");
         }
+    }
+
+    /**
+     * 엑셀 템플릿 업로드
+     *
+     * @param excel
+     * @return 엑셀파일
+     * @throws IOException
+     */
+    @Override
+    public void excelTemplateUpload(MultipartFile excel) throws IOException {
+        // 파일 유효성 검사
+        if (excel.isEmpty()) {
+            throw new IllegalArgumentException("Excel file is empty.");
+        }
+
+        // 업로드 디렉토리 생성 (없으면 생성)
+        File uploadDir = new File(UPLOAD_DIR);
+        if (!uploadDir.exists()) {
+            boolean created = uploadDir.mkdirs();
+            if (!created) {
+                throw new IOException("Failed to create upload directory: " + UPLOAD_DIR);
+            }
+        }
+
+        // 저장할 파일 이름 지정 (예: user_id + "_" + 원본 파일 이름)
+        String fileName = excel.getOriginalFilename();
+        File destinationFile = new File(uploadDir, fileName);
+
+        // MultipartFile 데이터를 지정된 경로에 저장
+        try {
+            excel.transferTo(destinationFile);
+        } catch (IllegalStateException | IOException e) {
+            e.printStackTrace();
+        }
+
+        // 파일 서버 저장
+        FileVO fileVO = commonService.saveImageFile(excel);
+
+        int file_seq = commonService.selectMaxHistSeq("admin");
+
+        // 파일 정보 DB 저장
+        fileVO.setUser_id("admin");
+        fileVO.setFile_seq(file_seq);
+        fileVO.setFile_se("EXCEL_TEMP");
+        commonService.insertUsrFileInfo(fileVO);
+
+        // 추가 처리 로직 (필요시)
+        logger.info("Excel file uploaded successfully: " + destinationFile.getAbsolutePath());
     }
 
     public static byte[] toByteArray(InputStream inputStream) throws IOException { // used by templates and SimpleExporter
