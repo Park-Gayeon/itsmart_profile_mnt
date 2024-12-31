@@ -498,7 +498,7 @@
                             <button type="button" class="btn btn-secondary" onclick="back();">
                                 <span>뒤로가기</span>
                             </button>
-                            <button type="button" class="btn btn-secondary" onclick="excelUpload();">
+                            <button type="button" class="btn btn-dark" onclick="excelUpload();">
                                 <span>일괄업로드</span>
                             </button>
                             <button type="button" class="btn btn-success" data-name="profile" onclick="goSave(this);">

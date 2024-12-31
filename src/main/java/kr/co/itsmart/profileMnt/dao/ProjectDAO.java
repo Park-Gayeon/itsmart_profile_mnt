@@ -29,7 +29,7 @@ public interface ProjectDAO {
     void deleteUsrAllSkillInfo(String user_id);
 
     /* 전체 project 삭제 */
-    @Delete("DELETE FROM TB_USER_SKILL_INFO WHERE USER_ID = #{user_id}")
+    @Delete("DELETE FROM TB_PROJECT_INFO WHERE USER_ID = #{user_id}")
     void deleteUsrAllProjectInfo(String user_id);
 
     /* 프로필 수정(사업경력) */
