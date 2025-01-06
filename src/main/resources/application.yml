@@ -1,6 +1,9 @@
 spring:
   application:
     name: profileMnt
+  devtools:
+    restart:
+      enabled: false
   security:
     jwt:
       secret-key: 7JWI64WV7ZWY7IS47JqU7J206rKD7J2A7Iuc7YGs66a/7YKk7JiI7Jes7JWE7J207Yuw7Iqk66eI7Yq4
@@ -23,7 +26,7 @@ spring:
       encoding: utf-8
   web:
     resources:
-      static-locations: classpath:static/, file:/opt/profileMnt/uploads/images/ # 정적 리소스 경로설정
+      static-locations: classpath:static/, file:/opt/profileMnt/uploads/images/, file:/opt/profileMnt/uploads/excel/ # 정적 리소스 경로설정
 mybatis:
   mapper-locations: classpath:sqlMapper/*.xml
   type-aliases-package: kr.co.itsmart.profileMnt.vo
@@ -43,4 +46,5 @@ user:
   default-password: itsmart1!
 
 file:
-  upload-dir: /opt/profileMnt/uploads/images
+  upload-photo-dir: /opt/profileMnt/uploads/images
+  upload-excel-dir: /opt/profileMnt/uploads/excel

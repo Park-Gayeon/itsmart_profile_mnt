@@ -7,10 +7,12 @@ import kr.co.itsmart.profileMnt.service.FileService;
 import kr.co.itsmart.profileMnt.service.ProfileInfoService;
 import kr.co.itsmart.profileMnt.service.ProfileMntService;
 import kr.co.itsmart.profileMnt.vo.FileVO;
+import kr.co.itsmart.profileMnt.vo.LoginVO;
 import kr.co.itsmart.profileMnt.vo.ProfileVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -39,15 +41,6 @@ public class ExcelDownController {
         this.fileService = fileService;
     }
 
-    @PostMapping("/{user_id}/download")
-    public void excelDown(@PathVariable("user_id") String user_id,
-                          HttpServletResponse response) throws IOException {
-        logger.info("== Ajax[사용자 프로필 EXCEL DOWNLOAD] ==");
-
-        ProfileVO profile = profileMntService.selectUsrProfileDetail(user_id);
-        excelDownService.downloadUsrProfileDetailExcel(profile, response);
-    }
-
     @PostMapping("/info/download")
     public void excelAllDown(HttpServletResponse response) throws IOException {
         logger.info("== Ajax[직원 전체 프로필 EXCEL DOWNLOAD] ==");
@@ -57,7 +50,7 @@ public class ExcelDownController {
 
     @GetMapping("/{user_id}/upload")
     public String openExcelUploadPop(@PathVariable("user_id") String user_id, Model model){
-        logger.info("== openExcelUploadPop[엑셀 업로드 팝업] ==");
+        logger.info("== openExcelUploadPop[KOSA 엑셀 업로드 팝업] ==");
         model.addAttribute("user_id", user_id);
         return "uploadExcel";
     }
@@ -79,10 +72,11 @@ public class ExcelDownController {
      * @return 모델 정보와 뷰 정보를 반환
      */
     @GetMapping("/excelTemplateUpload")
-    public String openExcelTemplateUploadPop(Model model){
+    public String openExcelTemplateUploadPop(@AuthenticationPrincipal LoginVO login, Model model){
         logger.info("== openExcelUploadPop[엑셀 템플릿 업로드 팝업] ==");
         
         FileVO fileVo = new FileVO();
+        fileVo.setUser_id(login.getUser_id());
         fileVo.setFile_se("EXCEL_TEMP");
         
         List<FileVO> attachFileList = fileService.selectFileList(fileVo);
@@ -97,18 +91,25 @@ public class ExcelDownController {
      * @return 사용자 프로필 템플릿 형식으로 다운
      */
     @PostMapping("/{user_id}/downloadTemplate/{file_seq}")
-    public void excelDown(@PathVariable("user_id") String user_id, @PathVariable("file_seq") int file_seq, HttpServletRequest request,
+    public void excelDown(@PathVariable("user_id") String user_id, @PathVariable("file_seq") int file_seq,
+                          @AuthenticationPrincipal LoginVO login, HttpServletRequest request,
                           HttpServletResponse response) throws IOException {
         logger.info("== Ajax[사용자 프로필 EXCEL TEMPLATE DOWNLOAD] ==");
         
         FileVO fileVo = new FileVO();
         FileVO templateFile = null;
+
+        String templateOwner = login.getUser_id();
         
         ProfileVO profile = profileMntService.selectUsrProfileDetail(user_id);
         if (file_seq != 0) {
+            fileVo.setUser_id(templateOwner);
         	fileVo.setFile_seq(file_seq);
+            fileVo.setFile_se("EXCEL_TEMP");
+            logger.info("user_id : {}", templateOwner);
+            logger.info("file_seq : {}", file_seq);
+            logger.info("file_se : {}", fileVo.getFile_se());
         	templateFile = fileService.selectFileInfo(fileVo);
-        } else {
         }
         excelDownService.downloadUsrProfileDetailExcelTemplate(profile, templateFile, request, response);
     }
@@ -119,9 +120,12 @@ public class ExcelDownController {
      * @throws FileNotFoundException 
      */
     @GetMapping("/downloadTemplate/{file_seq}")
-    public void downloadTemplate(@PathVariable("file_seq") Integer file_seq, HttpServletRequest request, HttpServletResponse response) {
+    public void downloadTemplate(@AuthenticationPrincipal LoginVO login,
+                                 @PathVariable("file_seq") Integer file_seq,
+                                 HttpServletRequest request,
+                                 HttpServletResponse response) {
     	logger.info("== Ajax[템플릿 EXCEL DOWNLOAD] ==");
-        excelDownService.downloadExcelTemplate(file_seq, request, response);
+        excelDownService.downloadExcelTemplate(login.getUser_id(), file_seq, request, response);
     }
     
     /**
@@ -129,9 +133,10 @@ public class ExcelDownController {
      * @return 
      */
     @PostMapping("/excelTemplateUpload")
-    public ResponseEntity<Object> excelTemplateUpload(@RequestParam(value = "excel") MultipartFile excel) throws IOException {
+    public ResponseEntity<Object> excelTemplateUpload(@AuthenticationPrincipal LoginVO login,
+                                                      @RequestParam(value = "excel") MultipartFile excel) throws IOException {
         logger.info("== excelUpload[EXCEL TEMPLATE UPLOAD] ==");
-        excelDownService.excelTemplateUpload(excel);
+        excelDownService.excelTemplateUpload(excel, login.getUser_id());
 
         return ResponseEntity.ok().build();
     }

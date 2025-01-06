@@ -23,6 +23,5 @@ public interface WorkExperienceDAO {
     void insertUsrWorkInfoHist(WorkExperienceVO workExperienceVO);
 
     /* 근무경력 totalMonth 조회 */
-    @Select("SELECT COALESCE(SUM(TIMESTAMPDIFF(MONTH, WORK_START_DATE, WORK_END_DATE)),0) FROM TB_WORK_EXPERIENCE_INFO WHERE USER_ID = #{user_id}")
     int calcWkTotalMonth(String user_id);
 }

@@ -66,6 +66,7 @@ public class ProfileMntController {
         int wk_totalMonth = workExperienceMntService.calcTotalMonth(user_id);
         
         FileVO fileVo = new FileVO();
+        fileVo.setUser_id(login.getUser_id());
         fileVo.setFile_se("EXCEL_TEMP");
         
         List<FileVO> attachFileList = fileService.selectFileList(fileVo);
@@ -112,6 +113,7 @@ public class ProfileMntController {
             LOGGER.info("프로필 정보 hist_seq: hist_seq={}", hist_seq);
 
             // 프로필 수정 처리
+            profile.setCreator(user_id);
             profileMntService.updateUsrProfileInfo(profile);
 
             return ResponseEntity.ok("SUCCESS");

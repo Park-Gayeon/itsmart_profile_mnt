@@ -286,7 +286,7 @@
                             </div>
                         </header>
                         <div class="table-responsive px-5">
-                            <table class="table table-hover mb-5">
+                            <table class="table table-hover">
                                 <colgroup>
                                     <col style="width: 10%;">
                                     <col style="width: auto;">
@@ -356,7 +356,7 @@
                                 <colgroup>
                                     <col style="width: 5%;">
                                     <col style="width: 15%;">
-                                    <col style="width: auto;">
+                                    <col style="width: 24%;">
                                     <col style="width: 15%;">
                                     <col style="width: 25%;">
                                     <col style="width: 10%;">
@@ -425,7 +425,7 @@
                                 <colgroup>
                                     <col style="width: 5%;">
                                     <col style="width: 15%;">
-                                    <col style="width: auto;">
+                                    <col style="width: 24%;">
                                     <col style="width: 15%;">
                                     <col style="width: 25%;">
                                     <col style="width: 10%;">
@@ -754,11 +754,11 @@
                                                     <option value="003">재학중</option>
                                                 </select>
                                             </div>
+                                            <button type="button" class="btn btn-danger clear_field"
+                                                    onclick="clearField(this)">
+                                                <span>-</span>
+                                            </button>
                                         </div>
-                                        <button type="button" class="btn btn-danger clear_field"
-                                                onclick="clearField(this)">
-                                            <span>-</span>
-                                        </button>
                                     </c:otherwise>
                                 </c:choose>
                             </div>
@@ -902,7 +902,7 @@
                                 </div>
                             </header>
                             <div class="table-responsive px-5">
-                                <table class="table table-hover mb-5">
+                                <table class="table table-hover">
                                     <colgroup>
                                         <col style="width: 10%;">
                                         <col style="width: auto;">
@@ -1011,6 +1011,9 @@
                                         </c:otherwise>
                                     </c:choose>
                                 </table>
+                                <div class="table">
+                                    <span class="description"><span class="star">*</span>재직중인 경우, [퇴사일자]를 미래일자로 설정 시 현 날짜로 계산됩니다.</span>
+                                </div>
                             </div>
                         </div>
                     </form>
@@ -1041,7 +1044,7 @@
                                     <colgroup>
                                         <col style="width: 5%;">
                                         <col style="width: 15%;">
-                                        <col style="width: auto;">
+                                        <col style="width: 27%;">
                                         <col style="width: 15%;">
                                         <col style="width: 20%;">
                                         <col style="width: 10%;">
@@ -1063,7 +1066,7 @@
                                     <c:choose>
                                         <c:when test="${empty profile.projectList}">
                                             <tbody class="table-group-divider" id="project_ing">
-                                            <tr>
+                                            <tr class="nodata">
                                                 <td colspan="8" class="figure-caption">진행중인 사업이 없습니다</td>
                                             </tr>
                                             </tbody>
@@ -1123,7 +1126,7 @@
                                                         <td>
                                                             <select name="projectList[${pjStatus.index}].project_role"
                                                                     class="form-select noneBorder">
-                                                                <option>--</option>
+                                                                <option value=""></option>
                                                                 <c:forEach var="roleList" items="${roleList}">
                                                                     <option value="${roleList.code_id}"
                                                                             <c:if test="${roleList.code_id eq project_ing.project_role}">selected</c:if>>${roleList.code_value}</option>
@@ -1155,7 +1158,7 @@
                                     <colgroup>
                                         <col style="width: 5%;">
                                         <col style="width: 15%;">
-                                        <col style="width: auto;">
+                                        <col style="width: 27%;">
                                         <col style="width: 15%;">
                                         <col style="width: 20%;">
                                         <col style="width: 10%;">
@@ -1177,7 +1180,7 @@
                                     <c:choose>
                                         <c:when test="${empty profile.projectList}">
                                             <tbody id="project_hist" class="table-group-divider">
-                                            <tr>
+                                            <tr class="nodata">
                                                 <td colspan="8" class="figure-caption">참여했던 사업이 없습니다</td>
                                             </tr>
                                             </tbody>
@@ -1238,7 +1241,7 @@
                                                         <td>
                                                             <select name="projectList[${pjStatus.index}].project_role"
                                                                     class="form-select noneBorder">
-                                                                <option>--</option>
+                                                                <option value=""></option>
                                                                 <c:forEach var="roleList" items="${roleList}">
                                                                     <option value="${roleList.code_id}"
                                                                             <c:if test="${roleList.code_id eq project_hist.project_role}">selected</c:if>>${roleList.code_value}</option>
@@ -1587,6 +1590,10 @@
                     </td>
                 </tr>
         `;
+        const nodataElement = $(target).find(".nodata");
+        if (nodataElement.length) {
+            nodataElement.remove();
+        }
 
         target.insertAdjacentHTML('beforeend', newRow);
         updateRowIndex(frmId, listNm);

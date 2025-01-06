@@ -81,7 +81,8 @@ public class ProfileInfoController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Object> registerUserInfo(@ModelAttribute ProfileVO profile,
+    public ResponseEntity<Object> registerUserInfo(@AuthenticationPrincipal LoginVO login,
+                                                   @ModelAttribute ProfileVO profile,
                                                    @RequestParam(required = false, value = "imgFile") MultipartFile file) {
         LOGGER.info("== Ajax[사용자 프로필 입력 처리] ==");
         String user_id = profile.getUser_id();
@@ -112,6 +113,7 @@ public class ProfileInfoController {
         }
 
         // 신규 정보 입력
+        profile.setCreator(login.getUser_id());
         profileInfoService.insertUsrProfile(profile);
 
         return ResponseEntity.ok().build();
