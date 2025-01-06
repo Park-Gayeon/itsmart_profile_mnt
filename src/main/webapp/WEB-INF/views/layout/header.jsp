@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<header class="d-flex flex-wrap justify-content-center py-3 my-3">
+<header id="hd" class="d-flex flex-wrap justify-content-center">
     <nav class="navbar navbar-dark bg-dark fixed-top">
         <div class="container-fluid">
             <!-- NAV - 메뉴바 토글 -->
@@ -21,7 +21,7 @@
                 <!-- 메뉴바 BODY -->
                 <div class="offcanvas-body">
                     <!-- 사이드바 -->
-                    <div class="d-flex flex-column flex-shrink-0 p-3 text-bg-dark" style="width: 280px;">
+                    <div class="d-flex flex-column flex-shrink-0 p-3 text-bg-dark">
                         <!-- 사이드바 BODY -->
                         <ul class="navbar-nav justify-content-end flex-grow-1 pe-3 mb-5">
                             <li class="nav-item">

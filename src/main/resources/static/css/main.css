@@ -1,0 +1,36 @@
+/* 초기화 및 공통 설정 */
+body {
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+    background-color: #f8f9fa;
+}
+
+.content {
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    background-image: url('/images/city_view.webp'); /* 이미지 경로 */
+    background-size: cover; /* 비율을 유지하면서 꽉 채움 */
+    background-position: center; /* 이미지 중심 기준 */
+    height: 300px; /* 모바일 기본 높이 */
+}
+
+.content img {
+    width: 100%;
+    height: 100%;
+    object-fit: fill; /* 이미지를 강제로 content 크기에 맞춤 */
+}
+
+img.loaded {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}

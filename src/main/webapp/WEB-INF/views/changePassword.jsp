@@ -7,26 +7,25 @@
     <meta name="viewport" content="width=device-width" , initial-scale="1">
     <link rel="stylesheet" href="/css/bootstrap.css">
     <link rel="stylesheet" href="/css/basic.css">
+    <link rel="stylesheet" href="/css/pop.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <title>비밀번호 변경</title>
 </head>
 <body>
 <div class="content" tabindex="-1">
-    <div class="container pb-0">
+    <div class="container-md py-sm-2">
         <div class="container-info row-box row mb-0 g-0">
             <h2 class="header">비밀번호 변경
                 <div class="description">
-                    <button type="button" class="btn btn-success" onclick="save()">저장</button>
+                    <button id="save" type="button" class="btn btn-success">저장</button>
                 </div>
             </h2>
-
             <div class="modal-body py-3">
-                <div class="container text-center">
+                <div class="container-md text-center">
                     <form id="frm">
-                        <!-- 개인정보 -->
-                        <div class="col-sm-auto g-0">
+                        <div class="col-md-auto g-0">
                             <div class="row mb-2 g-0">
-                                <div class="col-sm common-box common-box input-box pt-4">
+                                <div class="col-md common-box input-box pt-4">
                                     <span>NEW PASSWORD</span>
                                     <input type="hidden" name="user_id" value="${user_id}"/>
                                     <input type="password" name="user_pw" maxlength="20"/>
@@ -43,6 +42,17 @@
 <script src="//code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="/js/common.js"></script>
 <script type="text/javascript">
+    $(document).ready(function(){
+        $(document).on("keydown", function (e){
+            if(e.which === 13){
+                e.preventDefault();
+                $("#save").click();
+            }
+        });
+        $("#save").on("click", function(){
+            save();
+        });
+    });
 
     function save() {
         const newPw = $("input[name=user_pw]").val();

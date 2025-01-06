@@ -7,15 +7,16 @@
     <meta name="viewport" content="width=device-width" , initial-scale="1">
     <link rel="stylesheet" href="/css/bootstrap.css">
     <link rel="stylesheet" href="/css/basic.css">
+    <link rel="stylesheet" href="/css/pop.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <title>수행이력 작성</title>
 </head>
-<body>
+<body class="mngFile">
 <div class="content" tabindex="-1">
-    <div class="container pb-0">
+    <div class="container-md">
         <div class="container-info row-box row mb-0 g-0">
             <h2 class="header">KOSA 파일 업로드
-                <div class="description" >
+                <div class="description">
                     <button class="btn btn-success" onclick="upload()"><span>업로드</span></button>
                 </div>
             </h2>
@@ -37,7 +38,7 @@
 <script src="//code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="/js/common.js"></script>
 <script type="text/javascript">
-    $(document).ready(function (){
+    $(document).ready(function () {
 
     })
 

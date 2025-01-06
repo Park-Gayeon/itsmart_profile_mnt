@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<footer class="footer py-3 bg-dark">
-    <div class="container">
+<footer class="footer py-2 bg-dark">
+    <div class="container-md">
         <div class="div_footer">
             <p class="foot_logo">㈜아이티스마트</p>
             <div class="foot_txts">

@@ -220,6 +220,25 @@ function logout() {
 
 function changePw(user_id) {
     let url = "/auth/change/password/" + user_id;
-    let properties = "width=600, height=220";
+    let properties = calcSize(600, 220);
     window.open(url, "changePassword", properties);
+}
+
+function calcSize(oriWidth, oriHeight){
+    const popupWidth = oriWidth; // 기본 너비
+    const popupHeight = oriHeight; // 기본 높이
+    const screenWidth = window.innerWidth; // 화면 너비
+    const screenHeight = window.innerHeight; // 화면 높이
+
+    // 팝업 크기를 화면 크기에 맞춤
+    const width = screenWidth < popupWidth ? screenWidth * 0.9 : popupWidth;
+    const height = screenHeight < popupHeight ? screenHeight * 0.9 : popupHeight;
+
+    // 팝업 위치 계산 (화면 중앙)
+    const left = (screenWidth - width) / 2;
+    const top = (screenHeight - height) / 2;
+
+    const popupOptions = `width= ` + width+ `,height=` + height + `,left=` + left + `,top=` + top + `,resizable=yes,scrollbars=yes`;
+
+    return popupOptions;
 }
