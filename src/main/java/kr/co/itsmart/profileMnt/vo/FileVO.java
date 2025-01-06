@@ -16,6 +16,8 @@ public class FileVO {
 
 
     public String getUser_id() {
+        if(user_id == null)
+            user_id = "";
         return user_id;
     }
 
@@ -88,6 +90,8 @@ public class FileVO {
     }
 
 	public String getFile_se() {
+        if(file_se == null)
+            file_se = "";
 		return file_se;
 	}
 
