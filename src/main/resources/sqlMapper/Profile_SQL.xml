@@ -94,9 +94,11 @@
 
         FROM TB_USER_PROFILE_INFO PF
                  LEFT JOIN TB_ATTACHMENT_INFO AT
-                           ON PF.USER_ID = AT.USER_ID AND PF.FILE_SEQ = AT.FILE_SEQ AND AT.USE_YN = 'Y'
+                           ON PF.USER_ID = AT.USER_ID AND AT.file_se = 'PROFILE'
         WHERE PF.USER_ID = #{user_id}
           AND PF.USE_YN = 'Y'
+        ORDER BY AT.file_seq DESC
+        LIMIT 1
         ]]>
     </select>
 
@@ -114,6 +116,7 @@
                GRAD_STATUS
         FROM TB_USER_EDUCATION_INFO
         WHERE USER_ID = #{user_id}
+        ORDER BY SCHOOL_START_DATE DESC
     </select>
 
     <!-- profile + projectList -->
@@ -141,6 +144,7 @@
         FROM TB_PROJECT_INFO PJ
         WHERE USER_ID = #{user_id}
           AND USE_YN = 'Y'
+        ORDER BY PROJECT_START_DATE DESC
     </select>
 
     <!-- profile + qualificationList -->
@@ -153,6 +157,7 @@
         FROM TB_USER_QUALIFICATION_INFO
         WHERE USER_ID = #{user_id}
           AND USE_YN = 'Y'
+        ORDER BY ACQUISITION_DATE DESC
     </select>
 
     <!-- profile + workExperienceList -->
@@ -166,6 +171,7 @@
         FROM TB_WORK_EXPERIENCE_INFO
         WHERE USER_ID = #{user_id}
           AND USE_YN = 'Y'
+        ORDER BY WORK_START_DATE DESC
     </select>
 
     <!--updateUsrProfileInfo : 직원 프로필 정보 테이블 UPDATE-->
@@ -221,7 +227,7 @@
                USER_ADDRESS,
                FILE_SEQ,
                now(),
-               #{user_id}
+               #{creator}
         FROM TB_USER_PROFILE_INFO
         WHERE USER_ID = #{user_id}
           AND USE_YN = 'Y'

@@ -66,6 +66,7 @@ public class ProfileMntController {
         int wk_totalMonth = workExperienceMntService.calcTotalMonth(user_id);
         
         FileVO fileVo = new FileVO();
+        fileVo.setUser_id(login.getUser_id());
         fileVo.setFile_se("EXCEL_TEMP");
         
         List<FileVO> attachFileList = fileService.selectFileList(fileVo);
