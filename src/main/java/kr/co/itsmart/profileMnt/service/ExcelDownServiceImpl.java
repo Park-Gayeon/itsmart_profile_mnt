@@ -386,12 +386,13 @@ public class ExcelDownServiceImpl implements ExcelDownService {
             applyCellStyle(listHeader, 0, "순번", headerStyle);
             applyCellStyle(listHeader, 1, "이름", headerStyle);
             applyCellStyle(listHeader, 2, "소속", headerStyle);
-            applyCellStyle(listHeader, 3, "발주처", headerStyle);
-            applyCellStyle(listHeader, 4, "사업명", headerStyle);
-            applyCellStyle(listHeader, 5, "사업시작일", headerStyle);
-            applyCellStyle(listHeader, 6, "사업종료일", headerStyle);
-            applyCellStyle(listHeader, 7, "수행경력", headerStyle);
-            applyCellStyle(listHeader, 8, "자격증여부", headerStyle);
+            applyCellStyle(listHeader, 3, "직급", headerStyle);
+            applyCellStyle(listHeader, 4, "발주처", headerStyle);
+            applyCellStyle(listHeader, 5, "사업명", headerStyle);
+            applyCellStyle(listHeader, 6, "사업시작일", headerStyle);
+            applyCellStyle(listHeader, 7, "사업종료일", headerStyle);
+            applyCellStyle(listHeader, 8, "수행경력", headerStyle);
+            applyCellStyle(listHeader, 9, "자격증여부", headerStyle);
 
             int num = 1;
             for (ProfileVO profile : list) {
@@ -402,12 +403,13 @@ public class ExcelDownServiceImpl implements ExcelDownService {
                 cell.setCellStyle(contentStyle);
                 applyCellStyle(listData, 1, profile.getUser_nm(), contentStyle);
                 applyCellStyle(listData, 2, profile.getUser_department_nm(), contentStyle);
-                applyCellStyle(listData, 3, nullChange(profile.getProject_client()), contentStyle);
-                applyCellStyle(listData, 4, nullChange(profile.getProject_nm()), contentStyle);
-                applyCellStyle(listData, 5, nullChange(profile.getProject_start_date()) == "" ? "" : formatDate(profile.getProject_start_date()), contentStyle);
-                applyCellStyle(listData, 6, nullChange(profile.getProject_end_date()) == "" ? "" : formatDate(profile.getProject_end_date()), contentStyle);
-                applyCellStyle(listData, 7, convertToString(profile.getProject_totalMonth()), contentStyle);
-                applyCellStyle(listData, 8, "1".equals(profile.getQualification_yn()) ? "Y" : "N", contentStyle);
+                applyCellStyle(listData, 3, profile.getUser_position_nm(), contentStyle);
+                applyCellStyle(listData, 4, nullChange(profile.getProject_client()), contentStyle);
+                applyCellStyle(listData, 5, nullChange(profile.getProject_nm()), contentStyle);
+                applyCellStyle(listData, 6, nullChange(profile.getProject_start_date()) == "" ? "" : formatDate(profile.getProject_start_date()), contentStyle);
+                applyCellStyle(listData, 7, nullChange(profile.getProject_end_date()) == "" ? "" : formatDate(profile.getProject_end_date()), contentStyle);
+                applyCellStyle(listData, 8, convertToString(profile.getProject_totalMonth()), contentStyle);
+                applyCellStyle(listData, 9, "1".equals(profile.getQualification_yn()) ? "Y" : "N", contentStyle);
 
                 num++;
             }

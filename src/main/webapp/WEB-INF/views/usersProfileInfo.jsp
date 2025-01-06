@@ -54,6 +54,8 @@
                                 <%-- 이름 --%>
                                 <col style="width: 10%;">
                                 <%-- 소속 --%>
+                                <col style="width: 7%;">
+                                <%-- 직책 --%>
                                 <col style="width: 10%;">
                                 <%-- 발주처 --%>
                                 <col style="width: auto;">
@@ -70,6 +72,7 @@
                                 <th scope="col">NO</th>
                                 <th scope="col">이름</th>
                                 <th scope="col">소속</th>
+                                <th scope="col">직급</th>
                                 <th scope="col">발주처</th>
                                 <th scope="col">사업명</th>
                                 <th scope="col">사업기간</th>
@@ -83,6 +86,7 @@
                                     <td>${cnt - ((page.curPage -1) * page.pageSize + status.index)}</td>
                                     <td>${info.user_nm}</td>
                                     <td>${info.user_department_nm}</td>
+                                    <td>${info.user_position_nm}</td>
                                     <td>${info.project_client}</td>
                                     <td>${info.project_nm}</td>
                                     <c:choose>
