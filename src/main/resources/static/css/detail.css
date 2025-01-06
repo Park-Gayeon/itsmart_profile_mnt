@@ -130,6 +130,11 @@ h2.header .description > button {
     margin-bottom: 5px;
 }
 
+span.description {
+    font-size: 12px;
+    float: right;
+}
+
 .psitAb {
     position: absolute;
     bottom: 0;

@@ -40,4 +40,16 @@
         WHERE WORK_SEQ = #{work_seq}
           AND USER_ID = #{user_id}
     </insert>
+
+    <!-- calcWkTotalMonth : 근무경력 SELECT -->
+    <select id="calcWkTotalMonth" parameterType="String" resultType="int">
+        SELECT COALESCE(SUM(TIMESTAMPDIFF(MONTH, WORK_START_DATE,
+                                          CASE
+                                              WHEN WORK_END_DATE > NOW()
+                                                  THEN NOW()
+                                              ELSE WORK_END_DATE
+                                              END)), 0) AS total_months
+        FROM TB_WORK_EXPERIENCE_INFO
+        WHERE user_id = #{user_id}
+    </select>
 </mapper>
