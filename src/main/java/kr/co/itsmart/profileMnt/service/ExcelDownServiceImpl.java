@@ -760,26 +760,6 @@ public class ExcelDownServiceImpl implements ExcelDownService {
             throw new IllegalArgumentException("Excel file is empty.");
         }
 
-        // 업로드 디렉토리 생성 (없으면 생성)
-        File uploadDir = new File(UPLOAD_DIR);
-        if (!uploadDir.exists()) {
-            boolean created = uploadDir.mkdirs();
-            if (!created) {
-                throw new IOException("Failed to create upload directory: " + UPLOAD_DIR);
-            }
-        }
-
-        // 저장할 파일 이름 지정 (예: user_id + "_" + 원본 파일 이름)
-        String fileName = excel.getOriginalFilename();
-        File destinationFile = new File(uploadDir, fileName);
-
-        // MultipartFile 데이터를 지정된 경로에 저장
-        try {
-            excel.transferTo(destinationFile);
-        } catch (IllegalStateException | IOException e) {
-            e.printStackTrace();
-        }
-
         // 파일 서버 저장
         FileVO fileVO = commonService.saveImageFile(excel);
 

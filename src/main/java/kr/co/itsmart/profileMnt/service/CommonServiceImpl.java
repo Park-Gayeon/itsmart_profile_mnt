@@ -20,8 +20,10 @@ import java.util.UUID;
 public class CommonServiceImpl implements CommonService {
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     private final CommonDAO commonDAO;
-    @Value("${file.upload-dir}")
-    private String uploadDir;
+    @Value("${file.upload-photo-dir}")
+    private String uploadPhotoDir;
+    @Value("${file.upload-excel-dir}")
+    private String uploadExcelDir;
 
     public CommonServiceImpl(CommonDAO commonDAO) {
         this.commonDAO = commonDAO;
@@ -52,10 +54,17 @@ public class CommonServiceImpl implements CommonService {
             if (!file.isEmpty()) {
                 String oriFileNm = file.getOriginalFilename();
                 String extension = oriFileNm.substring(oriFileNm.lastIndexOf(".") + 1);
+                String uploadDir = "";
                 LOGGER.info("oriFileNm={}, extension={}", oriFileNm, extension);
 
                 // 파일 저장 경로 생성
                 String sverFileNm = UUID.randomUUID().toString().replaceAll("-", "") + "." + extension;
+
+                if(extension.contains("xlsx") || extension.contains("xls")){
+                    uploadDir = uploadExcelDir;
+                } else {
+                    uploadDir = uploadPhotoDir;
+                }
                 File uploadPath = new File(uploadDir, sverFileNm);
                 LOGGER.info("uploadPath={}", uploadPath);
 
