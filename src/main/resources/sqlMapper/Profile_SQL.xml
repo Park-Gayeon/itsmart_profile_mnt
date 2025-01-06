@@ -363,8 +363,8 @@
                    AND USE_YN = 'Y'),
                 now(),
                 now(),
-                #{user_id},
-                #{user_id})
+                #{creator},
+                #{creator})
     </insert>
 
     <!-- getUsrProfileNotPagingInfoList : 직원 목록 전체 SELECT -->

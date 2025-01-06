@@ -387,6 +387,7 @@ public class ExcelDownServiceImpl implements ExcelDownService {
                         // CREATE HIST
                         if (!createYn) {
                             logger.info("사용자 프로필이력 정보를 입력합니다: user_id={}", user_id);
+                            profile.setCreator(user_id);
                             profileDAO.insertUsrProfileInfoHist(profile);
                             createYn = true;
                         }
@@ -480,8 +481,13 @@ public class ExcelDownServiceImpl implements ExcelDownService {
             try {
                 FileVO fileInfo = new FileVO();
 
+                fileInfo.setUser_id(user_id);
                 fileInfo.setFile_seq(file_seq);
                 fileInfo.setFile_se("EXCEL_TEMP");
+
+                logger.info("user_id : {}",user_id);
+                logger.info("file_seq : {}",file_seq);
+                logger.info("file_se : {}",fileInfo.getFile_se());
 
                 FileVO fileVO = fileDAO.selectFileInfo(fileInfo);
 
