@@ -9,14 +9,10 @@
     <meta name="viewport" content="width=device-width" , initial-scale="1">
     <link rel="stylesheet" href="/css/bootstrap.css">
     <link rel="stylesheet" href="/css/basic.css">
+    <link rel="stylesheet" href="/css/detail.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <title>직원 프로필관리 시스템</title>
 </head>
-<style>
-    tr td:first-child input{
-        text-align: center;
-    }
-</style>
 <body>
 <!-- header.jsp -->
 <%@ include file="layout/header.jsp" %>
@@ -27,24 +23,39 @@
 
 <!-- main-content -->
 <div class="content">
-    <div class="container">
+    <div class="container-md pt-3 mb-md-5">
         <!-- 상세화면 -->
         <div id="viewMode" style="display: block">
             <!-- 프로필 -->
             <div class="form-floating">
                 <h2 class="header">프로필
-                    <div class="description">
+                    <div class="description d-md-flex">
                         <c:if test="${userRole[0] eq 'ROLE_ADMIN'}">
-                        <button type="button" class="btn btn-success" onclick=location.href="/profile/info/list">
-                            <span>목록가기</span>
-                        </button>
+                            <button type="button" class="btn btn-success btnChg"
+                                    onclick=location.href="/profile/info/list"
+                                    data-text-pc="목록가기" data-text-mobile="<">
+                                <span>목록가기</span>
+                            </button>
                         </c:if>
-                        
                         <c:if test="${profile.user_id != loginUser && userRole[0] eq 'ROLE_ADMIN'}">
                             <button type="button" class="btn btn-danger" onclick="usrDelete()">
                                 <span>삭제</span>
                             </button>
                         </c:if>
+                        <button type="button" class="btn btn-dark btnChg" onclick="openExcelTemplatePop()"
+                                data-text-pc="엑셀템플릿업로드" data-text-mobile="업로드">
+                            <span>엑셀템플릿업로드</span>
+                        </button>
+                        <select class="form-select" aria-label="Default select example" id="excelTempate"
+                                style="width: 150px; float: left;">
+                            <option value="0" selected>template.xlsx</option>
+                            <c:forEach var="attachFileList" items="${attachFileList}">
+                                <option value="${attachFileList.file_seq}">${attachFileList.file_ori_nm}</option>
+                            </c:forEach>
+                        </select>
+                        <button type="button" class="btn btn-secondary" onclick="excel()">
+                            <span>엑셀</span>
+                        </button>
                         <c:if test="${profile.user_id == loginUser}">
                             <button type="button" class="btn btn-warning" onclick="goModify()">
                                 <span>수정</span>
@@ -52,34 +63,19 @@
                         </c:if>
                     </div>
                 </h2>
-                <div style="float: right; display: block; width: 344px; text-align: right; margin-bottom: 10px;">
-                	<select class="form-select" aria-label="Default select example" id="excelTempate" style="width: 150px; float: left;">
-         	  			<option value="0" selected>template.xlsx</option>
-			  			<c:forEach var="attachFileList" items="${attachFileList}">
-                     		<option value="${attachFileList.file_seq}">${attachFileList.file_ori_nm}</option>
-                 		</c:forEach>
-					</select>
-			
-                    <button type="button" class="btn btn-secondary" onclick="excel()" style="float: left; margin-left: 10px;">
-                    	<span>엑셀</span>
-                   	</button>
-                   	
-                   	<button type="button" class="btn btn-dark" onclick="openExcelTemplatePop()" style="float: right;">
-                    	<span>엑셀템플릿업로드</span>
-                   	</button>
-                </div>
                 <div class="container-info row-box row mb-5 g-0" style="clear: both;">
                     <!-- 인적사항 -->
-                    <header class="description mb-sm-3">인적사항
+                    <header class="description mb-md-3">인적사항
                         <c:if test="${userRole[0] eq 'ROLE_ADMIN'}">
                             <div class="right-group">
-                                <a class="nav-link" style="font-size: 12px; color: var(--bs-danger);" href="#" onclick="initPw()">비밀번호초기화</a>
+                                <a class="nav-link" style="font-size: 12px; color: var(--bs-danger);" href="#"
+                                   onclick="initPw()">비밀번호초기화</a>
                             </div>
                         </c:if>
                     </header>
                     <div class="row-box px-5 row mb-5 g-0">
                         <!-- 사진 -->
-                        <div class="col-sm text-center">
+                        <div class="col-md text-center">
                             <c:choose>
                                 <c:when test="${profile.fileInfo.file_sver_nm eq null || profile.fileInfo.file_sver_nm eq ''}">
                                     <img class="img-profile detail" src="/images/image.png"/>
@@ -91,45 +87,45 @@
                         </div>
                         <!-- 사진 끝 -->
                         <!-- 개인정보 -->
-                        <div class="col-sm-10 g-0">
+                        <div class="col-md-10 g-0">
                             <!-- 첫번째 row -->
                             <div class="row mb-2 g-0">
-                                <div class="col-sm-2 common-box common-box input-box pt-4 me-2">
+                                <div class="col-md-2 common-box common-box input-box pt-4 me-2">
                                     <span>이름</span>
                                     <input type="text" value="${profile.user_nm}" readonly/>
                                 </div>
-                                <div class="col-sm-2 common-box common-box input-box pt-4 me-2">
+                                <div class="col-md-2 common-box common-box input-box pt-4 me-2">
                                     <span>생년월일</span>
                                     <input type="text" class="dateFmt" value="${profile.user_birth}" readonly/>
                                 </div>
-                                <div class="col-sm-2 common-box common-box input-box pt-4 me-2">
+                                <div class="col-md-2 common-box common-box input-box pt-4 me-2">
                                     <span>휴대전화</span>
                                     <input type="text" class="telFmt" value="${profile.user_phone}" readonly/>
                                 </div>
-                                <div class="col-sm-2 common-box common-box input-box pt-4 me-2">
+                                <div class="col-md-2 common-box common-box input-box pt-4 me-2">
                                     <span>직원ID</span>
                                     <input type="text" value="${profile.user_id}" readonly/>
                                 </div>
-                                <div class="col-sm common-box common-box input-box pt-4 me-2">
+                                <div class="col-md common-box common-box input-box pt-4 me-2">
                                     <span>이메일</span>
                                     <input type="text" value="${profile.user_id}@itsmart.co.kr" readonly/>
                                 </div>
                             </div>
                             <!-- 두번째 row -->
                             <div class="row mb-2 g-0">
-                                <div class="col-sm-2 common-box common-box input-box pt-4 me-2">
+                                <div class="col-md-2 common-box common-box input-box pt-4 me-2">
                                     <span>소속</span>
                                     <input type="text" value="${profile.user_department_nm}" readonly/>
                                 </div>
-                                <div class="col-sm-2 common-box common-box input-box pt-4 me-2">
+                                <div class="col-md-2 common-box common-box input-box pt-4 me-2">
                                     <span>직위/직급</span>
                                     <input type="text" value="${profile.user_position_nm}" readonly/>
                                 </div>
-                                <div class="col-sm-2 common-box common-box input-box pt-4 me-2">
+                                <div class="col-md-2 common-box common-box input-box pt-4 me-2">
                                     <span>입사일자</span>
                                     <input type="text" class="dateFmt" value="${profile.hire_date}" readonly/>
                                 </div>
-                                <div class="col-sm common-box common-box input-box pt-4 me-2">
+                                <div class="col-md common-box common-box input-box pt-4 me-2">
                                     <span>주소</span>
                                     <input type="text" value="${profile.user_address}" readonly/>
                                 </div>
@@ -141,13 +137,13 @@
                     <hr>
                     <!-- 학력 -->
                     <div class="mb-5 g-0">
-                        <header class="description mb-sm-3">학력</header>
-                        <div class="col-sm px-5 g-0">
+                        <header class="description mb-md-3">학력</header>
+                        <div class="col-md px-5 g-0">
                             <c:choose>
                                 <c:when test="${not empty profile.educationList}">
                                     <c:forEach var="education" items="${profile.educationList}">
                                         <div class="row mb-2 g-0">
-                                            <div class="col-sm-auto common-box input-box pt-4 me-1">
+                                            <div class="col-md common-box input-box pt-4 me-1">
                                                 <span>학교구분</span>
                                                 <select class="form-select noneBorder"
                                                         style="background-color: transparent" disabled>
@@ -165,32 +161,32 @@
                                                     </option>
                                                 </select>
                                             </div>
-                                            <div class="col-sm common-box input-box pt-4">
+                                            <div class="col-md common-box input-box pt-4">
                                                 <span>학교명</span>
                                                 <input type="text" value="${education.school_nm}" readonly/>
                                             </div>
-                                            <div class="col-sm-2 common-box input-box pt-4 me-1"
+                                            <div class="col-md-2 common-box input-box pt-4 me-1"
                                                  style="margin-left: -1px;">
                                                 <span>전공명</span>
                                                 <input type="text" value="${education.major}" readonly/>
                                             </div>
-                                            <div class="col-sm-2 common-box input-box pt-4">
+                                            <div class="col-md-2 common-box input-box pt-4">
                                                 <span>입학일자</span>
                                                 <input type="text" class="dateFmt"
                                                        value="${education.school_start_date}"
                                                        readonly/>
                                             </div>
-                                            <div class="col-sm-2 common-box input-box pt-4 me-1"
+                                            <div class="col-md-2 common-box input-box pt-4 me-1"
                                                  style="margin-left:-1px;">
                                                 <span>졸업일자</span>
                                                 <input type="text" class="dateFmt" value="${education.school_end_date}"
                                                        readonly/>
                                             </div>
-                                            <div class="col-sm-1 common-box input-box pt-4 me-1">
+                                            <div class="col-md-1 common-box input-box pt-4 me-1">
                                                 <span>학점</span>
                                                 <input type="text" value="${education.total_grade}" readonly/>
                                             </div>
-                                            <div class="col-sm-auto common-box input-box pt-4 me-2">
+                                            <div class="col-md common-box input-box pt-4 me-2">
                                                 <span>졸업상태</span>
                                                 <select class="form-select noneBorder"
                                                         style="background-color: transparent" disabled>
@@ -283,7 +279,7 @@
                 <div class="container-info row-box row mb-5 g-0">
                     <!-- 근무경력 -->
                     <div class="row mb-5 g-0">
-                        <header class="description mb-sm-3">
+                        <header class="description mb-md-3">
                             <div class="left-group">
                                 근무경력
                                 <span name="wk_career"></span>
@@ -348,7 +344,7 @@
                     <hr>
                     <!-- 수행경력 -->
                     <div class="mb-5 g-0">
-                        <header class="description mb-sm-3">
+                        <header class="description mb-md-3">
                             <div class="left-group">
                                 수행경력
                                 <span name="pj_career"></span>
@@ -356,12 +352,12 @@
                         </header>
                         <div class="table-responsive px-5">
                             <header class="basic-medium"><span class="star">*</span>현재 진행중인 사업 내역</header>
-                            <table class="table table-hover mb-5">
+                            <table class="table table-hover mb-5 twin">
                                 <colgroup>
                                     <col style="width: 5%;">
-                                    <col style="width: 20%;">
+                                    <col style="width: 15%;">
                                     <col style="width: auto;">
-                                    <col style="width: 10%;">
+                                    <col style="width: 15%;">
                                     <col style="width: 25%;">
                                     <col style="width: 10%;">
                                     <col style="width: 6%;">
@@ -425,12 +421,12 @@
                                 </c:choose>
                             </table>
                             <header class="basic-medium"><span class="star">*</span>과거 사업 내역</header>
-                            <table class="table table-hover">
+                            <table class="table table-hover twin">
                                 <colgroup>
                                     <col style="width: 5%;">
-                                    <col style="width: 20%;">
+                                    <col style="width: 15%;">
                                     <col style="width: auto;">
-                                    <col style="width: 10%;">
+                                    <col style="width: 15%;">
                                     <col style="width: 25%;">
                                     <col style="width: 10%;">
                                     <col style="width: 6%;">
@@ -507,8 +503,8 @@
             <form id="profile">
                 <div class="form-floating">
                     <h2 class="header">프로필
-                        <div class="description">
-                            <span class="basic-medium"><span class="star">*</span> 필수 입력 정보입니다.</span>
+                        <div class="description d-md-flex align-items-end">
+                            <span class="basic-medium me-2"><span class="star">*</span> 필수 입력 정보입니다.</span>
                             <button type="button" class="btn btn-secondary" onclick="back();">
                                 <span>뒤로가기</span>
                             </button>
@@ -522,10 +518,10 @@
                     </h2>
                     <div class="container-info row-box row mb-5 g-0">
                         <!-- 인적사항 -->
-                        <header class="description mb-sm-3">인적사항</header>
+                        <header class="description mb-md-3">인적사항</header>
                         <div class="row-box px-5 row mb-5 g-0">
                             <!-- 사진 -->
-                            <div class="col-sm d-sm-flex justify-content-sm-center">
+                            <div class="col-md d-md-flex justify-content-md-center position-relative photo">
                                 <c:choose>
                                     <c:when test="${profile.fileInfo.file_sver_nm eq null || profile.fileInfo.file_sver_nm eq ''}">
                                         <img class="img-profile edit" src="/images/image.png"/>
@@ -534,7 +530,7 @@
                                         <img class="img-profile edit" src="/${profile.fileInfo.file_sver_nm}"/>
                                     </c:otherwise>
                                 </c:choose>
-                                <label for="imgFile" class="align-self-end">
+                                <label for="imgFile" class="psitAb">
                                     <div class="img-profile-btn do-hyeon-regular">+</div>
                                 </label>
                                 <input type="file" id="imgFile" name="imgFile" class="d-none"
@@ -542,35 +538,35 @@
                             </div>
                             <!-- 사진 끝 -->
                             <!-- 개인정보 -->
-                            <div class="col-10 g-0">
+                            <div class="col-md-10 g-0">
                                 <!-- 첫번째 row -->
                                 <div class="row mb-2 g-0">
-                                    <div class="col-sm-2 common-box common-box input-box pt-4 me-2">
+                                    <div class="col-md-2 common-box common-box input-box pt-4 me-2">
                                         <span>이름</span>
                                         <input type="text" name="user_nm" value="${profile.user_nm}" readonly/>
                                     </div>
-                                    <div class="col-sm-2 common-box common-box input-box pt-4 me-2">
+                                    <div class="col-md-2 common-box common-box input-box pt-4 me-2">
                                         <span>생년월일 <span class="star">*</span></span>
                                         <input type="text" name="user_birth" class="dateFmt" maxlength="10"
                                                value="${profile.user_birth}"/>
                                     </div>
-                                    <div class="col-sm-2 common-box common-box input-box pt-4 me-2">
+                                    <div class="col-md-2 common-box common-box input-box pt-4 me-2">
                                         <span>휴대전화 <span class="star">*</span></span>
                                         <input type="text" name="user_phone" class="telFmt" maxlength="13"
                                                value="${profile.user_phone}"/>
                                     </div>
-                                    <div class="col-sm-2 common-box common-box input-box pt-4 me-2">
+                                    <div class="col-md-2 common-box common-box input-box pt-4 me-2">
                                         <span>직원ID</span>
                                         <input type="text" name="user_id" value="${profile.user_id}" readonly/>
                                     </div>
-                                    <div class="col-sm common-box common-box input-box pt-4 me-2">
+                                    <div class="col-md common-box common-box input-box pt-4 me-2">
                                         <span>이메일</span>
                                         <input type="text" value="${profile.user_id}@itsmart.co.kr" readonly/>
                                     </div>
                                 </div>
                                 <!-- 두번째 row -->
                                 <div class="row mb-2 g-0">
-                                    <div class="col-sm-2 common-box common-box input-box pt-4 me-2">
+                                    <div class="col-md-2 common-box common-box input-box pt-4 me-2">
                                         <span>소속 <span class="star">*</span></span>
                                         <select name="user_department" class="form-select noneBorder">
                                             <c:forEach var="orgList" items="${orgList}">
@@ -579,7 +575,7 @@
                                             </c:forEach>
                                         </select>
                                     </div>
-                                    <div class="col-sm-2 common-box common-box input-box pt-4 me-2">
+                                    <div class="col-md-2 common-box common-box input-box pt-4 me-2">
                                         <span>직위/직급 <span class="star">*</span></span>
                                         <select class="form-select noneBorder" name="user_position">
                                             <c:forEach var="psitList" items="${psitList}">
@@ -588,12 +584,12 @@
                                             </c:forEach>
                                         </select>
                                     </div>
-                                    <div class="col-sm-2 common-box common-box input-box pt-4 me-2">
+                                    <div class="col-md-2 common-box common-box input-box pt-4 me-2">
                                         <span>입사일자</span>
                                         <input type="text" name="hire_date" class="dateFmt" maxlength="10"
                                                value="${profile.hire_date}" readonly/>
                                     </div>
-                                    <div class="col-sm common-box common-box input-box pt-4 me-2">
+                                    <div class="col-md common-box common-box input-box pt-4 me-2">
                                         <span>주소 <span class="star">*</span></span>
                                         <input type="text" name="user_address" maxlength="40"
                                                value="${profile.user_address}"/>
@@ -606,7 +602,7 @@
                         <hr>
                         <!-- 학력 -->
                         <div id="schFrm" class="mb-5 g-0">
-                            <header class="description mb-sm-3">학력
+                            <header class="description mb-md-3">학력
                                 <div class="primary-btn">
                                     <button type="button" class="btn btn-outline-primary add_field"
                                             data-target="schFrm">
@@ -614,7 +610,7 @@
                                     </button>
                                 </div>
                             </header>
-                            <div class="col-sm ps-5 g-0 add-main">
+                            <div class="col-md px-5 g-0 add-main">
                                 <c:choose>
                                     <c:when test="${not empty profile.educationList}">
                                         <c:forEach var="education" items="${profile.educationList}" varStatus="status">
@@ -622,7 +618,7 @@
                                                 <input type="hidden"
                                                        name="educationList[${status.index}].school_seq"
                                                        class="seq" value="${education.school_seq}"/>
-                                                <div class="col-sm-auto common-box input-box pt-4 me-1">
+                                                <div class="col-md common-box input-box pt-4 me-1">
                                                     <span>학교구분</span>
                                                     <select name="educationList[${status.index}].school_gubun"
                                                             class="form-select noneBorder schGb">
@@ -641,19 +637,19 @@
                                                         </option>
                                                     </select>
                                                 </div>
-                                                <div class="col-sm common-box input-box pt-4">
+                                                <div class="col-md common-box input-box pt-4">
                                                     <span>학교명</span>
                                                     <input type="text" name="educationList[${status.index}].school_nm"
                                                            maxlength="15"
                                                            value="${education.school_nm}"/>
                                                 </div>
-                                                <div class="col-sm-2 common-box input-box pt-4 me-1"
+                                                <div class="col-md-2 common-box input-box pt-4 me-1"
                                                      style="margin-left: -1px;">
                                                     <span>전공명</span>
                                                     <input type="text" name="educationList[${status.index}].major"
                                                            maxlength="18" value="${education.major}"/>
                                                 </div>
-                                                <div class="col-sm-2 common-box input-box pt-4">
+                                                <div class="col-md-2 common-box input-box pt-4">
                                                     <span>입학일자</span>
                                                     <input type="text"
                                                            name="educationList[${status.index}].school_start_date"
@@ -661,7 +657,7 @@
                                                            maxlength="10"
                                                            value="${education.school_start_date}"/>
                                                 </div>
-                                                <div class="col-sm-2 common-box input-box pt-4 me-1"
+                                                <div class="col-md-2 common-box input-box pt-4 me-1"
                                                      style="margin-left:-1px;">
                                                     <span>졸업일자</span>
                                                     <input type="text"
@@ -670,14 +666,14 @@
                                                            maxlength="10"
                                                            value="${education.school_end_date}"/>
                                                 </div>
-                                                <div class="col-sm-1 common-box input-box pt-4 me-1">
+                                                <div class="col-md-1 common-box input-box pt-4 me-1">
                                                     <span>학점</span>
                                                     <input type="text"
                                                            name="educationList[${status.index}].total_grade"
                                                            class="grade" maxlength="3"
                                                            onkeyup="onlyDot(this)" value="${education.total_grade}"/>
                                                 </div>
-                                                <div class="col-sm-auto common-box input-box pt-4 me-2">
+                                                <div class="col-md common-box input-box pt-4 me-2">
                                                     <span>졸업상태</span>
                                                     <select name="educationList[${status.index}].grad_status"
                                                             class="form-select noneBorder">
@@ -694,19 +690,15 @@
                                                     </select>
                                                 </div>
                                                 <c:if test="${status.count eq 1}">
-                                                    <div class="col-sm-auto align-content-center ps-3">
-                                                        <button type="button" class="btn btn-danger clear_field"
-                                                                onclick="clearField(this)"><span>-</span>
-                                                        </button>
-                                                    </div>
+                                                    <button type="button" class="btn btn-danger clear_field"
+                                                            onclick="clearField(this)"><span>-</span>
+                                                    </button>
                                                 </c:if>
                                                 <c:if test="${status.count ne 1}">
-                                                    <div class="col-sm-auto align-content-center ps-3">
-                                                        <button type="button"
-                                                                class="btn btn-outline-danger remove-field"
-                                                                data-target="schFrm"><span>-</span>
-                                                        </button>
-                                                    </div>
+                                                    <button type="button"
+                                                            class="btn btn-outline-danger remove-field"
+                                                            data-target="schFrm"><span>-</span>
+                                                    </button>
                                                 </c:if>
                                             </div>
                                         </c:forEach>
@@ -715,7 +707,7 @@
                                         <div class="row mb-2 g-0 add" id="educationList_0">
                                             <input type="hidden" name="educationList[0].school_seq"
                                                    class="seq" value="1">
-                                            <div class="col-sm-auto common-box input-box pt-4 me-1">
+                                            <div class="col-md common-box input-box pt-4 me-1">
                                                 <span>학교구분</span>
                                                 <select name="educationList[0].school_gubun"
                                                         class="form-select noneBorder schGb">
@@ -726,33 +718,33 @@
                                                     <option value="013">대학원</option>
                                                 </select>
                                             </div>
-                                            <div class="col-sm common-box input-box pt-4">
+                                            <div class="col-md common-box input-box pt-4">
                                                 <span>학교명</span>
                                                 <input type="text" name="educationList[0].school_nm" maxlength="15"/>
                                             </div>
-                                            <div class="col-sm-2 common-box input-box pt-4 me-1"
+                                            <div class="col-md-2 common-box input-box pt-4 me-1"
                                                  style="margin-left: -1px;">
                                                 <span>전공명</span>
                                                 <input type="text" name="educationList[0].major" maxlength="18"/>
                                             </div>
-                                            <div class="col-sm-2 common-box input-box pt-4">
+                                            <div class="col-md-2 common-box input-box pt-4">
                                                 <span>입학일자</span>
                                                 <input type="text" name="educationList[0].school_start_date"
                                                        class="dateFmt"/>
                                             </div>
-                                            <div class="col-sm-2 common-box input-box pt-4 me-1"
+                                            <div class="col-md-2 common-box input-box pt-4 me-1"
                                                  style="margin-left: -1px;">
                                                 <span>졸업일자</span>
                                                 <input type="text" name="educationList[0].school_end_date"
                                                        class="dateFmt"/>
                                             </div>
-                                            <div class="col-sm-1 common-box input-box pt-4 me-1">
+                                            <div class="col-md-1 common-box input-box pt-4 me-1">
                                                 <span>학점</span>
                                                 <input type="text" name="educationList[0].total_grade" class="grade"
                                                        maxlength="3"
                                                        onkeyup="onlyDot(this)"/>
                                             </div>
-                                            <div class="col-sm-auto common-box input-box pt-4 me-2">
+                                            <div class="col-md common-box input-box pt-4 me-2">
                                                 <span>졸업상태</span>
                                                 <select name="educationList[0].grad_status"
                                                         class="form-select noneBorder">
@@ -762,13 +754,11 @@
                                                     <option value="003">재학중</option>
                                                 </select>
                                             </div>
-                                            <div class="col-sm-auto align-content-center ps-3">
-                                                <button type="button" class="btn btn-danger clear_field"
-                                                        onclick="clearField(this)">
-                                                    <span>-</span>
-                                                </button>
-                                            </div>
                                         </div>
+                                        <button type="button" class="btn btn-danger clear_field"
+                                                onclick="clearField(this)">
+                                            <span>-</span>
+                                        </button>
                                     </c:otherwise>
                                 </c:choose>
                             </div>
@@ -781,7 +771,7 @@
             <!-- 자격증 -->
             <form id="qualification">
                 <div id="qlFrm">
-                    <h2 class="header">자격증
+                    <h2 class="header ql">자격증
                         <span>
                             <button type="button" class="btn btn-outline-primary add_field"
                                     data-target="qlFrm"><span>+</span></button>
@@ -894,8 +884,8 @@
                 <div class="container-info row-box row mb-5 g-0">
                     <!-- 근무경력 -->
                     <form id="workExperience">
-                        <div id="workFrm" class="mb-5 px-sm-0 g-0">
-                            <header class="description mb-sm-3">
+                        <div id="workFrm" class="mb-5 px-md-0 g-0">
+                            <header class="description mb-md-3">
                                 <div class="left-group">
                                     근무경력
                                     <span name="wk_career"></span>
@@ -1028,8 +1018,8 @@
                     <hr>
                     <!-- 수행경력 -->
                     <form id="project">
-                        <div id="pjFrm" class="mb-5 px-sm-0 g-0">
-                            <header class="description mb-sm-3">
+                        <div id="pjFrm" class="mb-5 px-md-0 g-0">
+                            <header class="description mb-md-3">
                                 <div class="left-group">
                                     수행경력
                                     <span name="pj_career"></span>
@@ -1047,12 +1037,12 @@
                             </header>
                             <div class="table-responsive px-5">
                                 <header class="basic-medium"><span class="star">*</span>현재 진행중인 사업 내역</header>
-                                <table class="table table-hover mb-5">
+                                <table class="table table-hover mb-5 twin">
                                     <colgroup>
                                         <col style="width: 5%;">
-                                        <col style="width: 20%;">
+                                        <col style="width: 15%;">
                                         <col style="width: auto;">
-                                        <col style="width: 10%;">
+                                        <col style="width: 15%;">
                                         <col style="width: 20%;">
                                         <col style="width: 10%;">
                                         <col style="width: 6%;">
@@ -1161,12 +1151,12 @@
                                     </c:choose>
                                 </table>
                                 <header class="basic-medium"><span class="star">*</span>과거 사업 내역</header>
-                                <table class="table table-hover">
+                                <table class="table table-hover twin">
                                     <colgroup>
                                         <col style="width: 5%;">
-                                        <col style="width: 20%;">
+                                        <col style="width: 15%;">
                                         <col style="width: auto;">
-                                        <col style="width: 10%;">
+                                        <col style="width: 15%;">
                                         <col style="width: 20%;">
                                         <col style="width: 10%;">
                                         <col style="width: 6%;">
@@ -1323,7 +1313,7 @@
         }
 
         // 최초 DOM 읽을 때 dateFmt, telFmt 포맷팅하여 표기
-        $(".container").find(".dateFmt, .telFmt").each(function () {
+        $(".container-md").find(".dateFmt, .telFmt").each(function () {
             formatInput($(this));
         });
 
@@ -1343,7 +1333,7 @@
         });
 
         // 날짜 및 휴대전화 실시간 포맷
-        $(".container").on("keyup", ".dateFmt, .telFmt", function () {
+        $(".container-md").on("keyup", ".dateFmt, .telFmt", function () {
             formatInput($(this));
         });
 
@@ -1450,7 +1440,7 @@
                 newRow =
                     `<div class="row mb-2 g-0 add" id="educationList_">
                             <input type="hidden" class="seq" name="educationList[].school_seq" value=""/>
-                            <div class="col-sm-auto common-box input-box pt-4 me-1">
+                            <div class="col-md common-box input-box pt-4 me-1">
                                 <span>학교구분</span>
                                 <select class="form-select noneBorder schGb"
                                         name="educationList[].school_gubun">
@@ -1461,27 +1451,27 @@
                                     <option value="013">대학원</option>
                                 </select>
                             </div>
-                            <div class="col-sm common-box input-box pt-4">
+                            <div class="col-md common-box input-box pt-4">
                                 <span>학교명</span>
                                 <input type="text" name="educationList[].school_nm" maxlength="15"  />
                             </div>
-                            <div class="col-sm-2 common-box input-box pt-4 me-1" style="margin-left: -1px;">
+                            <div class="col-md-2 common-box input-box pt-4 me-1" style="margin-left: -1px;">
                                 <span>전공명</span>
                                 <input type="text" name="educationList[].major" maxlength="18"/>
                             </div>
-                            <div class="col-sm-2 common-box input-box pt-4">
+                            <div class="col-md-2 common-box input-box pt-4">
                                 <span>입학일자</span>
                                 <input type="text" class="dateFmt" maxlength="10" name="educationList[].school_start_date"  />
                             </div>
-                            <div class="col-sm-2 common-box input-box pt-4 me-1" style="margin-left: -1px;">
+                            <div class="col-md-2 common-box input-box pt-4 me-1" style="margin-left: -1px;">
                                 <span>졸업일자</span>
                                 <input type="text" class="dateFmt" maxlength="10" name="educationList[].school_end_date"  />
                             </div>
-                            <div class="col-sm-1 common-box input-box pt-4 me-1">
+                            <div class="col-md-1 common-box input-box pt-4 me-1">
                                 <span>학점</span>
                                 <input type="text" class="grade" maxlength="3" name="educationList[].total_grade" onkeyup="onlyDot(this)" />
                             </div>
-                            <div class="col-sm-auto common-box input-box pt-4 me-4">
+                            <div class="col-md common-box input-box pt-4 me-2">
                                 <span>졸업상태</span>
                                 <select class="form-select noneBorder"
                                         name="educationList[].grad_status">
@@ -1491,16 +1481,31 @@
                                     <option value="003">재학중</option>
                                 </select>
                             </div>
-                            <div class="col-sm-auto align-content-center">
-                                <button type="button" class="btn btn-outline-danger remove-field" data-target="schFrm"><span>-</span></button>
-                                </button>
-                            </div>
+                            <button type="button" class="btn btn-outline-danger remove-field" data-target="schFrm"><span>-</span></button>
+                            </button>
                         </div>`;
             }
             $("#" + frmId + " .add-main").append(newRow);
             updateRowIndex(frmId, listNm);
         });
 
+        function updateButtonTexts() {
+            const isMobile = $(window).width() < 768; // 모바일 여부 판단
+            $(".btnChg").each(function () {
+                const $button = $(this);
+                const pcText = $button.data("text-pc");
+                const mobileText = $button.data("text-mobile");
+
+                // 화면 크기에 따라 텍스트 변경
+                $button.find("span").text(isMobile ? mobileText : pcText);
+            });
+        }
+
+        // 초기 실행
+        updateButtonTexts();
+
+        // 화면 크기 변경 시 실행
+        $(window).on("resize", updateButtonTexts);
     });
 
     // 항목 추가/제거 시 index 정렬
@@ -1522,9 +1527,9 @@
     // input 초기화
     function clearField(ob) {
         const clearOb = $(ob).closest(".add");
-        clearOb.find("input, select").each(function(){
+        clearOb.find("input, select").each(function () {
             const name = $(this).attr("name");
-            if(!name.includes("seq")){
+            if (!name.includes("seq")) {
                 $(this).val('');
             }
         });
@@ -1534,7 +1539,7 @@
     function addProject() {
         let user_id = $('input[name=user_id]').val();
         let url = "/profile/project/add?user_id=" + user_id;
-        let properties = "width=800,height=300"
+        let properties = calcSize(750, 280);
         window.open(url, "addNewProject", properties);
     }
 
@@ -1592,8 +1597,8 @@
     function viewSkill(project_seq, flag) {
         let user_id = $('input[name=user_id]').val();
         let url = "/profile/project/select/skill?user_id=" + user_id + "&project_seq=" + project_seq + "&flag=" + flag;
-        let properties = "width=600, height=420";
-        window.open(url, "viewSkill", properties)
+        let properties = calcSize(600, 420);
+        window.open(url, "viewSkill", properties);
     }
 
     function excel() {
@@ -1669,7 +1674,7 @@
             const grade = $(this).val();
             // 고등학교는 검증제외
             let gubun = $(this).closest(".add").find(".schGb").val();
-            if(gubun == '010'){
+            if (gubun == '010') {
                 return;
             }
             if (!chkGrade(grade)) {
@@ -1690,7 +1695,7 @@
             const date = $(this).val();
 
             let name = $(this).attr("name");
-            if(name.endsWith("expiry_date") && date === ""){
+            if (name.endsWith("expiry_date") && date === "") {
                 return;
             } else {
                 if (!chkDate(date)) {
@@ -1699,7 +1704,8 @@
                     isValidDates = false;
                     return false;
                 }
-            };
+            }
+            ;
         });
 
         if (!isValidDates) return false;
@@ -1960,11 +1966,11 @@
         }
     }
 
-    function usrDelete(){
+    function usrDelete() {
         let user_id = $("input[name=user_id]").val();
-        if(confirm("직원 삭제 하시겠습니까?")){
+        if (confirm("직원 삭제 하시겠습니까?")) {
             $.ajax({
-                url: "/auth/delete/"+user_id,
+                url: "/auth/delete/" + user_id,
                 type: "POST",
                 contentType: "application/json",
                 data: JSON.stringify({
@@ -1981,17 +1987,17 @@
         }
     }
 
-    function excelUpload(){
+    function excelUpload() {
         let user_id = $("input[name=user_id]").val();
 
         let url = "/excel/" + user_id + "/upload";
-        let properties = "width=600, height=200";
+        let properties = calcSize(500, 150);
         window.open(url, "excelUpload", properties)
     }
-    
-    function openExcelTemplatePop(){
-    	let url = "/excel/excelTemplateUpload";
-        let properties = "width=900, height=600";
+
+    function openExcelTemplatePop() {
+        let url = "/excel/excelTemplateUpload";
+        let properties = calcSize(500, 400);
         window.open(url, "excelUpload", properties)
     }
 

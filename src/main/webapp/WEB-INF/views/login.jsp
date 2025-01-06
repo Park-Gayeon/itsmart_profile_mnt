@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <%-- 웹 앱 반응형 --%>
     <meta name="viewport" content="width=device-width" , initial-scale="1">
-    <link rel="stylesheet" href="/css/sign-in.css">
+    <link rel="stylesheet" href="/css/login.css">
     <link rel="stylesheet" href="/css/basic.css">
     <link rel="stylesheet" href="/css/bootstrap.css">
     <title>직원 프로필관리 시스템</title>
@@ -16,7 +16,7 @@
 
 <!-- main-content -->
 <main class="content">
-    <div class="form-signin w-100 m-auto my-5">
+    <div class="form-signin w-100 m-auto">
         <div class="logo pb-3">
             <div class="logo-image">
                 <img src="/images/person-circle.svg" alt="logo" class="bi pe-none me-2">

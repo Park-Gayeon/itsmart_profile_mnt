@@ -1,7 +1,9 @@
-html,
-body {
-    height: 100%;
-    margin: 0px;
+.content {
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    height: 350px !important;
+
 }
 
 .form-signin {

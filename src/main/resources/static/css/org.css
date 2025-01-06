@@ -1,0 +1,166 @@
+/* 공통 스타일 */
+.container {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 960px !important;
+}
+
+.container_org {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* 조직도 노드 스타일 */
+.org-node {
+    position: relative;
+    margin: 10px 0;
+    padding: 15px;
+    background-color: #ffffff;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: max-height 0.3s ease-in, opacity 0.3s ease-in;
+}
+
+.org-node:hover {
+    background-color: #f1f3f5;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* 조직도 제목 스타일 */
+.org-title {
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    font-weight: bold;
+    color: #343a40;
+    cursor: pointer;
+}
+
+.org-title img {
+    margin-right: 10px;
+    width: 16px;
+    height: 16px;
+    transition: transform 0.3s ease;
+}
+
+.org-title[title] {
+    border-bottom: 1px dashed #6c757d;
+}
+
+.basic-bold {
+    font-weight: bold;
+}
+
+/* 사용자 목록 스타일 */
+.user-list {
+    margin-top: 10px;
+    padding-left: 20px;
+    border-left: 2px solid #adb5bd;
+}
+
+.user-list {
+    transition: max-height 0.3s ease-in, opacity 0.3s ease-in;
+    max-height: 500px; /* 충분히 큰 값 설정 */
+    opacity: 1;
+}
+
+.hidden {
+    height: 0;
+    padding: 0;
+    margin: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.visible {
+    height: auto;
+    margin: 10px 0;
+    padding: 15px;
+    opacity: 1;
+    transition: all 0.3s ease;
+}
+
+.visible_usr {
+    height: auto;
+    opacity: 1;
+    transition: all 0.3s ease;
+}
+
+.user-item {
+    padding: 8px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.user-item span {
+    display: block;
+    color: #495057;
+    font-size: 12px;
+}
+
+.basic-medium {
+    font-weight: 500;
+    font-size: 14px;
+}
+
+.basic-thin {
+    font-weight: 300;
+    font-size: 12px;
+    color: #868e96;
+}
+
+/* 미디어 쿼리 (반응형 디자인) */
+@media (max-width: 768px) {
+    .container_org {
+        padding: 10px;
+    }
+
+    .org-node {
+        padding: 10px;
+    }
+
+    .org-title {
+        font-size: 14px;
+    }
+
+    .user-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+/* Mobile 화면 스타일 */
+@media (max-width: 767px) {
+    .org-node {
+        padding-left: 50px !important;
+    }
+    .hidden {
+        height: 0;
+        padding: 0;
+        margin: 0;
+        opacity: 0;
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+
+    .visible {
+        height: auto;
+        margin: 10px 0;
+        padding: 15px;
+        opacity: 1;
+        transition: all 0.3s ease;
+    }
+
+    .visible_usr {
+        height: auto;
+        opacity: 1;
+        transition: all 0.3s ease;
+    }
+}

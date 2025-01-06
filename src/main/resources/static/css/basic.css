@@ -28,6 +28,38 @@
     font-style: normal;
 }
 
+/* 헤더 고정 크기 설정 */
+#hd, .navbar {
+    height: 70px;
+}
+
+/* 헤더 고정 */
+.navbar {
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* 모바일 기본 스타일 */
+.navbar {
+    padding: 10px;
+}
+
+.offcanvas {
+    width: 250px;
+    transition: transform 0.3s ease;
+}
+
+.offcanvas-body {
+    padding: 20px;
+}
+
+.navbar-toggler {
+    border-color: #fff;
+}
+
+.nav-link {
+    font-size: 14px;
+    padding: 10px 5px;
+}
 /* 폰트 적용 */
 span {
     font-family: "Noto Sans KR", sans-serif !important;
@@ -56,231 +88,13 @@ h2, button span {
     font-style: normal;
 }
 
-
 .content {
     flex-grow: 1; /* 빈 공간을 채우기 위한 메인 콘텐츠 */
-    padding: 20px; /* 패딩으로 여백 추가 */
     background-color: var(--bs-gray-200);
-}
-
-.content > img {
-    width: 100%;
-    height: 485px;
-    opacity: 0;
-    transition: opacity 0.5s ease;
-}
-
-.content > img.loaded {
-    opacity: 1;
-}
-
-.content > .container {
-    position: relative;
-    margin: 0 auto;
-    padding-bottom: 200px;
-    text-align: left;
-}
-
-.container-info {
-    margin: 0 auto;
-    background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-}
-
-/* 여기는 info list 에서 사용하고 있는 css임 > 총 n건 이랑 버튼*/
-.container header.description {
-    position: relative;
-    color: var(--bs-gray-dark);
-    letter-spacing: 0px;
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    font-size: 16px;
-}
-
-.container header.description .primary-btn {
-    right: 0;
-    top: 0px;
-    position: relative;
-}
-
-.description .left-group {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-
-.left-group span {
-    font-size: 14px;
-}
-
-.description .right-group {
-    display: flex;
-    gap: 10px;
-}
-
-/* 여기는 상세화면에서 프로필 / 자격증 등 세부항목에 대한 라인 */
-.container h2.header {
-    position: relative;
-    margin-bottom: 14px;
-    color: #333;
-    font-weight: bold;
-    font-size: 25px;
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-}
-
-.container h2.header .description {
-    position: relative;
-    top: 0;
-    font-size: 13px;
-    letter-spacing: 0px;
-    color: #999;
-    font-weight: normal;
-}
-
-.container .search-type {
-    position: relative;
-    width: 120px;
-    height: 40px;
-    border: 1px solid #6a6a6a;
-    border-radius: 8px !important;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #fff;
-    color: #6a6a6a;
-    font-weight: bold;
-    cursor: pointer;
-    font-size: 14px;
-    gap: unset;
-}
-
-.container .search-input {
-    width: 300px;
-    height: 40px;
-    border-radius: 8px 0 0 8px !important;
-    outline: none;
-    font-size: 14px;
-    border: 1px solid #d2d2d2;
-
-
-}
-
-.container_org {
-    max-width: 800px;
-    margin: 0 auto;
-    background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-}
-
-.org-node {
-    display: flex;
-    padding: 10px 0 0 10px;
-}
-
-.org-title {
-    font-weight: bold;
-    font-size: 18px;
-    width: 25%;
-}
-
-.user-list {
-    margin-left: 20px;
-    margin-top: 20px;
-}
-
-.user-item {
-    padding: 2px 0;
-}
-
-.sort {
-    position: relative;
-    display: inline-block;
-}
-
-.remove-btn {
-    position: absolute;
-    top: -5px;
-    right: -5px;
-    display: none;
-    cursor: pointer;
-}
-
-.sort:hover .remove-btn {
-    display: flex;
 }
 
 .star {
     color: #ff3333;
-}
-
-.common-box {
-    border: 1px solid #d2d2d2;
-    box-sizing: border-box;
-}
-
-.table-responsive header {
-    font-size: 15px;
-    color: var(--bs-gray-700);
-    margin-bottom: 5px;
-}
-
-.row-box {
-    position: relative;
-    background-color: #fff;
-    padding: 20px 20px 10px;
-    -webkit-box-sizing: border-box;
-}
-
-.input-box {
-    position: relative;
-    display: inline-block;
-    vertical-align: top;
-    text-align: left;
-}
-
-.input-box > span {
-    top: 9px;
-    left: 15px;
-    font-size: 11px;
-    letter-spacing: 0px;
-    color: #a8a8a8;
-    visibility: visible;
-    position: absolute;
-    vertical-align: middle;
-}
-
-.input-box > input {
-    display: block;
-    width: 100%;
-    padding: 0 15px;
-    border: 0;
-    color: #333;
-    outline: none;
-    box-sizing: border-box;
-    font-size: 14px;
-    height: 40px;
-}
-
-.img-profile {
-    width: 130px;
-    height: 150px;
-    border-radius: 3rem;
-    padding-bottom: 10px;
-}
-
-.img-profile-btn {
-    padding: 6px 15px;
-    margin-bottom: 10px;
-    background-color: var(--bs-orange);
-    border-radius: 20px;
-    color: white;
-    cursor: pointer;
 }
 
 .noneBorder {
@@ -292,63 +106,18 @@ h2, button span {
     color: var(--bs-gray-dark) !important;
 }
 
-th:first-child {
-    text-align: center;
-}
-
-tr td:first-child {
-    text-align: center;
-}
-
-td {
-    border: none;
-    font-size: 14px;
-    align-content: center;
-}
-
-td input {
-    border: none;
-    outline: none;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    width: 100%;
-}
-
 /* footer.jsp 설정 */
+.footer {
+    text-align: center;
+    font-size: 12px;
+    line-height: 1.4;
+}
+
 .div_footer {
     width: 100%;
-    max-width: 1030px;
     position: relative;
     margin: 0 auto;
     bottom: 0;
-    overflow: hidden;
-}
-
-.div_footer .foot_logo {
-    width: 15%;
-    text-align: right;
-    float: left;
-    color: #fff;
-    border-right: 1px solid #fff;
-    margin: 25px 0;
-    font-size: 15px;
-    padding: 0 25px 10px 0;
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
-}
-
-.div_footer .foot_txts {
-    width: 85%;
-    float: left;
-    overflow: hidden;
-    margin: 20px auto;
-    text-align: center;
-    position: relative;
-    font-size: 13px;
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
 }
 
 .div_footer .foot_txts > address {
@@ -360,9 +129,116 @@ td input {
     color: #fff !important;
 }
 
+.foot_txts a {
+    color: #ccc;
+    text-decoration: none;
+}
+
+.foot_txts a:hover {
+    text-decoration: underline;
+}
+
 .div_footer .foot_txts > .copyright {
     width: 100%;
     color: #fff;
     text-align: center;
     margin: 5px 0 0 0;
+}
+
+/* PC 화면 스타일 */
+@media (min-width: 768px) {
+    .navbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+    }
+
+    .offcanvas {
+        position: relative;
+        width: 280px;
+        border-right: 1px solid #e9ecef;
+        transform: translateX(0);
+        visibility: visible;
+        transition: none;
+    }
+
+    .offcanvas-body {
+        padding: 20px;
+    }
+
+    .nav-link {
+        font-size: 16px;
+        padding: 10px 15px;
+    }
+
+    .offcanvas.show {
+        transform: none;
+    }
+
+    .footer {
+        display: flex;
+        justify-content: space-between;
+        flex-direction: row;
+        align-items: center;
+        background-color: #333;
+        color: #fff;
+        padding: 20px 40px;
+        font-size: 14px;
+    }
+
+    .foot_logo {
+        width: 15%;
+        text-align: right;
+        float: left;
+        color: #fff;
+        border-right: 1px solid #fff;
+        margin: 25px 0;
+        font-size: 15px;
+        padding: 0 25px 10px 0;
+        -moz-box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+    }
+
+    .foot_txts {
+        width: 85%;
+        float: left;
+        overflow: hidden;
+        margin: 20px auto;
+        text-align: center;
+        position: relative;
+        font-size: 13px;
+        -moz-box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+    }
+}
+
+/* Mobile 화면 스타일 */
+@media (max-width: 767px) {
+    .foot_logo {
+        width: 100%;
+        text-align: center;
+        color: #fff;
+        border-bottom: 1px solid #fff;
+        margin: 5px 0;
+        font-size: 13px;
+        padding: 5px 0;
+        -moz-box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+    }
+
+    .foot_txts {
+        width: 100%;
+        margin: 5px auto;
+        text-align: center;
+        position: relative;
+        font-size: 11px;
+        -moz-box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+    }
 }

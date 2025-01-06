@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width", initial-scale="1">
     <link rel="stylesheet" href="/css/bootstrap.css">
     <link rel="stylesheet" href="/css/basic.css">
+    <link rel="stylesheet" href="/css/main.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <title>직원 프로필관리 시스템</title>
 </head>
@@ -16,7 +17,7 @@
 <!-- header.jsp -->
 
 <!-- main-content -->
-<div class="content p-0">
+<div class="content">
     <img src="/images/city_view.webp" alt="city-view" onload="this.classList.add('loaded')">
 </div>
 <!-- main-content -->
