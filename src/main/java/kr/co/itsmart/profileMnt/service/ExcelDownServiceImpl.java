@@ -230,7 +230,8 @@ public class ExcelDownServiceImpl implements ExcelDownService {
                     applyCellStyle(qualificationData, 0, ql.getQualification_nm(), contentStyle);
                     applyCellStyle(qualificationData, 1, ql.getIssuer(), contentStyle);
                     applyCellStyle(qualificationData, 2, formatDate(ql.getAcquisition_date()), contentStyle);
-                    applyCellStyle(qualificationData, 3, formatDate(ql.getExpiry_date()), contentStyle);
+                    applyCellStyle(qualificationData, 3, nullChange(ql.getExpiry_date()).isEmpty() ? "" : formatDate(ql.getExpiry_date()), contentStyle);
+
                 }
                 sheet.createRow(rowCount++); // 여백
             }
@@ -856,7 +857,7 @@ public class ExcelDownServiceImpl implements ExcelDownService {
             certificationInfo.put("certificateName", ql.getQualification_nm());    //자격증명
             certificationInfo.put("issuingOrganization", ql.getIssuer());    //발행기관
             certificationInfo.put("acquisitionDate", formatDate(ql.getAcquisition_date()));    //취득일자
-            certificationInfo.put("expirationDate", formatDate(ql.getExpiry_date()));    //만기일자
+            certificationInfo.put("expirationDate", nullChange(ql.getExpiry_date()).isEmpty() ? "" : formatDate(ql.getExpiry_date()));    //만기일자
 
             certificationList.add(certificationInfo);
         }
