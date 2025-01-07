@@ -8,6 +8,8 @@ import kr.co.itsmart.profileMnt.dao.*;
 import kr.co.itsmart.profileMnt.vo.*;
 import net.sf.jxls.transformer.XLSTransformer;
 import org.apache.poi.EncryptedDocumentException;
+import org.apache.poi.POIXMLProperties;
+import org.apache.poi.openxml4j.opc.OPCPackage;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
@@ -553,10 +555,21 @@ public class ExcelDownServiceImpl implements ExcelDownService {
                 throw new IOException("Template file not found at: " + file.getAbsolutePath());
             }
             fis = new FileInputStream(file);
+            // 메타데이터 확인 로직 추가
+            chkMeta(fis, file.getName());
+
+            // FileInputStream을 새로 생성 (이전 스트림은 이미 닫힘)
+            fis = new FileInputStream(file);  // 다시 열기
 
         } else {
             String templatePath = UPLOAD_DIR + "/template.xlsx";
             fis = getClass().getClassLoader().getResourceAsStream(templatePath);
+
+            // 메타데이터 확인 로직 추가
+            chkMeta(fis, templatePath);
+
+            // InputStream을 새로 생성
+            fis = getClass().getClassLoader().getResourceAsStream(templatePath);  // 다시 열기
         }
 
         Map<String, Object> personalInfo = new HashMap<>(); //인적사항
@@ -743,6 +756,10 @@ public class ExcelDownServiceImpl implements ExcelDownService {
         } catch (Exception e) {
             e.printStackTrace();
             throw new IOException("엑셀 생성 중 오류가 발생했습니다.");
+        } finally {
+            if (fis != null){
+                fis.close(); // InputStream 자원 해제
+            }
         }
     }
 
@@ -921,5 +938,31 @@ public class ExcelDownServiceImpl implements ExcelDownService {
         map.put("value", str);
         map.put("level", level);
         return commonDAO.getTaskCodeId(map);
+    }
+
+    private void chkMeta(InputStream fis, String fileNm) throws CustomException {
+        try {
+            // Apache POI 로 메타데이터 확인
+            OPCPackage pkg = OPCPackage.open(fis);
+            XSSFWorkbook workbook = new XSSFWorkbook(pkg);
+            POIXMLProperties props = workbook.getProperties();
+
+            String application = props.getExtendedProperties().getApplication();
+            logger.info("File: {}", fileNm);
+            logger.info("application: {}", application);
+
+            if("Cell".equals(application)){ // 한셀파일
+                throw new CustomException("Hansel 로 작성된 파일은 호환되지 않습니다.\nMS의 Excel, 혹은 구글 스프레드시트를 사용해주세요.");
+            }
+            workbook.close();
+            pkg.close();
+
+        } catch (CustomException e){
+            logger.info("Hansel 프로그램");
+            throw e;
+        } catch (Exception e) {
+            logger.error("General Error reading metadata for file: {}", fileNm, e);
+            throw new CustomException("메타데이터를 읽는동안 문제가 발생했습니다.");
+        }
     }
 }
