@@ -24,7 +24,7 @@
         <div class="container-md pt-3 mb-md-5">
             <h2>직원 프로필관리</h2>
             <div class="input-group pb-2 justify-content-md-end">
-                <select name="searchType" class="search-type me-md-1 ps-3">
+                <select name="searchType" class="search-type ps-3">
                     <option value="userNm" <c:if test="${searchType eq 'userNm'}">selected</c:if>>이름</option>
                     <option value="userId" <c:if test="${searchType eq 'userId'}">selected</c:if>>ID</option>
                     <option value="userDepartment" <c:if test="${searchType eq 'userDepartment'}">selected</c:if>>소속

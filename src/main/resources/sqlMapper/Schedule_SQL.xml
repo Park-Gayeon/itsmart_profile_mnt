@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.itsmart.profileMnt.dao.ScheduleDAO">
+
+    <!-- getUsrListCnt : 직원 프로젝트 일정관리 건수 SELECT -->
+    <select id="getUsrListCnt" parameterType="ProfileVO" resultType="int">
+        SELECT COUNT(*) FROM TB_PROJECT_INFO
+        WHERE 1=1
+        <if test="project_start_date != '' and project_start_date != null">
+            AND project_start_date &gt;= #{project_start_date}
+        </if>
+        <if test="project_end_date != '' and project_end_date != null">
+            AND project_end_date &lt;= #{project_end_date}
+        </if>
+        <if test="(project_start_date == null and project_end_date == null) or (project_start_date == '' and project_end_date == '')">
+            AND now() between project_start_date and project_end_date
+        </if>
+    </select>
+
+    <!-- getUsrProjectList : 직원 프로젝트 목록 SELECT -->
+    <select id="getUsrProjectList" parameterType="ProfileVO" resultType="ProfileVO">
+        select user_nm, pj.user_id, project_nm, project_client, project_start_date, project_end_date
+        from TB_PROJECT_INFO pj
+        join (select user_id, user_nm from TB_USER_PROFILE_INFO where use_yn = 'Y') pf on pj.user_id = pf.user_id
+        where 1=1
+        <if test="project_start_date != '' and project_start_date != null">
+            AND project_start_date &gt;= #{project_start_date}
+        </if>
+        <if test="project_end_date != '' and project_end_date != null">
+            AND project_end_date &lt;= #{project_end_date}
+        </if>
+        <if test="(project_start_date == null and project_end_date == null) or (project_start_date == '' and project_end_date == '')">
+            AND now() between project_start_date and project_end_date
+        </if>
+        order by project_start_date desc
+        limit #{limit} offset #{offset}
+    </select>
+
+    <!-- getUsrInfo : 투입인력에 관한 정보 조회 -->
+    <select id="getUsrInfo" parameterType="String" resultType="ProfileVO">
+        select (SELECT calculate_total_months_v2(pf.user_id)) AS project_totalMonth,
+               pf.user_nm,
+               (select code_value
+                from TB_COMMON_CODE cd
+                where cd.code_group_id = 'ORG'
+                  and pf.user_department = cd.code_id)        as user_department_nm,
+               (select code_value
+                from TB_COMMON_CODE cd
+                where cd.code_group_id = 'PSIT'
+                  and pf.user_position = cd.code_id)          as user_position_nm
+        from TB_USER_PROFILE_INFO pf
+        where user_id = #{user_id}
+    </select>
+</mapper>

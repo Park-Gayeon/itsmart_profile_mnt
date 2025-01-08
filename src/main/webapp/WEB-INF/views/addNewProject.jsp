@@ -25,27 +25,27 @@
                     <div class="col-sm-auto g-0">
                         <div class="row mb-2 g-0">
                             <input type="hidden" id="project_seq" name="project_seq" value="${maxSeq}"/>
-                            <div class="col-sm-4 common-box common-box input-box pt-4 me-2">
+                            <div class="col-sm-4 common-box input-box pt-4 me-2">
                                 <span>사업명</span>
                                 <input type="text" id="project_nm" name="project_nm" maxlength="18">
                             </div>
-                            <div class="col-sm-3 common-box common-box input-box pt-4 me-2">
+                            <div class="col-sm-3 common-box input-box pt-4 me-2">
                                 <span>발주처</span>
                                 <input type="text" id="project_client" name="project_client" maxlength="18">
                             </div>
-                            <div class="col-sm-2 common-box common-box input-box pt-4 me-2">
+                            <div class="col-sm-2 common-box input-box pt-4 me-2">
                                 <span>투입시작일</span>
                                 <input type="text" class="dateFmt" id="project_start_date" name="project_start_date"
                                        maxlength="10">
                             </div>
-                            <div class="col-sm-2 common-box common-box input-box pt-4">
+                            <div class="col-sm-2 common-box input-box pt-4">
                                 <span>투입종료일</span>
                                 <input type="text" class="dateFmt" id="project_end_date" name="project_end_date"
                                        maxlength="10">
                             </div>
                         </div>
                         <div class="row mb-2 g-0">
-                            <div class="col-sm-4 common-box common-box input-box pt-4 me-2">
+                            <div class="col-sm-4 common-box input-box pt-4 me-2">
                                 <span>담당업무(대분류)</span>
                                 <select class="form-select noneBorder" id="assigned_task_lar" name="assigned_task_lar"
                                         onchange="selectTaskLar(this)">
@@ -55,7 +55,7 @@
                                     </c:forEach>
                                 </select>
                             </div>
-                            <div class="col-sm-3 common-box common-box input-box pt-4 me-2">
+                            <div class="col-sm-3 common-box input-box pt-4 me-2">
                                 <span>담당업무(중분류)</span>
                                 <select class="form-select noneBorder" id="assigned_task_mid" name="assigned_task_mid">
                                     <option value="" selected>-</option>
@@ -64,7 +64,7 @@
                                     </c:forEach>
                                 </select>
                             </div>
-                            <div class="col-sm-2 common-box common-box input-box pt-4">
+                            <div class="col-sm-2 common-box input-box pt-4">
                                 <span>역할</span>
                                 <select class="form-select noneBorder" id="project_role" name="project_role">
                                     <option value="">-</option>
