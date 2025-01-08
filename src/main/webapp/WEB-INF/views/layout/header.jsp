@@ -36,6 +36,9 @@
                                 <a class="nav-link" href="/profile/${loginUser}">내 프로필관리</a>
                             </li>
                             <li class="nav-item">
+                                <a class="nav-link" href="/schedule/list">프로젝트 일정관리</a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link" href="/orgChart">회사조직도</a>
                             </li>
                         </ul>
