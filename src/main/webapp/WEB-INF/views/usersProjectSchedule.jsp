@@ -42,11 +42,9 @@
                             <colgroup>
                                 <col style="width: 5%;">
                                 <%-- no --%>
-                                <col style="width: 10%;">
-                                <%-- 이름 --%>
                                 <col style="width: auto;">
                                 <%-- 사업명 --%>
-                                <col style="width: 15%;">
+                                <col style="width: 20%;">
                                 <%-- 발주처 --%>
                                 <col style="width: 10%;">
                                 <%-- 사업시작일 --%>
@@ -56,7 +54,6 @@
                             <thead>
                             <tr>
                                 <th scope="col">NO</th>
-                                <th scope="col">이름</th>
                                 <th scope="col">사업명</th>
                                 <th scope="col">발주처</th>
                                 <th scope="col">사업시작일</th>
@@ -65,9 +62,8 @@
                             </thead>
                             <tbody class="table-group-divider">
                             <c:forEach var="list" items="${list}" varStatus="status">
-                                <tr style="cursor: pointer" onclick="goPopup('${list.user_id}')">
+                                <tr style="cursor: pointer" onclick="goPopup('${list.project_nm}')">
                                     <td>${cnt - ((page.curPage -1) * page.pageSize + status.index)}</td>
-                                    <td>${list.user_nm}</td>
                                     <td>${list.project_nm}</td>
                                     <td>${list.project_client}</td>
                                     <fmt:parseDate var="project_start_date" value="${list.project_start_date}"
@@ -164,10 +160,11 @@
     });
 
 
-    function goPopup(user_id) {
-        const userId = user_id;
-        const url = "/schedule/info/" + userId;
-        let properties = calcSize(600, 200);
+    function goPopup(project_nm) {
+        const project_start_date = $("input[name=project_start_date]").val();
+        const project_end_date = $("input[name=project_end_date]").val();
+        const url = "/schedule/info/" + encodeURIComponent(project_nm) + "?project_start_date=" + project_start_date + "&project_end_date=" + project_end_date;
+        let properties = calcSize(700, 200);
         window.open(url, "usrInfo", properties);
     }
 

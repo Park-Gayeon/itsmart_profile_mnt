@@ -9,10 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -42,10 +39,7 @@ public class ProjectMntScheduleController {
             profile.setProject_end_date(profile.getProject_end_date().replace("-", ""));
         }
 
-        logger.info("project_start_date: {}", profile.getProject_start_date());
-        logger.info("project_end_date: {}", profile.getProject_end_date());
-
-        int userCnt = scheduleService.getUsrListCnt(profile);
+        int userCnt = scheduleService.getListCnt(profile);
 
         int defaultCurPage = 1;
         if(profile.getCurPage() == 0){
@@ -60,7 +54,7 @@ public class ProjectMntScheduleController {
         profile.setLimit(pageVO.getPageSize());
 
         // list 조회
-        List<ProfileVO> usrProjectList = scheduleService.getUsrProjectList(profile);
+        List<ProfileVO> usrProjectList = scheduleService.getProjectList(profile);
 
         model.addAttribute("loginUser", login.getUser_id());
         model.addAttribute("userRole", login.getAuthorities());
@@ -72,14 +66,25 @@ public class ProjectMntScheduleController {
         return "usersProjectSchedule";
     }
 
-    @GetMapping("/info/{user_id}")
-    public String openUsrInfoPop(@PathVariable("user_id") String user_id, Model model){
-        logger.info("== open openUsrInfoPop[사용자 정보 팝업] ==");
+    @GetMapping("/info/{project_nm}")
+    public String openUsersInfoPop(ProfileVO profile, Model model){
+        logger.info("== open openUsersInfoPop[투입인력 정보 팝업] ==");
 
-        ProfileVO usrInfo = scheduleService.getUsrInfo(user_id);
+        if (!"".equals(profile.getProject_start_date()) && profile.getProject_start_date() != null) {
+            profile.setProject_start_date(profile.getProject_start_date().replace("-", ""));
+        }
+        if(!"".equals(profile.getProject_end_date()) && profile.getProject_end_date() != null) {
+            profile.setProject_end_date(profile.getProject_end_date().replace("-", ""));
+        }
+
+        logger.info("project_nm : {}", profile.getProject_nm() );
+        logger.info("project_start_date : {}", profile.getProject_start_date());
+        logger.info("project_end_date : {}" , profile.getProject_end_date());
+
+        List<ProfileVO> usrInfo = scheduleService.getUsersInfoList(profile);
 
         model.addAttribute("info", usrInfo);
-        return "selectUsrInfo";
+        return "selectUsersInfo";
     }
 
 }

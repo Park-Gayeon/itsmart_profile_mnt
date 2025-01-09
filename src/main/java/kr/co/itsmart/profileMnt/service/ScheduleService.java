@@ -5,10 +5,11 @@ import kr.co.itsmart.profileMnt.vo.ProfileVO;
 import java.util.List;
 
 public interface ScheduleService {
-    int getUsrListCnt(ProfileVO profile);
+    int getListCnt(ProfileVO profile);
 
-    List<ProfileVO> getUsrProjectList(ProfileVO profile);
+    List<ProfileVO> getProjectList(ProfileVO profile);
 
-    ProfileVO getUsrInfo(String user_id);
+
+    List<ProfileVO> getUsersInfoList(ProfileVO profile);
 
 }
