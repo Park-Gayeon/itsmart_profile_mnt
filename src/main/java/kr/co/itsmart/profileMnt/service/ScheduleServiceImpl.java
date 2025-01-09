@@ -18,17 +18,17 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public int getUsrListCnt(ProfileVO profile) {
-        return scheduleDAO.getUsrListCnt(profile);
+    public int getListCnt(ProfileVO profile) {
+        return scheduleDAO.getListCnt(profile);
     }
 
     @Override
-    public List<ProfileVO> getUsrProjectList(ProfileVO profile) {
-        return scheduleDAO.getUsrProjectList(profile);
+    public List<ProfileVO> getProjectList(ProfileVO profile) {
+        return scheduleDAO.getProjectList(profile);
     }
 
     @Override
-    public ProfileVO getUsrInfo(String user_id) {
-        return scheduleDAO.getUsrInfo(user_id);
+    public List<ProfileVO> getUsersInfoList(ProfileVO profile) {
+        return scheduleDAO.getUsersInfoList(profile);
     }
 }

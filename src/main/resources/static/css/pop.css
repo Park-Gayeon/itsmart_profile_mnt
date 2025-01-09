@@ -172,6 +172,52 @@ h2.header .description {
     border-radius: 8px;
 }
 
+/* 투입인력 팝업 화면 */
+.table {
+    margin-bottom: 20px;
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: #ffffff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.table thead {
+    background-color: #f8f9fa;
+    font-weight: bold;
+    color: #495057;
+}
+
+.table th, .table td {
+    text-align: center;
+    vertical-align: middle;
+    padding: 12px;
+    border: none;
+}
+
+.table tbody tr {
+    transition: background-color 0.3s;
+}
+
+.table tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+.table-responsive {
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+}
+
+.table th:first-child, .table td:first-child {
+    text-align: center;
+    width: 5%;
+}
+
+.table th:last-child, .table td:last-child {
+    width: 15%;
+}
+
 /* Mobile 화면 스타일 */
 @media (max-width: 767px) {
     body {
@@ -194,5 +240,15 @@ h2.header .description {
     .photo {
         display: flex;
         justify-content: center;
+    }
+
+    /* 투입인력 팝업 */
+    #content {
+        min-width: 700px;
+    }
+
+    .table th, .table td {
+        font-size: 14px;
+        padding: 10px;
     }
 }
