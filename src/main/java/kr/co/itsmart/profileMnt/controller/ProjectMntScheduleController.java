@@ -67,21 +67,12 @@ public class ProjectMntScheduleController {
     }
 
     @GetMapping("/info/{project_nm}")
-    public String openUsersInfoPop(ProfileVO profile, Model model){
+    public String openUsersInfoPop(@PathVariable("project_nm") String project_nm, Model model){
         logger.info("== open openUsersInfoPop[투입인력 정보 팝업] ==");
 
-        if (!"".equals(profile.getProject_start_date()) && profile.getProject_start_date() != null) {
-            profile.setProject_start_date(profile.getProject_start_date().replace("-", ""));
-        }
-        if(!"".equals(profile.getProject_end_date()) && profile.getProject_end_date() != null) {
-            profile.setProject_end_date(profile.getProject_end_date().replace("-", ""));
-        }
+        logger.info("project_nm : {}", project_nm);
 
-        logger.info("project_nm : {}", profile.getProject_nm() );
-        logger.info("project_start_date : {}", profile.getProject_start_date());
-        logger.info("project_end_date : {}" , profile.getProject_end_date());
-
-        List<ProfileVO> usrInfo = scheduleService.getUsersInfoList(profile);
+        List<ProfileVO> usrInfo = scheduleService.getUsersInfoList(project_nm);
 
         model.addAttribute("info", usrInfo);
         return "selectUsersInfo";

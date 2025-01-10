@@ -8,10 +8,10 @@
         FROM TB_PROJECT_INFO
         WHERE 1=1
         <if test="project_start_date != '' and project_start_date != null">
-            AND project_start_date &gt;= #{project_start_date}
+            AND #{project_start_date} &lt;= project_end_date
         </if>
         <if test="project_end_date != '' and project_end_date != null">
-            AND project_end_date &lt;= #{project_end_date}
+            AND #{project_end_date} &gt;= project_start_date
         </if>
         <if test="(project_start_date == null and project_end_date == null) or (project_start_date == '' and project_end_date == '')">
             AND now() between project_start_date and project_end_date
@@ -20,29 +20,32 @@
 
     <!-- getProjectList : 프로젝트 목록 SELECT -->
     <select id="getProjectList" parameterType="ProfileVO" resultType="ProfileVO">
-        SELECT project_nm as project_nm,
+        SELECT tb.*
+        FROM (
+        SELECT
+        project_nm AS project_nm,
         project_client,
-        min(project_start_date) as project_start_date,
-        max(project_end_date) as project_end_date
+        MIN(project_start_date) AS project_start_date,
+        MAX(project_end_date) AS project_end_date
         FROM TB_PROJECT_INFO
+        GROUP BY project_nm, project_client
+        ) tb
         WHERE 1=1
         <if test="project_start_date != '' and project_start_date != null">
-            AND project_start_date &gt;= #{project_start_date}
+            AND #{project_start_date} &lt;= tb.project_end_date
         </if>
         <if test="project_end_date != '' and project_end_date != null">
-            AND project_end_date &lt;= #{project_end_date}
+            AND #{project_end_date} &gt;= tb.project_start_date
         </if>
         <if test="(project_start_date == null and project_end_date == null) or (project_start_date == '' and project_end_date == '')">
             AND now() between project_start_date and project_end_date
         </if>
-        GROUP BY project_nm, project_client
-        ORDER by project_start_date desc
+        ORDER BY tb.project_start_date DESC
         limit #{limit} offset #{offset}
     </select>
 
-
     <!-- getUsersInfoList : 투입인력에 관한 정보 조회 -->
-    <select id="getUsersInfoList" parameterType="ProfileVO" resultType="ProfileVO">
+    <select id="getUsersInfoList" parameterType="String" resultType="ProfileVO">
         SELECT DISTINCT
         pf.user_nm,
         pf.user_department_nm,
@@ -68,12 +71,6 @@
         ) pf ON pj.user_id = pf.user_id
         WHERE
         pj.project_nm = #{project_nm}
-        <if test="project_start_date != '' and project_start_date != null">
-            AND pj.project_start_date &gt;= #{project_start_date}
-        </if>
-        <if test="project_end_date != '' and project_end_date != null">
-            AND pj.project_end_date &lt;= #{project_end_date}
-        </if>
         GROUP BY
         pf.user_nm,
         pf.user_department_nm,

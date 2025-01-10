@@ -161,9 +161,7 @@
 
 
     function goPopup(project_nm) {
-        const project_start_date = $("input[name=project_start_date]").val();
-        const project_end_date = $("input[name=project_end_date]").val();
-        const url = "/schedule/info/" + encodeURIComponent(project_nm) + "?project_start_date=" + project_start_date + "&project_end_date=" + project_end_date;
+        const url = "/schedule/info/" + encodeURIComponent(project_nm);
         let properties = calcSize(700, 200);
         window.open(url, "usrInfo", properties);
     }
