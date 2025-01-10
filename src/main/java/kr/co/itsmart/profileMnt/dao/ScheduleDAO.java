@@ -15,7 +15,7 @@ public interface ScheduleDAO {
     List<ProfileVO> getProjectList(ProfileVO profile);
 
     /* 투입인력에 관한 정보 조회 */
-    List<ProfileVO> getUsersInfoList(ProfileVO profile);
+    List<ProfileVO> getUsersInfoList(String project_nm);
 
 
 }

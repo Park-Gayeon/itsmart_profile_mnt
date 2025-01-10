@@ -28,7 +28,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public List<ProfileVO> getUsersInfoList(ProfileVO profile) {
-        return scheduleDAO.getUsersInfoList(profile);
+    public List<ProfileVO> getUsersInfoList(String project_nm) {
+        return scheduleDAO.getUsersInfoList(project_nm);
     }
 }

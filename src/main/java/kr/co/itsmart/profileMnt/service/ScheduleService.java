@@ -10,6 +10,6 @@ public interface ScheduleService {
     List<ProfileVO> getProjectList(ProfileVO profile);
 
 
-    List<ProfileVO> getUsersInfoList(ProfileVO profile);
+    List<ProfileVO> getUsersInfoList(String project_nm);
 
 }
