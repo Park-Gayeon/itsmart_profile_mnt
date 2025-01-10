@@ -17,7 +17,7 @@
                 작성자: 정규현
                 최초작성일 : 2024.12.31
      -->
-    <select id="selectFileList" parameterType="FileVO"  resultType="FileVO">
+    <select id="getFileList" parameterType="FileVO"  resultType="FileVO">
         SELECT USER_ID
 	 		 , FILE_SEQ
 	 		 , FILE_SE
@@ -44,7 +44,7 @@
                 작성자: 정규현
                 최초작성일 : 2024.12.31
      -->
-    <select id="selectFileInfo" parameterType="FileVO"  resultType="FileVO">
+    <select id="getFileInfo" parameterType="FileVO"  resultType="FileVO">
         SELECT USER_ID
 	 		 , FILE_SEQ
 	 		 , FILE_SE

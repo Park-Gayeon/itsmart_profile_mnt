@@ -17,8 +17,8 @@ public class WorkExperienceMntServiceImpl implements WorkExperienceMntService{
         this.workExperienceDAO = workExperienceDAO;
     }
     @Override
-    public int selectMaxHistSeq(String user_id) {
-        return workExperienceDAO.selectMaxHistSeq(user_id);
+    public int getMaxHistSeq(String user_id) {
+        return workExperienceDAO.getMaxHistSeq(user_id);
     }
 
     @Override

@@ -23,7 +23,7 @@ public class WorkExperienceMntController {
         LOGGER.info("== Ajax[사용자 프로필 수정 처리(근무경력)] ==");
         try {
             // CREATE hist_seq
-            int hist_seq = workExperienceMntService.selectMaxHistSeq(user_id);
+            int hist_seq = workExperienceMntService.getMaxHistSeq(user_id);
             profile.setHist_seq(hist_seq);
             LOGGER.info("근무 정보 hist_seq: hist_seq={}", hist_seq);
 

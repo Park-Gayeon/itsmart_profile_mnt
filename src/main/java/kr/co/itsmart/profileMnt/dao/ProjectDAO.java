@@ -14,7 +14,7 @@ public interface ProjectDAO {
 
     /* 사업 이력 테이블 hist_seq 생성 */
     @Select("SELECT COALESCE(MAX(HIST_SEQ) + 1, 1) AS HIST_SEQ FROM TB_PROJECT_INFO_HIST WHERE USER_ID = #{user_id}")
-    int selectMaxHistSeq(String userId);
+    int getMaxHistSeq(String userId);
 
     /* project_seq 로 연결된 skill 목록 삭제 */
     @Delete("DELETE FROM TB_USER_SKILL_INFO WHERE USER_ID = #{user_id} AND PROJECT_SEQ = #{project_seq}")
@@ -39,11 +39,11 @@ public interface ProjectDAO {
     void insertUsrProjectInfoHist(ProjectVO project);
 
     /* 기술 정보 조회 */
-    ProjectVO selectUsrSkillList(ProjectVO project);
+    ProjectVO getUsrSkillList(ProjectVO project);
 
     /* 기술 이력 테이블 hist_seq 생성 */
     @Select("SELECT COALESCE(MAX(HIST_SEQ) + 1, 1) AS HIST_SEQ FROM TB_USER_SKILL_INFO_HIST WHERE USER_ID = #{user_id} AND PROJECT_SEQ = #{project_seq}")
-    int selectSkMaxSeq(ProjectVO projectVO);
+    int getSkMaxSeq(ProjectVO projectVO);
 
     /* 기술 정보 등록 */
     void updateUsrSkillInfo(UserSkillVO skill);

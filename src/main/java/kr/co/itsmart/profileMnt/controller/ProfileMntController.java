@@ -41,27 +41,27 @@ public class ProfileMntController {
     }
 
     @GetMapping("/{user_id}")
-    public String selectDetailInfo(@AuthenticationPrincipal LoginVO login,
+    public String getDetailInfo(@AuthenticationPrincipal LoginVO login,
                                    @PathVariable("user_id") String user_id,
                                    Model model) {
-        LOGGER.info("== go selectProfileDetail[사용자 프로필 상세 화면] ==");
-        ProfileVO profile = profileMntService.selectUsrProfileDetail(user_id);
+        LOGGER.info("== go getProfileDetail[사용자 프로필 상세 화면] ==");
+        ProfileVO profile = profileMntService.getUsrProfileDetail(user_id);
 
         Map<String, String> params = new HashMap<>();
         params.put("code_group_id", "TASK");
         params.put("task_type", "lar");
-        List<CommonVO> taskLarList = commonService.selectCodeList(params);
+        List<CommonVO> taskLarList = commonService.getCodeList(params);
 
         params.clear();
         params.put("code_group_id", "TASK");
-        List<CommonVO> taskMidList = commonService.selectCodeList(params);
+        List<CommonVO> taskMidList = commonService.getCodeList(params);
         params.put("code_group_id", "PSIT");
-        List<CommonVO> psitList = commonService.selectCodeList(params);
+        List<CommonVO> psitList = commonService.getCodeList(params);
         params.put("code_group_id", "ROLE");
-        List<CommonVO> roleList = commonService.selectCodeList(params);
+        List<CommonVO> roleList = commonService.getCodeList(params);
 
         String code_group_id = "ORG";
-        List<CommonVO> orgList = commonService.selectPureCodeList(code_group_id);
+        List<CommonVO> orgList = commonService.getPureCodeList(code_group_id);
         int pj_totalMonth = projectMntService.calcTotalMonth(user_id);
         int wk_totalMonth = workExperienceMntService.calcTotalMonth(user_id);
         
@@ -69,7 +69,7 @@ public class ProfileMntController {
         fileVo.setUser_id(login.getUser_id());
         fileVo.setFile_se("EXCEL_TEMP");
         
-        List<FileVO> attachFileList = fileService.selectFileList(fileVo);
+        List<FileVO> attachFileList = fileService.getFileList(fileVo);
         model.addAttribute("attachFileList", attachFileList);
 
         model.addAttribute("loginUser", login.getUser_id());
@@ -94,7 +94,7 @@ public class ProfileMntController {
         try {
             if(file != null){
                 // CREATE file_seq
-                int file_seq = commonService.selectMaxHistSeq(user_id);
+                int file_seq = commonService.getMaxHistSeq(user_id);
                 LOGGER.info("파일 정보 file_seq: file_seq={}", file_seq);
 
                 // 파일 서버 저장
@@ -108,7 +108,7 @@ public class ProfileMntController {
             }
 
             // CREATE hist_seq
-            int hist_seq = profileMntService.selectMaxHistSeq(user_id);
+            int hist_seq = profileMntService.getMaxHistSeq(user_id);
             profile.setHist_seq(hist_seq);
             LOGGER.info("프로필 정보 hist_seq: hist_seq={}", hist_seq);
 

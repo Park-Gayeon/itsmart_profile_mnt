@@ -18,13 +18,13 @@ public class FileServiceImpl implements FileService {
     private FileDAO FileDAO;
 
 	@Override
-	public List<FileVO> selectFileList(FileVO vo) {
-		return FileDAO.selectFileList(vo);
+	public List<FileVO> getFileList(FileVO vo) {
+		return FileDAO.getFileList(vo);
 	}
 
 	@Override
-	public FileVO selectFileInfo(FileVO vo) {
-		return FileDAO.selectFileInfo(vo);
+	public FileVO getFileInfo(FileVO vo) {
+		return FileDAO.getFileInfo(vo);
 	}
 
 }

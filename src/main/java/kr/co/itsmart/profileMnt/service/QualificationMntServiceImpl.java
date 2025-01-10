@@ -18,8 +18,8 @@ public class QualificationMntServiceImpl implements QualificationMntService {
     }
 
     @Override
-    public int selectMaxHistSeq(String user_id) {
-        return qualificationDAO.selectMaxHistSeq(user_id);
+    public int getMaxHistSeq(String user_id) {
+        return qualificationDAO.getMaxHistSeq(user_id);
     }
 
     @Override

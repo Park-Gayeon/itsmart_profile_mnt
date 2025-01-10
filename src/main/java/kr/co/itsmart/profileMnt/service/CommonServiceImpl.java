@@ -30,13 +30,13 @@ public class CommonServiceImpl implements CommonService {
     }
 
     @Override
-    public List<CommonVO> selectCodeList(Map<String, String> params) {
-        return commonDAO.selectCodeList(params);
+    public List<CommonVO> getCodeList(Map<String, String> params) {
+        return commonDAO.getCodeList(params);
     }
 
     @Override
-    public List<CommonVO> selectPureCodeList(String code_group_id) {
-        return commonDAO.selectPureCodeList(code_group_id);
+    public List<CommonVO> getPureCodeList(String code_group_id) {
+        return commonDAO.getPureCodeList(code_group_id);
     }
     ;
     @Override
@@ -85,8 +85,8 @@ public class CommonServiceImpl implements CommonService {
     }
 
     @Override
-    public int selectMaxHistSeq(String user_id) {
-        return commonDAO.selectMaxHistSeq(user_id);
+    public int getMaxHistSeq(String user_id) {
+        return commonDAO.getMaxHistSeq(user_id);
     }
 
     @Override

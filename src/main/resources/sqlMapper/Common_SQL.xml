@@ -3,7 +3,7 @@
 <mapper namespace="kr.co.itsmart.profileMnt.dao.CommonDAO">
 
     <!-- code_group_id로 list 조회 -->
-    <select id="selectCodeList" parameterType="Map" resultType="CommonVO">
+    <select id="getCodeList" parameterType="Map" resultType="CommonVO">
         SELECT code_id, code_value
         FROM TB_COMMON_CODE AS A
         WHERE CODE_GROUP_ID = #{code_group_id}
@@ -23,8 +23,8 @@
           AND A.USE_YN = 'Y'
     </select>
 
-    <!-- selectPureCodeList : 순수 코드 list 조회 -->
-    <select id="selectPureCodeList" parameterType="String" resultType="CommonVO">
+    <!-- getPureCodeList : 순수 코드 list 조회 -->
+    <select id="getPureCodeList" parameterType="String" resultType="CommonVO">
         SELECT code_id, code_value
         FROM TB_COMMON_CODE AS A
         WHERE CODE_GROUP_ID = #{code_group_id}

@@ -1,15 +1,14 @@
 package kr.co.itsmart.profileMnt.dao;
 
-import java.util.List;
-
+import kr.co.itsmart.profileMnt.vo.FileVO;
 import org.apache.ibatis.annotations.Mapper;
 
-import kr.co.itsmart.profileMnt.vo.FileVO;
+import java.util.List;
 
 @Mapper
 public interface FileDAO {
 	
-	public List<FileVO> selectFileList(FileVO vo);
+	public List<FileVO> getFileList(FileVO vo);
 	
-	public FileVO selectFileInfo(FileVO vo);
+	public FileVO getFileInfo(FileVO vo);
 }

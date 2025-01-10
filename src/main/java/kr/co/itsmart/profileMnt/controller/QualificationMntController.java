@@ -23,7 +23,7 @@ public class QualificationMntController {
         LOGGER.info("== Ajax[사용자 프로필 수정 처리(자격증)] ==");
         try {
             // CREATE hist_seq
-            int hist_seq = qualificationMntService.selectMaxHistSeq(user_id);
+            int hist_seq = qualificationMntService.getMaxHistSeq(user_id);
             profile.setHist_seq(hist_seq);
             LOGGER.info("자격증 정보 hist_seq: hist_seq={}", hist_seq);
 

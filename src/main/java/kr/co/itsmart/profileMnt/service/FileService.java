@@ -7,8 +7,8 @@ import java.util.List;
 
 public interface FileService {
 
-    List<FileVO> selectFileList(FileVO file);
+    List<FileVO> getFileList(FileVO file);
 
-	FileVO selectFileInfo(FileVO file);
+	FileVO getFileInfo(FileVO file);
 
 }

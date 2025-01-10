@@ -24,13 +24,13 @@ public class ProjectMntServiceImpl implements ProjectMntService {
     }
 
     @Override
-    public int selectMaxHistSeq(String user_id) {
-        return projectDAO.selectMaxHistSeq(user_id);
+    public int getMaxHistSeq(String user_id) {
+        return projectDAO.getMaxHistSeq(user_id);
     }
 
     @Override
-    public int selectMaxSkillSeq(ProjectVO project) {
-        return projectDAO.selectSkMaxSeq(project);
+    public int getMaxSkillSeq(ProjectVO project) {
+        return projectDAO.getSkMaxSeq(project);
     }
 
     @Override
@@ -68,8 +68,8 @@ public class ProjectMntServiceImpl implements ProjectMntService {
     }
 
     @Override
-    public ProjectVO selectUsrSkillList(ProjectVO project) {
-        return projectDAO.selectUsrSkillList(project);
+    public ProjectVO getUsrSkillList(ProjectVO project) {
+        return projectDAO.getUsrSkillList(project);
     }
 
 

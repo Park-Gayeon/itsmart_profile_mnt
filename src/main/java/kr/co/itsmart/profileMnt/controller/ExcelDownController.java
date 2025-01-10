@@ -79,7 +79,7 @@ public class ExcelDownController {
         fileVo.setUser_id(login.getUser_id());
         fileVo.setFile_se("EXCEL_TEMP");
         
-        List<FileVO> attachFileList = fileService.selectFileList(fileVo);
+        List<FileVO> attachFileList = fileService.getFileList(fileVo);
         model.addAttribute("attachFileList", attachFileList);
         return "uploadExcelTemplate";
     }
@@ -101,7 +101,7 @@ public class ExcelDownController {
 
         String templateOwner = login.getUser_id();
         
-        ProfileVO profile = profileMntService.selectUsrProfileDetail(user_id);
+        ProfileVO profile = profileMntService.getUsrProfileDetail(user_id);
         if (file_seq != 0) {
             fileVo.setUser_id(templateOwner);
         	fileVo.setFile_seq(file_seq);
@@ -109,7 +109,7 @@ public class ExcelDownController {
             logger.info("user_id : {}", templateOwner);
             logger.info("file_seq : {}", file_seq);
             logger.info("file_se : {}", fileVo.getFile_se());
-        	templateFile = fileService.selectFileInfo(fileVo);
+        	templateFile = fileService.getFileInfo(fileVo);
         }
         excelDownService.downloadUsrProfileDetailExcelTemplate(profile, templateFile, request, response);
     }

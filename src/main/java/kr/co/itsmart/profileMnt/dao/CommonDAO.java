@@ -16,10 +16,10 @@ import java.util.Optional;
 public interface CommonDAO {
 
     /* code_group_id로 list 조회 */
-    List<CommonVO> selectCodeList(Map<String, String> params);
+    List<CommonVO> getCodeList(Map<String, String> params);
 
     /* 순수 코드 list 조회 */
-    List<CommonVO> selectPureCodeList(String code_id);
+    List<CommonVO> getPureCodeList(String code_id);
 
     /* TASK 하위 코드 조회 */
     List<CommonVO> getTaskMidCodeList(String code_id);
@@ -30,7 +30,7 @@ public interface CommonDAO {
 
     /* 파일 테이블 file_seq 생성 */
     @Select("SELECT COALESCE(MAX(FILE_SEQ + 1), 1) AS FILE_SEQ FROM TB_ATTACHMENT_INFO WHERE USER_ID = #{user_id}")
-    int selectMaxHistSeq(String user_id);
+    int getMaxHistSeq(String user_id);
 
     /* 파일 등록  */
     void insertUsrFileInfo(FileVO file);

@@ -24,10 +24,10 @@ public class ProjectMntScheduleController {
     }
 
     @GetMapping("/list")
-    public String selectProjectScheduleList(@AuthenticationPrincipal LoginVO login,
+    public String getProjectScheduleList(@AuthenticationPrincipal LoginVO login,
                                             @ModelAttribute ProfileVO profile,
                                             Model model){
-        logger.info("== go selectProjectScheduleList[직원 프로젝트 일정관리 화면] ==");
+        logger.info("== go getProjectScheduleList[직원 프로젝트 일정관리 화면] ==");
 
         model.addAttribute("project_start_date", profile.getProject_start_date());
         model.addAttribute("project_end_date", profile.getProject_end_date());
