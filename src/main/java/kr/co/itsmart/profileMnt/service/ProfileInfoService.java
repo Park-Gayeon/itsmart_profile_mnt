@@ -13,7 +13,7 @@ public interface ProfileInfoService {
 
     void insertUsrProfile(ProfileVO profile);
 
-    int selectMaxHistSeq(String user_id);
+    int getMaxHistSeq(String user_id);
 
     List<ProfileVO> getUsrProfileNotPagingInfoList();
 }

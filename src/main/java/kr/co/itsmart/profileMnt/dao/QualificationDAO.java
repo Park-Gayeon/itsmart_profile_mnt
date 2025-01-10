@@ -10,7 +10,7 @@ public interface QualificationDAO {
 
     /* 자격증 이력 테이블 hist_seq 생성 */
     @Select("SELECT COALESCE(MAX(HIST_SEQ) + 1, 1) AS HIST_SEQ FROM TB_USER_QUALIFICATION_INFO_HIST WHERE USER_ID = #{user_id}")
-    int selectMaxHistSeq(String userId);
+    int getMaxHistSeq(String userId);
 
     /* 자격증 테이블 데이터 삭제 */
     @Delete("DELETE FROM TB_USER_QUALIFICATION_INFO WHERE USER_ID = #{user_id}")

@@ -59,8 +59,8 @@ public class ProfileInfoServiceImpl implements ProfileInfoService{
     }
 
     @Override
-    public int selectMaxHistSeq(String user_id) {
-        return profileDAO.selectMaxHistSeq(user_id);
+    public int getMaxHistSeq(String user_id) {
+        return profileDAO.getMaxHistSeq(user_id);
     }
 
     @Override

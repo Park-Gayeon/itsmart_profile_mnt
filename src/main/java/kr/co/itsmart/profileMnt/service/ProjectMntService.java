@@ -6,13 +6,13 @@ import kr.co.itsmart.profileMnt.vo.ProjectVO;
 public interface ProjectMntService {
     int getProjectMaxSeq(String user_id);
 
-    int selectMaxHistSeq(String user_id);
+    int getMaxHistSeq(String user_id);
 
-    int selectMaxSkillSeq(ProjectVO project);
+    int getMaxSkillSeq(ProjectVO project);
 
     void updateUsrProject(ProfileVO profile);
 
-    ProjectVO selectUsrSkillList(ProjectVO project);
+    ProjectVO getUsrSkillList(ProjectVO project);
 
     void updateUsrSkill(ProjectVO project);
 

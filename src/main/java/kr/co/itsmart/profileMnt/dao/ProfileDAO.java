@@ -11,11 +11,11 @@ import java.util.List;
 @Mapper
 public interface ProfileDAO {
     /* 프로필 상세화면 조회 */
-    ProfileVO selectUsrProfileDetail(String user_id);
+    ProfileVO getUsrProfileDetail(String user_id);
 
     /* 프로필 이력 테이블 hist_seq 생성 */
     @Select("SELECT COALESCE(MAX(HIST_SEQ) + 1, 1) AS HIST_SEQ FROM TB_USER_PROFILE_INFO_HIST WHERE USER_ID = #{user_id}")
-    int selectMaxHistSeq(String userId);
+    int getMaxHistSeq(String userId);
 
     /* 프로필 수정(인적사항)*/
     void updateUsrProfileInfo(ProfileVO profileVO);

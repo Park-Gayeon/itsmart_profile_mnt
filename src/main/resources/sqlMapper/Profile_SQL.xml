@@ -21,7 +21,7 @@
             <result property="file_extension" column="FILE_EXTENSION"/>
         </association>
         <collection column="user_id" property="educationList" javaType="List" ofType="EduVO"
-                    select="selectUsrEducationList">
+                    select="getUsrEducationList">
             <result property="school_seq" column="SCHOOL_SEQ"/>
             <result property="school_gubun" column="SCHOOL_GUBUN"/>
             <result property="school_nm" column="SCHOOL_NM"/>
@@ -34,7 +34,7 @@
             <result property="grad_status" column="GRAD_STATUS"/>
         </collection>
         <collection column="user_id" property="projectList" javaType="List" ofType="ProjectVO"
-                    select="selectUsrProjectList">
+                    select="getUsrProjectList">
             <result property="project_seq" column="PROJECT_SEQ"/>
             <result property="project_nm" column="PROJECT_NM"/>
             <result property="project_start_date" column="PROJECT_START_DATE"/>
@@ -47,7 +47,7 @@
             <result property="assigned_task_mid" column="ASSIGNED_TASK_MID"/>
         </collection>
         <collection column="user_id" property="qualificationList" javaType="List" ofType="QualificationVO"
-                    select="selectUsrQualificationList">
+                    select="getUsrQualificationList">
             <result property="qualification_seq" column="QUALIFICATION_SEQ"/>
             <result property="qualification_nm" column="QUALIFICATION_NM"/>
             <result property="issuer" column="ISSUER"/>
@@ -55,7 +55,7 @@
             <result property="expiry_date" column="EXPIRY_DATE"/>
         </collection>
         <collection column="user_id" property="workExperienceList" javaType="List" ofType="WorkExperienceVO"
-                    select="selectUsrWorkList">
+                    select="getUsrWorkList">
             <result property="work_seq" column="WORK_SEQ"/>
             <result property="work_place" column="WORK_PLACE"/>
             <result property="work_assigned_task" column="WORK_ASSIGNED_TASK"/>
@@ -65,7 +65,7 @@
         </collection>
     </resultMap>
 
-    <select id="selectUsrProfileDetail" parameterType="String" resultMap="UsrProfileInfo">
+    <select id="getUsrProfileDetail" parameterType="String" resultMap="UsrProfileInfo">
         <![CDATA[
         SELECT
             /* 인적사항 */
@@ -103,7 +103,7 @@
     </select>
 
     <!-- profile + educationList -->
-    <select id="selectUsrEducationList" resultType="EduVO">
+    <select id="getUsrEducationList" resultType="EduVO">
         SELECT SCHOOL_GUBUN,
                SCHOOL_SEQ,
                SCHOOL_NM,
@@ -120,7 +120,7 @@
     </select>
 
     <!-- profile + projectList -->
-    <select id="selectUsrProjectList" resultType="projectVO">
+    <select id="getUsrProjectList" resultType="projectVO">
         SELECT PROJECT_SEQ,
                PROJECT_NM,
                PROJECT_START_DATE,
@@ -148,7 +148,7 @@
     </select>
 
     <!-- profile + qualificationList -->
-    <select id="selectUsrQualificationList" resultType="qualificationVO">
+    <select id="getUsrQualificationList" resultType="qualificationVO">
         SELECT QUALIFICATION_SEQ,
                QUALIFICATION_NM,
                ISSUER,
@@ -161,7 +161,7 @@
     </select>
 
     <!-- profile + workExperienceList -->
-    <select id="selectUsrWorkList" resultType="workExperienceVO">
+    <select id="getUsrWorkList" resultType="workExperienceVO">
         SELECT WORK_SEQ,
                WORK_PLACE,
                WORK_ASSIGNED_TASK,

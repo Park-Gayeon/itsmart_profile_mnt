@@ -37,11 +37,11 @@ public class ProjectMntController {
         Map<String, String> params = new HashMap<>();
         params.put("code_group_id", "TASK");
         params.put("task_type", "lar");
-        List<CommonVO> taskLarList = commonService.selectCodeList(params);
+        List<CommonVO> taskLarList = commonService.getCodeList(params);
 
         params.clear();
         params.put("code_group_id", "TASK");
-        List<CommonVO> taskMidList = commonService.selectCodeList(params);
+        List<CommonVO> taskMidList = commonService.getCodeList(params);
         model.addAttribute("taskLarList", taskLarList);
         model.addAttribute("taskMidList", taskMidList);
         model.addAttribute("maxSeq", maxSeq);
@@ -54,7 +54,7 @@ public class ProjectMntController {
         LOGGER.info("== Ajax[사용자 프로필 수정 처리(사업경력)] ==");
         try {
             // CREATE hist_seq
-            int hist_seq = projectMntService.selectMaxHistSeq(user_id);
+            int hist_seq = projectMntService.getMaxHistSeq(user_id);
             profile.setHist_seq(hist_seq);
             LOGGER.info("사업 정보 hist_seq: hist_seq={}", hist_seq);
 
@@ -77,7 +77,7 @@ public class ProjectMntController {
     }
 
     @GetMapping("/select/skill")
-    public String selectUsrSkill(
+    public String getUsrSkill(
             @RequestParam("user_id") String user_id,
             @RequestParam("project_seq") int project_seq,
             @RequestParam(value = "flag", defaultValue = "0") int flag,
@@ -87,7 +87,7 @@ public class ProjectMntController {
         ProjectVO project = new ProjectVO();
         project.setUser_id(user_id);
         project.setProject_seq(project_seq);
-        ProjectVO skill = projectMntService.selectUsrSkillList(project);
+        ProjectVO skill = projectMntService.getUsrSkillList(project);
 
         // flag : 1 => edit
         model.addAttribute("flag", flag);
@@ -102,7 +102,7 @@ public class ProjectMntController {
         LOGGER.info("== Ajax[사용자 프로필 수정 처리(기술)] ==");
         try {
             // CREATE hist_seq
-            int hist_seq = projectMntService.selectMaxSkillSeq(project);
+            int hist_seq = projectMntService.getMaxSkillSeq(project);
             LOGGER.info("기술 정보 hist_seq: hist_seq={}", hist_seq);
             project.setHist_seq(hist_seq);
 

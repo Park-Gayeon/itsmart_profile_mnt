@@ -71,9 +71,9 @@ public class ProfileInfoController {
         Map<String, String> params = new HashMap<>();
         params.put("code_group_id", "PSIT");
 
-        List<CommonVO> psitList = commonService.selectCodeList(params);
+        List<CommonVO> psitList = commonService.getCodeList(params);
         String code_group_id = "ORG";
-        List<CommonVO> orgList = commonService.selectPureCodeList(code_group_id);
+        List<CommonVO> orgList = commonService.getPureCodeList(code_group_id);
 
         model.addAttribute("psitList", psitList);
         model.addAttribute("orgList", orgList);
@@ -89,7 +89,7 @@ public class ProfileInfoController {
 
         if (file != null) {
             // CREATE file_seq
-            int file_seq = commonService.selectMaxHistSeq(user_id);
+            int file_seq = commonService.getMaxHistSeq(user_id);
             LOGGER.info("파일 정보 file_seq: file_seq={}", file_seq);
 
             // 파일 서버 저장
@@ -103,7 +103,7 @@ public class ProfileInfoController {
         }
 
         // CREATE hist_seq
-        int hist_seq = profileInfoService.selectMaxHistSeq(user_id);
+        int hist_seq = profileInfoService.getMaxHistSeq(user_id);
         profile.setHist_seq(hist_seq);
         LOGGER.info("프로필 정보 hist_seq: hist_seq={}", hist_seq);
 

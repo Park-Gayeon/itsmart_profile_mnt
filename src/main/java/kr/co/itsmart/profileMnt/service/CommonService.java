@@ -11,15 +11,15 @@ import java.util.Optional;
 
 public interface CommonService {
 
-    List<CommonVO> selectCodeList(Map<String, String> params);
+    List<CommonVO> getCodeList(Map<String, String> params);
 
-    List<CommonVO> selectPureCodeList(String code_group_id);
+    List<CommonVO> getPureCodeList(String code_group_id);
 
     List<CommonVO> getTaskMidCodeList(String code_id);
 
     FileVO saveImageFile(MultipartFile file);
 
-    int selectMaxHistSeq(String user_id);
+    int getMaxHistSeq(String user_id);
 
     void insertUsrFileInfo(FileVO file);
 

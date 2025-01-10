@@ -210,10 +210,10 @@ public class ExcelDownServiceImpl implements ExcelDownService {
             QualificationVO qualification = new QualificationVO();
             UserSkillVO skill = new UserSkillVO();
 
-            int work_hist_seq = workExperienceDAO.selectMaxHistSeq(user_id);
-            int project_hist_seq = projectDAO.selectMaxHistSeq(user_id);
-            int profile_hist_seq = profileDAO.selectMaxHistSeq(user_id);
-            int qualification_hist_seq = qualificationDAO.selectMaxHistSeq(user_id);
+            int work_hist_seq = workExperienceDAO.getMaxHistSeq(user_id);
+            int project_hist_seq = projectDAO.getMaxHistSeq(user_id);
+            int profile_hist_seq = profileDAO.getMaxHistSeq(user_id);
+            int qualification_hist_seq = qualificationDAO.getMaxHistSeq(user_id);
 
             for (int r = 0; r < rows; r++) {
                 Row row = sheet.getRow(r);
@@ -337,7 +337,7 @@ public class ExcelDownServiceImpl implements ExcelDownService {
                         }
                         if (chk) { // 작성된 기술이 있다면
                             // SKILL UPDATE(INSERT)
-                            int skill_hist_seq = projectDAO.selectSkMaxSeq(project);
+                            int skill_hist_seq = projectDAO.getSkMaxSeq(project);
                             skill.setUser_id(user_id);
                             skill.setHist_seq(skill_hist_seq);
                             skill.setProject_seq(seq);
@@ -491,7 +491,7 @@ public class ExcelDownServiceImpl implements ExcelDownService {
                 logger.info("file_seq : {}",file_seq);
                 logger.info("file_se : {}",fileInfo.getFile_se());
 
-                FileVO fileVO = fileDAO.selectFileInfo(fileInfo);
+                FileVO fileVO = fileDAO.getFileInfo(fileInfo);
 
 
                 if (fileVO == null) {
@@ -638,7 +638,7 @@ public class ExcelDownServiceImpl implements ExcelDownService {
             temp.setUser_id(profile.getUser_id());
             temp.setProject_seq(project_seq);
 
-            ProjectVO rst = projectMntService.selectUsrSkillList(temp);
+            ProjectVO rst = projectMntService.getUsrSkillList(temp);
             for (UserSkillVO skill : rst.getSkillList()) {
                 skillNames.add(skill.getSkill_nm());
             }
@@ -780,7 +780,7 @@ public class ExcelDownServiceImpl implements ExcelDownService {
         // 파일 서버 저장
         FileVO fileVO = commonService.saveImageFile(excel);
 
-        int file_seq = commonService.selectMaxHistSeq(user_id);
+        int file_seq = commonService.getMaxHistSeq(user_id);
 
         // 파일 정보 DB 저장
         fileVO.setUser_id(user_id);

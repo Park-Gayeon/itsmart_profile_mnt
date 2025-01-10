@@ -63,7 +63,7 @@
     </insert>
 
     <!-- project + usrSkillLIst -->
-    <select id="selectUsrSkillList" resultMap="UsrProjectSkills">
+    <select id="getUsrSkillList" resultMap="UsrProjectSkills">
         SELECT PJ.PROJECT_SEQ,
                PJ.PROJECT_NM,
                SK.SKILL_ID,
