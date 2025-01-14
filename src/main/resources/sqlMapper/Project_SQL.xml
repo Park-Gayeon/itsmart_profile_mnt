@@ -13,7 +13,7 @@
     <!-- updateUsrProjectInfo : 사업 경력 UPSERT -->
     <insert id="updateUsrProjectInfo" parameterType="projectVO">
         INSERT INTO TB_PROJECT_INFO(USER_ID, PROJECT_SEQ, PROJECT_NM, PROJECT_START_DATE, PROJECT_END_DATE,
-                                    PROJECT_ROLE, PROJECT_CLIENT, ASSIGNED_TASK_LAR, ASSIGNED_TASK_MID,
+                                    PROJECT_ROLE, PROJECT_CLIENT, ASSIGNED_TASK_LAR, ASSIGNED_TASK_MID, MASTER_ID,
                                     CREATED_DATE, MODIFIED_DATE, CREATOR, MODIFIER)
         VALUES (#{user_id},
                 #{project_seq},
@@ -24,11 +24,13 @@
                 #{project_client},
                 #{assigned_task_lar},
                 #{assigned_task_mid},
+                #{master_id},
                 now(),
                 now(),
                 #{user_id},
                 #{user_id})
         ON DUPLICATE KEY UPDATE PROJECT_NM         = #{project_nm},
+                                MASTER_ID          = #{master_id},
                                 PROJECT_START_DATE = #{project_start_date},
                                 PROJECT_END_DATE   = #{project_end_date},
                                 PROJECT_ROLE       = #{project_role},
@@ -43,7 +45,7 @@
     <insert id="insertUsrProjectInfoHist" parameterType="projectVO">
         INSERT INTO TB_PROJECT_INFO_HIST(USER_ID, PROJECT_SEQ, HIST_SEQ, PROJECT_NM, PROJECT_START_DATE,
                                          PROJECT_END_DATE, PROJECT_ROLE, PROJECT_CLIENT, ASSIGNED_TASK_LAR,
-                                         ASSIGNED_TASK_MID, CREATED_DATE, CREATOR)
+                                         ASSIGNED_TASK_MID, MASTER_ID, CREATED_DATE, CREATOR)
         SELECT user_id,
                project_seq,
                #{hist_seq},
@@ -54,6 +56,7 @@
                project_client,
                assigned_task_lar,
                assigned_task_mid,
+               master_id,
                now(),
                #{user_id}
         FROM TB_PROJECT_INFO
@@ -74,6 +77,7 @@
                            ON PJ.USER_ID = SK.USER_ID AND PJ.PROJECT_SEQ = SK.PROJECT_SEQ AND SK.USE_YN = 'Y'
         WHERE PJ.USER_ID = #{user_id}
           AND PJ.PROJECT_SEQ = #{project_seq}
+          AND PJ.USE_YN = 'Y'
     </select>
 
     <!-- updateUsrSkillInfo : 기술 정보 INSERT -->

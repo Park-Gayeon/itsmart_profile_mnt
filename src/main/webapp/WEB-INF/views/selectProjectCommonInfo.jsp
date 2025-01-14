@@ -22,48 +22,61 @@
 <div class="content">
     <form id="frm">
         <div class="container-md pt-3 mb-md-5">
-            <h2>프로젝트 일정관리</h2>
+            <h2>프로젝트 관리</h2>
             <div class="input-group pb-2 justify-content-md-end">
-                <div class="search-group gap-2">
-                    <span class="align-content-center">시작일자</span>
-                    <input type="date" name="project_start_date" class="dateFmt" value="${project_start_date}"/>
-                    <span class="align-content-center">종료일자</span>
-                    <input type="date" name="project_end_date" class="dateFmt" value="${project_end_date}"/>
-
+                <select name="searchType" class="search-type ps-3">
+                    <option value="projectNm" <c:if test="${searchType eq 'projectNm'}">selected</c:if>>사업명</option>
+                    <option value="client" <c:if test="${searchType eq 'client'}">selected</c:if>>발주처</option>
+                    <option value="masterId" <c:if test="${searchType eq 'masterId'}">selected</c:if>>MASTER_ID</option>
+                </select>
+                <div class="search-group">
+                    <input type="text" name="searchText" class="search-input px-sm-3 searchInput" value="${searchText}"
+                           maxlength="30"/>
                     <button type="button" id="find" class="btn btn-secondary"><span>검색</span>
                     </button>
                 </div>
             </div>
             <div>
-                <header class="description mb-sm-2 basic-medium">총 ${cnt}건</header>
+                <header class="description mb-sm-2 basic-medium">총 ${cnt}건
+                    <div class="primary-btn">
+                        <button type="button" class="btn btn-warning" onclick="register()"><span>등록</span></button>
+                    </div>
+                </header>
                 <div class="container-info mb-5">
                     <div class="table-responsive">
                         <table class="table table-hover mb-5">
                             <colgroup>
                                 <col style="width: 5%;">
                                 <%-- no --%>
-                                <col style="width: auto;">
+                                <col style="width: 10%;">
+                                <%-- id --%>
+                                <col style="width: 30%;">
                                 <%-- 사업명 --%>
-                                <col style="width: 20%;">
+                                <col style="width: auto;">
                                 <%-- 발주처 --%>
                                 <col style="width: 10%;">
                                 <%-- 사업시작일 --%>
                                 <col style="width: 10%;">
                                 <%-- 사업종료일 --%>
+                                <col style="width: 8%;">
+                                <%-- 사용여부 --%>
                             <colgroup>
                             <thead>
                             <tr>
                                 <th scope="col">NO</th>
+                                <th scope="col">MASTER_ID</th>
                                 <th scope="col">사업명</th>
                                 <th scope="col">발주처</th>
                                 <th scope="col">사업시작일</th>
                                 <th scope="col">사업종료일</th>
+                                <th scope="col">사용여부</th>
                             </tr>
                             </thead>
                             <tbody class="table-group-divider">
                             <c:forEach var="list" items="${list}" varStatus="status">
-                                <tr style="cursor: pointer" onclick="goPopup('${list.project_nm}')">
+                                <tr>
                                     <td>${cnt - ((page.curPage -1) * page.pageSize + status.index)}</td>
+                                    <td>${list.master_id}</td>
                                     <td>${list.project_nm}</td>
                                     <td>${list.project_client}</td>
                                     <fmt:parseDate var="project_start_date" value="${list.project_start_date}"
@@ -76,6 +89,27 @@
                                                     var="project_end_date"/>
                                     <td>${project_start_date}</td>
                                     <td>${project_end_date}</td>
+                                    <td>
+                                        <div class="form-check">
+                                            <input class="form-check-input radio" type="radio"
+                                                   name="use_yn_${status.index}"
+                                                   id="use_yn_y${status.index}" value="Y"
+                                            <c:if test="${list.use_yn eq 'Y'}"> checked</c:if>>
+                                            <label class="form-check-label" for="use_yn_y${status.index}">
+                                                Y
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input radio" type="radio"
+                                                   name="use_yn_${status.index}"
+                                                   id="use_yn_n${status.index}" value="N"
+                                            <c:if test="${list.use_yn eq 'N'}"> checked</c:if>>
+                                            <label class="form-check-label" for="use_yn_n${status.index}">
+                                                N
+                                            </label>
+                                        </div>
+                                    </td>
+                                    <input type="hidden" name="master_id" value="${list.master_id}"/>
                                 </tr>
                             </c:forEach>
                             </tbody>
@@ -162,22 +196,75 @@
 
         $("#find").on("click", function () {
             goFind();
-        })
+        });
+
+        let previousValue = {};
+
+        $(".radio").mousedown(function () {
+            let name = $(this).attr("name");
+            previousValue[name] = $("input[name='" + name + "']:checked").val();
+        });
+
+        // 라디오 버튼 클릭
+        $(".radio").click(function () {
+            let name = $(this).attr("name");
+            let clickYn = $(this).val(); // 클릭한 값
+            let oriYn = previousValue[name];
+            let master_id = $(this).closest("tr").find("input[name=master_id]").val();
+
+            if (clickYn === oriYn) {
+                alert("변경할 데이터가 없습니다.");
+                return;
+            }
+
+            if (confirm("사용여부 변경시 모든 직원의 수행이력에 즉시 반영됩니다.\n변경하시겠습니까?")) {
+                $.ajax({
+                    url: "/project/common/update",
+                    type: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify({
+                        master_id: master_id,
+                        use_yn: $("input[name='" + name + "']:checked").val()
+                    }),
+                    success: function () {
+                        alert("변경되었습니다.");
+                        window.location.reload();
+                    },
+                    error: function (response) {
+                        alert(response.responseText);
+                    }
+                });
+            } else {
+                // 취소한 경우 이전 상태로 복원
+                $("input[name='" + name + "']").each(function () {
+                    if ($(this).val() == oriYn) {
+                        $(this).prop("checked", true);
+                    } else {
+                        $(this).prop("checked", false);
+                    }
+                });
+            }
+        });
     });
 
-
-    function goPopup(project_nm) {
-        const url = "/schedule/info/" + encodeURIComponent(project_nm);
-        let properties = calcSize(700, 200);
-        window.open(url, "usrInfo", properties);
+    function register() {
+        let url = "/project/common/register";
+        let properties = calcSize(670, 200);
+        // 팝업 열기
+        window.open(url, "registerProject", properties);
     }
 
     function goFind() {
         $("input[name=curPage]").val(1);
-
         const frm = $("#frm");
+        frm.find("input, select").each(function() {
+            const name = $(this).attr("name");
+            if (name !== "curPage" && name !== "searchType" && name !== "searchText") {
+                $(this).remove();
+            }
+        });
 
-        frm.attr('action', '/schedule/list');
+        frm.attr('action', '/project/common/list');
         frm.attr('method', 'get');
         frm.submit();
     }
@@ -186,7 +273,13 @@
         $("input[name=curPage]").val(pageNum);
 
         const frm = $("#frm");
-        frm.attr('action', '/schedule/list');
+        frm.find("input, select").each(function() {
+            const name = $(this).attr("name");
+            if (name !== "curPage" && name !== "searchType" && name !== "searchText") {
+                $(this).remove();
+            }
+        });
+        frm.attr('action', '/project/common/list');
         frm.attr('method', 'get');
         frm.submit();
     }

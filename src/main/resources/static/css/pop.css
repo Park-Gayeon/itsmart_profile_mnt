@@ -218,6 +218,55 @@ h2.header .description {
     width: 15%;
 }
 
+/* 불러오기 팝업화면 */
+table {
+    min-width: 600px;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    padding: 10px;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.search-type {
+    position: relative;
+    min-width: 80px;
+    width: 120px;
+    height: 40px;
+    border: 1px solid #6a6a6a;
+    border-radius: 8px !important;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #fff;
+    color: #6a6a6a;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 14px;
+    gap: unset;
+}
+
+.search-group {
+    position: relative;
+    display: flex;
+}
+
+#find {
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+#find:hover {
+    background-color: #5a6268;
+}
+
 /* Mobile 화면 스타일 */
 @media (max-width: 767px) {
     body {
@@ -250,5 +299,20 @@ h2.header .description {
     .table th, .table td {
         font-size: 14px;
         padding: 10px;
+    }
+
+    /* 불러오기 팝업 */
+    .search-type {
+        width: 100px;
+        font-size: 12px;
+    }
+
+    .search-group {
+        margin-left: 0.2rem !important;
+        width: auto;
+    }
+
+    #find {
+        text-align: center;
     }
 }

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.itsmart.profileMnt.dao.ProjectCommonDAO">
+
+    <!-- getListCnt :  목록 건수 조회-->
+    <select id="getListCnt" parameterType="ProjectVO" resultType="int">
+        SELECT COUNT(*)
+        FROM TB_PROJECT_MMT
+        WHERE 1=1
+        <if test="searchText != ''">
+            <choose>
+                <when test="searchType == 'projectNm'">
+                    AND PROJECT_NM LIKE CONCAT('%', #{searchText}, '%')
+                </when>
+                <when test="searchType == 'client'">
+                    AND PROJECT_CLIENT LIKE CONCAT('%', #{searchText}, '%')
+                </when>
+                <otherwise>
+                    AND MASTER_ID LIKE CONCAT('%', #{searchText}, '%')
+                </otherwise>
+            </choose>
+        </if>
+    </select>
+
+    <!-- getProjectList : 목록 조회 -->
+    <select id="getProjectList" parameterType="ProjectVO" resultType="ProjectVO">
+        SELECT MASTER_ID, PROJECT_NM, PROJECT_START_DATE, PROJECT_END_DATE, PROJECT_CLIENT, USE_YN
+        from TB_PROJECT_MMT
+        WHERE 1=1
+        <if test="searchText != ''">
+            <choose>
+                <when test="searchType == 'projectNm'">
+                    AND PROJECT_NM LIKE CONCAT('%', #{searchText}, '%')
+                </when>
+                <when test="searchType == 'client'">
+                    AND PROJECT_CLIENT LIKE CONCAT('%', #{searchText}, '%')
+                </when>
+                <otherwise>
+                    AND MASTER_ID LIKE CONCAT('%', #{searchText}, '%')
+                </otherwise>
+            </choose>
+        </if>
+        ORDER BY CREATED_DATE DESC
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <!-- getProjectListPop : 팝업 목록 조회 -->
+    <select id="getProjectListPop" parameterType="ProjectVO" resultType="ProjectVO">
+        SELECT MASTER_ID, PROJECT_NM, PROJECT_START_DATE, PROJECT_END_DATE, PROJECT_CLIENT
+        FROM TB_PROJECT_MMT
+        WHERE USE_YN = 'Y'
+        <if test="searchText != ''">
+            <choose>
+                <when test="searchType == 'projectNm'">
+                    AND PROJECT_NM LIKE CONCAT('%', #{searchText}, '%')
+                </when>
+                <otherwise>
+                    AND PROJECT_CLIENT LIKE CONCAT('%', #{searchText}, '%')
+                </otherwise>
+            </choose>
+        </if>
+        ORDER BY CREATED_DATE DESC
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <!-- getProjectCntPop : 팝업 목록 건수 조회 -->
+    <select id="getProjectCntPop" parameterType="ProjectVO" resultType="int">
+        SELECT COUNT(*)
+        FROM TB_PROJECT_MMT
+        WHERE USE_YN = 'Y'
+        <if test="searchText != ''">
+            <choose>
+                <when test="searchType == 'projectNm'">
+                    AND PROJECT_NM LIKE CONCAT('%', #{searchText}, '%')
+                </when>
+                <otherwise>
+                    AND PROJECT_CLIENT LIKE CONCAT('%', #{searchText}, '%')
+                </otherwise>
+            </choose>
+        </if>
+    </select>
+
+    <!-- insertProjectCommon : 신규 프로젝트 등록 -->
+    <insert id="insertProjectCommon" parameterType="ProjectVO">
+        insert into TB_PROJECT_MMT (master_id, project_nm, project_start_date, project_end_date, project_client,
+                                    created_date, modified_date, creator, modifier)
+        values (#{master_id},
+                #{project_nm},
+                #{project_start_date},
+                #{project_end_date},
+                #{project_client},
+                now(),
+                now(),
+                #{creator},
+                #{creator})
+    </insert>
+
+    <!-- updateProjectCommon : 프로젝트 사용여부 업데이트 -->
+    <update id="updateProjectCommon" parameterType="ProjectVO">
+        update TB_PROJECT_MMT
+        set use_yn   = #{use_yn},
+            modifier = #{modifier}
+        where master_id = #{master_id}
+    </update>
+
+    <!-- updateProjectStatus : 프로젝트 일괄 업데이트[master_id]-->
+    <update id="updateProjectStatus" parameterType="String">
+        update TB_PROJECT_INFO
+        set use_yn   = (select use_yn from TB_PROJECT_MMT where master_id = #{master_id}),
+            modifier = (select modifier from TB_PROJECT_MMT where master_id = #{master_id})
+        where master_id = #{master_id}
+    </update>
+
+    <!-- checkMasterIdExists : MASTER_ID 중복 여부 확인 -->
+    <select id="checkMasterIdExists" parameterType="String" resultType="boolean">
+        SELECT (EXISTS(SELECT 1
+                       FROM TB_PROJECT_MMT
+                       WHERE MASTER_ID = #{master_id}))
+    </select>
+
+
+</mapper>
