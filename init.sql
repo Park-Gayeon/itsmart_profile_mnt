@@ -105,6 +105,7 @@ CREATE TABLE TB_PROJECT_INFO
     project_client     VARCHAR(20)  NOT NULL COMMENT '발주처',
     assigned_task_lar  VARCHAR(3)   NOT NULL COMMENT '담당업무(대분류)',
     assigned_task_mid  VARCHAR(3)   NOT NULL COMMENT '담당업무(소분류)',
+    master_id          VARCHAR(6) COMMENT '마스터 아이디',
     use_yn             CHAR(1)      NOT NULL DEFAULT 'Y' COMMENT '사용 여부',
     created_date       TIMESTAMP    NOT NULL COMMENT '생성일시',
     modified_date      TIMESTAMP    NOT NULL COMMENT '수정일시',
@@ -126,6 +127,7 @@ CREATE TABLE TB_PROJECT_INFO_HIST
     project_client     VARCHAR(20) COMMENT '발주처',
     assigned_task_lar  VARCHAR(3) COMMENT '담당업무(대분류)',
     assigned_task_mid  VARCHAR(3) COMMENT '담당업무(소분류)',
+    master_id          VARCHAR(6) COMMENT '마스터 아이디',
     created_date       TIMESTAMP   NOT NULL COMMENT '생성일시',
     creator            VARCHAR(10) NOT NULL COMMENT '생성자',
 
@@ -266,6 +268,22 @@ CREATE TABLE TB_USER_REFRESH_TOKEN_INFO
     created_date TIMESTAMP    NOT NULL COMMENT '생성일시'
 ) COMMENT ='TOKEN 테이블';
 
+CREATE TABLE TB_PROJECT_MMT
+(
+    master_id          VARCHAR(6)   NOT NULL COMMENT '마스터 아이디',
+    project_nm         VARCHAR(100) NOT NULL COMMENT '사업명',
+    project_start_date VARCHAR(8)   NOT NULL COMMENT '투입시작일',
+    project_end_date   VARCHAR(8)   NOT NULL COMMENT '투입종료일',
+    project_client     VARCHAR(20)  NOT NULL COMMENT '발주처',
+    use_yn             CHAR(1)      NOT NULL DEFAULT 'Y' COMMENT '사용 여부',
+    created_date       TIMESTAMP    NOT NULL COMMENT '생성일시',
+    modified_date      TIMESTAMP    NOT NULL COMMENT '수정일시',
+    creator            VARCHAR(10)  NOT NULL COMMENT '생성자',
+    modifier           VARCHAR(10)  NOT NULL COMMENT '수정자',
+
+    PRIMARY KEY (master_id)
+) COMMENT ='참여사업 관리 테이블';
+
 -- parent_id 컬럼에 인덱스 추가
 CREATE INDEX idx_tb_common_code_parent_id ON TB_COMMON_CODE (parent_id);
 -- 수행경력 계산을 위한 인덱스 추가
@@ -295,6 +313,7 @@ BEGIN
     SELECT project_start_date, project_end_date
     FROM TB_PROJECT_INFO
     WHERE user_id = input_user_id
+      AND use_yn = 'Y'
     ORDER BY project_start_date;
 
     -- 초기 시작일과 종료일 설정
@@ -335,7 +354,7 @@ BEGIN
     UNTIL done END REPEAT;
 
     -- 총 개월 수 계산
-    SELECT FLOOR(SUM(DATEDIFF(project_end_date, project_start_date) + 1) / 30)
+    SELECT FLOOR(SUM(DATEDIFF(CASE WHEN project_end_date > NOW() THEN NOW() ELSE project_end_date END, project_start_date) + 1) / 30)
     INTO total_months
     FROM temp_merged_periods;
 

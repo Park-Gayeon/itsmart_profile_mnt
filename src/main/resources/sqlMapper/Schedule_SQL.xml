@@ -4,9 +4,10 @@
 
     <!-- getListCnt : 직원 프로젝트 일정관리 건수 SELECT -->
     <select id="getListCnt" parameterType="ProfileVO" resultType="int">
-        SELECT COUNT(DISTINCT PROJECT_NM)
+        SELECT COUNT(*)
+        FROM(SELECT PROJECT_NM
         FROM TB_PROJECT_INFO
-        WHERE 1=1
+        WHERE USE_YN = 'Y'
         <if test="project_start_date != '' and project_start_date != null">
             AND #{project_start_date} &lt;= project_end_date
         </if>
@@ -16,66 +17,83 @@
         <if test="(project_start_date == null and project_end_date == null) or (project_start_date == '' and project_end_date == '')">
             AND now() between project_start_date and project_end_date
         </if>
-    </select>
-
-    <!-- getProjectList : 프로젝트 목록 SELECT -->
-    <select id="getProjectList" parameterType="ProfileVO" resultType="ProfileVO">
-        SELECT tb.*
-        FROM (
-        SELECT
-        project_nm AS project_nm,
-        project_client,
-        MIN(project_start_date) AS project_start_date,
-        MAX(project_end_date) AS project_end_date
-        FROM TB_PROJECT_INFO
-        GROUP BY project_nm, project_client
-        ) tb
-        WHERE 1=1
+        UNION
+        SELECT PROJECT_NM
+        FROM TB_PROJECT_MMT
+        WHERE USE_YN = 'Y'
         <if test="project_start_date != '' and project_start_date != null">
-            AND #{project_start_date} &lt;= tb.project_end_date
+            AND #{project_start_date} &lt;= project_end_date
         </if>
         <if test="project_end_date != '' and project_end_date != null">
-            AND #{project_end_date} &gt;= tb.project_start_date
+            AND #{project_end_date} &gt;= project_start_date
         </if>
         <if test="(project_start_date == null and project_end_date == null) or (project_start_date == '' and project_end_date == '')">
             AND now() between project_start_date and project_end_date
         </if>
-        ORDER BY tb.project_start_date DESC
-        limit #{limit} offset #{offset}
+        ) TB
+    </select>
+
+    <!-- getProjectList : 프로젝트 목록 SELECT -->
+    <select id="getProjectList" parameterType="ProfileVO" resultType="ProfileVO">
+        SELECT TB.*
+        FROM (SELECT PROJECT_NM,
+        PROJECT_CLIENT,
+        MIN(PROJECT_START_DATE) AS PROJECT_START_DATE,
+        MAX(PROJECT_END_DATE) AS PROJECT_END_DATE
+        FROM (SELECT PROJECT_NM,
+        PROJECT_CLIENT,
+        PROJECT_START_DATE,
+        PROJECT_END_DATE
+        FROM TB_PROJECT_INFO
+        WHERE USE_YN = 'Y'
+        UNION
+        SELECT PROJECT_NM,
+        PROJECT_CLIENT,
+        PROJECT_START_DATE,
+        PROJECT_END_DATE
+        FROM TB_PROJECT_MMT
+        WHERE USE_YN = 'Y') T
+        GROUP BY PROJECT_NM, PROJECT_CLIENT) TB
+        WHERE 1 = 1
+        <if test="project_start_date != '' and project_start_date != null">
+            AND #{project_start_date} &lt;= TB.PROJECT_END_DATE
+        </if>
+        <if test="project_end_date != '' and project_end_date != null">
+            AND #{project_end_date} &gt;= TB.PROJECT_START_DATE
+        </if>
+        <if test="(project_start_date == null and project_end_date == null) or (project_start_date == '' and project_end_date == '')">
+            AND NOW() BETWEEN PROJECT_START_DATE AND PROJECT_END_DATE
+        </if>
+        ORDER BY TB.PROJECT_START_DATE DESC
+        LIMIT #{limit} OFFSET #{offset}
     </select>
 
     <!-- getUsersInfoList : 투입인력에 관한 정보 조회 -->
     <select id="getUsersInfoList" parameterType="String" resultType="ProfileVO">
-        SELECT DISTINCT
-        pf.user_nm,
-        pf.user_department_nm,
-        pf.user_position_nm,
-        pf.project_totalMonth,
-        MIN(pj.project_start_date) AS project_start_date,
-        MAX(pj.project_end_date) AS project_end_date
-        FROM
-        TB_PROJECT_INFO pj
-        JOIN
-        (SELECT
-        up.user_id,
-        up.user_nm,
-        cc_org.code_value AS user_department_nm,
-        cc_psit.code_value AS user_position_nm,
-        calculate_total_months_v2(up.user_id) AS project_totalMonth
-        FROM
-        TB_USER_PROFILE_INFO up
-        JOIN
-        TB_COMMON_CODE cc_org ON up.user_department = cc_org.code_id AND cc_org.code_group_id = 'ORG'
-        JOIN
-        TB_COMMON_CODE cc_psit ON up.user_position = cc_psit.code_id AND cc_psit.code_group_id = 'PSIT'
-        ) pf ON pj.user_id = pf.user_id
-        WHERE
-        pj.project_nm = #{project_nm}
-        GROUP BY
-        pf.user_nm,
-        pf.user_department_nm,
-        pf.user_position_nm,
-        pf.project_totalMonth
+        SELECT DISTINCT pf.user_nm,
+                        pf.user_department_nm,
+                        pf.user_position_nm,
+                        pf.project_totalMonth,
+                        MIN(pj.project_start_date) AS project_start_date,
+                        MAX(pj.project_end_date)   AS project_end_date
+        FROM TB_PROJECT_INFO pj
+                 JOIN
+             (SELECT up.user_id,
+                     up.user_nm,
+                     cc_org.code_value                     AS user_department_nm,
+                     cc_psit.code_value                    AS user_position_nm,
+                     calculate_total_months_v2(up.user_id) AS project_totalMonth
+              FROM TB_USER_PROFILE_INFO up
+                       JOIN
+                   TB_COMMON_CODE cc_org ON up.user_department = cc_org.code_id AND cc_org.code_group_id = 'ORG'
+                       JOIN
+                   TB_COMMON_CODE cc_psit ON up.user_position = cc_psit.code_id AND cc_psit.code_group_id = 'PSIT'
+              WHERE up.USE_YN = 'Y') pf ON pj.user_id = pf.user_id
+        WHERE pj.project_nm = #{project_nm}
+        GROUP BY pf.user_nm,
+                 pf.user_department_nm,
+                 pf.user_position_nm,
+                 pf.project_totalMonth
         ORDER BY project_start_date DESC
     </select>
 </mapper>

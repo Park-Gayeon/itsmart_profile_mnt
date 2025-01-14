@@ -1029,6 +1029,9 @@
                                 </div>
                                 <div class="right-group">
                                     <span>
+                                        <button type="button" class="btn btn-dark"
+                                                onclick="findProject()"><span>불러오기</span>
+                                        </button>
                                         <button type="button" class="btn btn-outline-primary" data-target="pjFrm"
                                                 onclick="addProject()"><span>+</span>
                                         </button>
@@ -1040,7 +1043,7 @@
                             </header>
                             <div class="table-responsive px-5">
                                 <header class="basic-medium"><span class="star">*</span>현재 진행중인 사업 내역</header>
-                                <table class="table table-hover mb-5 twin">
+                                <table class="table table-hover twin">
                                     <colgroup>
                                         <col style="width: 5%;">
                                         <col style="width: 15%;">
@@ -1087,6 +1090,9 @@
                                                         <input type="hidden"
                                                                name="projectList[${pjStatus.index}].project_seq"
                                                                value="${project_ing.project_seq}"/>
+                                                        <input type="hidden"
+                                                               name="projectList[${pjStatus.index}].master_id"
+                                                               value="${project_ing.master_id}"/>
                                                         <input type="hidden"
                                                                name="projectList[${pjStatus.index}].use_yn"
                                                                class="useYn" value="${project_ing.use_yn}"/>
@@ -1153,6 +1159,9 @@
                                         </c:otherwise>
                                     </c:choose>
                                 </table>
+                                <div class="table mb-md-5">
+                                    <span class="description"><span class="star">*</span>진행중인 사업의 경우, 수행경력은 현 날짜 기준으로 계산됩니다.</span>
+                                </div>
                                 <header class="basic-medium"><span class="star">*</span>과거 사업 내역</header>
                                 <table class="table table-hover twin">
                                     <colgroup>
@@ -1202,6 +1211,9 @@
                                                                name="projectList[${pjStatus.index}].project_seq"
                                                                value="${project_hist.project_seq}"/>
                                                         <input type="hidden"
+                                                               name="projectList[${pjStatus.index}].master_id"
+                                                               value="${project_hist.master_id}"/>
+                                                        <input type="hidden"
                                                                name="projectList[${pjStatus.index}].use_yn"
                                                                class="useYn" value="${project_hist.use_yn}"/>
                                                         <td><input type="text"
@@ -1247,6 +1259,7 @@
                                                                             <c:if test="${roleList.code_id eq project_hist.project_role}">selected</c:if>>${roleList.code_value}</option>
                                                                 </c:forEach>
                                                             </select>
+                                                        </td>
                                                         <td>
                                                             <button type="button" class="btn btn-warning"
                                                                     onclick="viewSkill(${project_hist.project_seq}, '1')">
@@ -1538,6 +1551,14 @@
         });
     }
 
+    // 사업 불러오기
+    function findProject(){
+        let user_id = $('input[name=user_id]').val();
+        let url = "/project/common/getList?user_id=" + user_id;
+        let properties = calcSize(750, 400);
+        window.open(url, "getProjectList", properties);
+    }
+
     // 사업 추가 팝업 호출
     function addProject() {
         let user_id = $('input[name=user_id]').val();
@@ -1560,7 +1581,8 @@
         let project_seq = Number(data.project_seq) + addCnt; // TB_PROJECT 에서 MAX(SEQ)를 조회한 값에 addCnt를 더해줌으로써 seq 를 새롭게 생성
         let frmId = 'pjFrm';
         let listNm = 'projectList';
-        newRow = `<tr class="add">
+        if(!data.master_id){
+            newRow = `<tr class="add">
                     <td>+</td>
                     <input type="hidden" name="projectList[].project_seq" value="` + project_seq + `"/>
                     <td><input type="text" class="noneBorder align-content-center" name="projectList[].project_client" style="background: transparent;" maxlength="18"
@@ -1581,15 +1603,59 @@
                     <td>
                         <input type="hidden" name="projectList[].project_role" value="` + data.project_role + `"/>
                         <input type="text" value="` + data.project_role_nm + `" style="width: 100%; background: transparent;" readonly/>
-                    <td>
-
                     </td>
+                    <td></td>
                     <td>
                         <button type="button" class="btn btn-outline-danger" onclick="remove(this, 'new')">
                             <span>-</span>
                     </td>
                 </tr>
         `;
+        } else {
+            newRow = `<tr class="add">
+                    <td>+</td>
+                    <input type="hidden" name="projectList[].project_seq" value="` + project_seq + `"/>
+                    <input type="hidden" name="projectList[].master_id" value="` + data.master_id + `"/>
+                    <td><input type="text" class="noneBorder align-content-center" name="projectList[].project_client" style="background: transparent;" maxlength="18"
+                               value="` + data.project_client + `" readonly/></td>
+                    <td><input type="text" class="noneBorder align-content-center" name="projectList[].project_nm" style="background: transparent;" maxlength="18"
+                               value="` + data.project_nm + `" readonly/></td>
+                    <td><input type="text" class="dateFmt noneBorder align-content-center" maxlength="10"
+                               name="projectList[].project_start_date" style="width: 80px; background: transparent;"
+                               value="` + data.project_start_date + `" readonly/>
+                        ~ <input type="text" class="dateFmt noneBorder align-content-center" maxlength="10"
+                                 name="projectList[].project_end_date" style="width: 80px; background: transparent;"
+                                 value="` + data.project_end_date + `" readonly/></td>
+                    <td>
+                        <select name="projectList[].assigned_task_lar" class="form-select noneBorder"
+                                onchange="selectTaskLar(this)">
+                            <c:forEach var="taskLarList" items="${taskLarList}">
+                                <option value="${taskLarList.code_id}">${taskLarList.code_value}</option>
+                            </c:forEach>
+                        </select>
+                        <select name="projectList[].assigned_task_mid" class="form-select noneBorder">
+                            <c:forEach var="taskMidList" items="${taskMidList}">
+                                <option value="${taskMidList.code_id}">${taskMidList.code_value}</option>
+                            </c:forEach>
+                        </select>
+                    </td>
+                    <td>
+                        <select name="projectList[].project_role" class="form-select noneBorder">
+                            <option value=""></option>
+                            <c:forEach var="roleList" items="${roleList}">
+                                <option value="${roleList.code_id}">${roleList.code_value}</option>
+                            </c:forEach>
+                        </select>
+                    </td>
+                    <td></td>
+                    <td>
+                        <button type="button" class="btn btn-outline-danger" onclick="remove(this, 'new')">
+                            <span>-</span>
+                    </td>
+                </tr>
+        `;
+        }
+
         const nodataElement = $(target).find(".nodata");
         if (nodataElement.length) {
             nodataElement.remove();
@@ -1732,7 +1798,7 @@
             const name = $(this).attr("name");
             if (name) {
                 let input = $(this).val();
-                const nullable = ['major', 'total_grade', 'imgFile', 'expiry_date'];
+                const nullable = ['major', 'total_grade', 'imgFile', 'expiry_date', 'master_id'];
                 let isNullable = false;
 
                 for (const nullableItem of nullable) {

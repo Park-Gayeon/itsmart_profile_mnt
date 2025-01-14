@@ -9,50 +9,58 @@
     <meta name="viewport" content="width=device-width" , initial-scale="1">
     <link rel="stylesheet" href="/css/bootstrap.css">
     <link rel="stylesheet" href="/css/basic.css">
-    <link rel="stylesheet" href="/css/info.css">
+    <link rel="stylesheet" href="/css/pop.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
-    <title>직원 프로필관리 시스템</title>
+    <title>프로젝트 불러오기</title>
 </head>
 <body>
-<!-- header.jsp -->
-<%@ include file="layout/header.jsp" %>
-<!-- header.jsp -->
-
 <!-- main-content -->
 <div class="content">
     <form id="frm">
         <div class="container-md pt-3 mb-md-5">
-            <h2>프로젝트 일정관리</h2>
-            <div class="input-group pb-2 justify-content-md-end">
-                <div class="search-group gap-2">
-                    <span class="align-content-center">시작일자</span>
-                    <input type="date" name="project_start_date" class="dateFmt" value="${project_start_date}"/>
-                    <span class="align-content-center">종료일자</span>
-                    <input type="date" name="project_end_date" class="dateFmt" value="${project_end_date}"/>
-
-                    <button type="button" id="find" class="btn btn-secondary"><span>검색</span>
-                    </button>
-                </div>
-            </div>
             <div>
-                <header class="description mb-sm-2 basic-medium">총 ${cnt}건</header>
                 <div class="container-info mb-5">
+                    <h2 class="header">불러오기
+                        <div class="description">
+                            <button type="button" class="btn btn-success" onclick="sendDataToParent()"><span>저장</span>
+                            </button>
+                        </div>
+                    </h2>
+                    <div class="input-group pb-2 justify-content-sm-end">
+                        <select name="searchType" class="search-type ps-3">
+                            <option value="projectNm" <c:if test="${searchType eq 'projectNm'}">selected</c:if>>
+                                사업명
+                            </option>
+                            <option value="client" <c:if test="${searchType eq 'client'}">selected</c:if>>발주처
+                            </option>
+                        </select>
+                        <div class="search-group">
+                            <input type="text" name="searchText" class="search-input px-sm-3 searchInput"
+                                   value="${searchText}"
+                                   maxlength="30"/>
+                            <button type="button" id="find" class="btn btn-secondary"><span>검색</span>
+                            </button>
+                        </div>
+                    </div>
                     <div class="table-responsive">
                         <table class="table table-hover mb-5">
                             <colgroup>
                                 <col style="width: 5%;">
+                                <%-- radio --%>
+                                <col style="width: 5%;">
                                 <%-- no --%>
-                                <col style="width: auto;">
+                                <col style="width: 35%;">
                                 <%-- 사업명 --%>
-                                <col style="width: 20%;">
+                                <col style="width: 25%;">
                                 <%-- 발주처 --%>
-                                <col style="width: 10%;">
+                                <col style="width: 15%;">
                                 <%-- 사업시작일 --%>
-                                <col style="width: 10%;">
+                                <col style="width: 15%;">
                                 <%-- 사업종료일 --%>
                             <colgroup>
                             <thead>
                             <tr>
+                                <th scope="col"></th>
                                 <th scope="col">NO</th>
                                 <th scope="col">사업명</th>
                                 <th scope="col">발주처</th>
@@ -61,8 +69,15 @@
                             </tr>
                             </thead>
                             <tbody class="table-group-divider">
+                            <input type="hidden" id="project_seq" name="project_seq" value="${maxSeq}"/>
+                            <input type="hidden" name="user_id" value="${userId}"/>
                             <c:forEach var="list" items="${list}" varStatus="status">
-                                <tr style="cursor: pointer" onclick="goPopup('${list.project_nm}')">
+                                <tr>
+                                    <td>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="select"/>
+                                        </div>
+                                    </td>
                                     <td>${cnt - ((page.curPage -1) * page.pageSize + status.index)}</td>
                                     <td>${list.project_nm}</td>
                                     <td>${list.project_client}</td>
@@ -76,6 +91,7 @@
                                                     var="project_end_date"/>
                                     <td>${project_start_date}</td>
                                     <td>${project_end_date}</td>
+                                    <input type="hidden" name="master_id" value="${list.master_id}"/>
                                 </tr>
                             </c:forEach>
                             </tbody>
@@ -139,20 +155,11 @@
 </div>
 <!-- main-content -->
 
-<!-- footer.jsp -->
-<%@ include file="layout/footer.jsp" %>
-<!-- footer.jsp -->
 <script src="//code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="/js/bootstrap.bundle.js"></script>
 <script src="/js/common.js"></script>
 <script type="text/javascript">
     $(document).ready(function () {
-        const user_role = `${userRole[0]}`;
-        if (user_role === 'ROLE_USER') {
-            alert("접근권한이 없습니다");
-            window.location.href = "/home";
-        }
-
         $(document).on("keydown", ".searchInput", function (e) {
             if (e.which == 13) {
                 e.preventDefault();
@@ -165,19 +172,17 @@
         })
     });
 
-
-    function goPopup(project_nm) {
-        const url = "/schedule/info/" + encodeURIComponent(project_nm);
-        let properties = calcSize(700, 200);
-        window.open(url, "usrInfo", properties);
-    }
-
     function goFind() {
         $("input[name=curPage]").val(1);
-
         const frm = $("#frm");
+        frm.find("input, select").each(function () {
+            const name = $(this).attr("name");
+            if (name !== "curPage" && name !== "searchType" && name !== "searchText" && name !== "user_id") {
+                $(this).remove();
+            }
+        });
 
-        frm.attr('action', '/schedule/list');
+        frm.attr('action', '/project/common/getList');
         frm.attr('method', 'get');
         frm.submit();
     }
@@ -186,9 +191,49 @@
         $("input[name=curPage]").val(pageNum);
 
         const frm = $("#frm");
-        frm.attr('action', '/schedule/list');
+        frm.find("input, select").each(function () {
+            const name = $(this).attr("name");
+            if (name !== "curPage" && name !== "searchType" && name !== "searchText" && name !== "user_id") {
+                $(this).remove();
+            }
+        });
+        frm.attr('action', '/project/common/getList');
         frm.attr('method', 'get');
         frm.submit();
+    }
+
+    function sendDataToParent() {
+        let selectTr = $("input[type=radio]:checked").closest("tr");
+
+        let rowData = [];
+        selectTr.find("td").each(function () {
+            if ($(this).children().first().is(".form-check")) {
+                return; // 라디오 버튼을 포함한 td는 건너뜀
+            }
+            rowData.push($(this).text().trim());
+        });
+        rowData.push(selectTr.find("input[name=master_id]").val());
+
+        const project_seq = $("input[name=project_seq]").val();
+        const project_nm = rowData[1];
+        const project_client = rowData[2];
+        const project_start_date = rowData[3];
+        const project_end_date = rowData[4];
+        const master_id = rowData[5];
+
+        const data = {
+            project_seq: project_seq,
+            project_nm: project_nm,
+            project_client: project_client,
+            project_start_date: project_start_date,
+            project_end_date: project_end_date,
+            master_id: master_id,
+            flag: "new",
+            addCnt: 1
+        };
+
+        window.opener.addProjectRow(data);
+        window.close();
     }
 
 </script>

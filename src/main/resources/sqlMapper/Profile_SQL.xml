@@ -45,6 +45,7 @@
             <result property="assigned_task_lar" column="ASSIGNED_TASK_LAR"/>
             <result property="assigned_task_mid_nm" column="ASSIGNED_TASK_MID_NM"/>
             <result property="assigned_task_mid" column="ASSIGNED_TASK_MID"/>
+            <result property="master_id" column="MASTER_ID"/>
         </collection>
         <collection column="user_id" property="qualificationList" javaType="List" ofType="QualificationVO"
                     select="getUsrQualificationList">
@@ -140,7 +141,8 @@
                (SELECT CODE_VALUE
                 FROM TB_COMMON_CODE
                 WHERE CODE_GROUP_ID = 'TASK'
-                  AND CODE_ID = PJ.ASSIGNED_TASK_MID) AS ASSIGNED_TASK_MID_NM
+                  AND CODE_ID = PJ.ASSIGNED_TASK_MID) AS ASSIGNED_TASK_MID_NM,
+               MASTER_ID
         FROM TB_PROJECT_INFO PJ
         WHERE USER_ID = #{user_id}
           AND USE_YN = 'Y'
@@ -284,7 +286,8 @@
         project_end_date,
         project_client
         from TB_PROJECT_INFO
-        where project_end_date >= now()) pj
+        where project_end_date >= now()
+        and use_yn = 'Y') pj
         on pf.user_id = pj.user_id
         join (select code_id,
         code_value
@@ -392,7 +395,8 @@
                                          project_end_date,
                                          project_client
                                   from TB_PROJECT_INFO
-                                  where project_end_date >= now()) pj
+                                  where project_end_date >= now()
+                                  and use_yn = 'Y') pj
                                  on pf.user_id = pj.user_id
                        join (select code_id,
                                     code_value

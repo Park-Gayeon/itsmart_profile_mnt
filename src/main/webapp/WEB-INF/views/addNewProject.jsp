@@ -17,7 +17,7 @@
         <div class="container-info row-box row mb-0 g-0">
             <h2 class="header">수행이력 작성
                 <div class="description">
-                    <button class="btn btn-success" onclick="sendDataToParent()"><span>저장</span></button>
+                    <button type="button" class="btn btn-success" onclick="sendDataToParent()"><span>저장</span></button>
                 </div>
             </h2>
             <div class="py-3">

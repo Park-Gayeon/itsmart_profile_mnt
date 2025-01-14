@@ -16,12 +16,24 @@ public class ProjectVO {
     private String assigned_task_lar_nm; // 담당업무(대분류)
     private String assigned_task_mid_nm; // 담당업무(소분류)
     private String use_yn; // 사용여부
+    private String master_id; // 마스터 아이디
 
     // 이력관리
     private int hist_seq; // 이력 순번
 
+    // 검색조건
+    private String searchType; // 검색타입
+    private String searchText; // 검색내용
+
     // etc
     private int totalMonth; // 총 사업 경력
+    private int cnt; // 건수
+
+    // paging
+    private int curPage;
+    private int offset;
+    private int limit;
+
 
     private List<UserSkillVO> skillList;
 
@@ -128,10 +140,19 @@ public class ProjectVO {
     }
 
     public String getUse_yn() {
-        if(use_yn == null){
+        if (use_yn == null) {
             use_yn = "Y";
         }
         return use_yn;
+    }
+
+    public String getMaster_id() {
+        if (master_id == null) master_id = "";
+        return master_id;
+    }
+
+    public void setMaster_id(String master_id) {
+        this.master_id = master_id;
     }
 
     public void setUse_yn(String use_yn) {
@@ -146,12 +167,64 @@ public class ProjectVO {
         this.hist_seq = hist_seq;
     }
 
+    public String getSearchType() {
+        if (searchType == null)
+            searchType = "";
+        return searchType;
+    }
+
+    public void setSearchType(String searchType) {
+        this.searchType = searchType;
+    }
+
+    public String getSearchText() {
+        if(searchText == null)
+            searchText = "";
+        return searchText;
+    }
+
+    public void setSearchText(String searchText) {
+        this.searchText = searchText;
+    }
+
     public int getTotalMonth() {
         return totalMonth;
     }
 
     public void setTotalMonth(int totalMonth) {
         this.totalMonth = totalMonth;
+    }
+
+    public int getCnt() {
+        return cnt;
+    }
+
+    public void setCnt(int cnt) {
+        this.cnt = cnt;
+    }
+
+    public int getCurPage() {
+        return curPage;
+    }
+
+    public void setCurPage(int curPage) {
+        this.curPage = curPage;
+    }
+
+    public int getOffset() {
+        return offset;
+    }
+
+    public void setOffset(int offset) {
+        this.offset = offset;
+    }
+
+    public int getLimit() {
+        return limit;
+    }
+
+    public void setLimit(int limit) {
+        this.limit = limit;
     }
 
     public List<UserSkillVO> getSkillList() {
